@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-burgundy text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_10px_24px_-14px_rgb(106_31_38/0.9)] hover:bg-burgundy-deep hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_16px_30px_-14px_rgb(106_31_38/0.95)] hover:[&_svg]:translate-x-0.5",
+          "btn-shimmer bg-burgundy text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_10px_24px_-14px_rgb(106_31_38/0.9)] hover:bg-burgundy-deep hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_16px_30px_-14px_rgb(106_31_38/0.95)] hover:[&_svg]:translate-x-0.5",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20",
         outline:
@@ -17,7 +17,7 @@ const buttonVariants = cva(
         secondary:
           "bg-latte text-shadow hover:bg-[#cdb497] hover:[&_svg]:translate-x-0.5",
         paper:
-          "bg-paper text-burgundy shadow-paper hover:bg-white hover:[&_svg]:translate-x-0.5",
+          "btn-shimmer bg-paper text-burgundy shadow-paper hover:bg-white hover:[&_svg]:translate-x-0.5",
         ghost:
           "text-shadow hover:bg-shadow/5",
         link: "rounded-none px-0 text-burgundy underline decoration-burgundy/30 decoration-1 underline-offset-[6px] hover:decoration-burgundy",

@@ -1,12 +1,17 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { concerns } from '@/data/content'
+import { WaveDivider } from '@/components/animations/wave-divider'
 import { SectionHeading } from './section-heading'
 
 export function Concerns() {
   return (
     <section id="concerns" aria-labelledby="concerns-title" className="relative py-14 lg:py-20">
-      <div aria-hidden="true" className="latte-surface torn-top absolute inset-x-0 top-0 bottom-0 -z-10 opacity-60" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 flex flex-col text-[#e4d3bc]">
+        <WaveDivider variant="cloud" />
+        <div className="-mt-px flex-1 bg-[#e4d3bc]" />
+        <WaveDivider variant="wave" flip className="-mt-px" />
+      </div>
       <div className="container-editorial pt-6">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
           <SectionHeading

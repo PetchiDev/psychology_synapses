@@ -5,6 +5,8 @@ import { services } from '@/data/content'
 import { siteConfig } from '@/lib/site'
 import { JsonLd } from '@/lib/seo/json-ld'
 import { graph, organizationSchema, websiteSchema } from '@/lib/seo/schemas'
+import { ButtonSparkles } from '@/components/animations/button-sparkles'
+import { FairyParticles } from '@/components/animations/fairy-particles'
 import { HashLinkHandler } from '@/components/layout/hash-link-handler'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
@@ -92,14 +94,16 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         >
           Skip to main content
         </a>
+        <FairyParticles />
         <TooltipProvider delayDuration={200}>
           <SiteHeader />
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
+          <main id="main" tabIndex={-1} className="relative flex-1 outline-none">
             {children}
           </main>
           <SiteFooter />
         </TooltipProvider>
         <HashLinkHandler />
+        <ButtonSparkles />
         <JsonLd
           data={graph(
             organizationSchema(

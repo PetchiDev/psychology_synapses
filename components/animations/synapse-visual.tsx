@@ -1,6 +1,7 @@
-﻿'use client'
+'use client'
 
 import { useRef } from 'react'
+import { controlAmbient } from '@/lib/ambient'
 import { cn } from '@/lib/utils'
 import { gsap, useGSAP } from './gsap'
 
@@ -44,7 +45,7 @@ export function SynapseVisual({ className, muted }: SynapseVisualProps) {
         const tl = gsap.timeline({ defaults: { ease: 'sine.inOut' } })
 
         tl.from('[data-link]', { strokeDashoffset: 1, duration: 2.4, stagger: 0.035, ease: 'power2.out' }, 0)
-        tl.from('[data-node]', { scale: 0, transformOrigin: 'center', duration: 0.9, stagger: 0.03, ease: 'back.out(2)' }, 0.3)
+        tl.from('[data-node]', { scale: 0, transformOrigin: 'center', duration: 0.9, stagger: 0.03, ease: 'power2.out' }, 0.3)
         tl.from('[data-note]', { autoAlpha: 0, y: 8, duration: 1, stagger: 0.25 }, 1.4)
 
         const loops = [
@@ -58,11 +59,7 @@ export function SynapseVisual({ className, muted }: SynapseVisualProps) {
           gsap.to('[data-drift]', { y: -10, x: 6, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut' }),
         ]
 
-        const observer = new IntersectionObserver(([entry]) => {
-          loops.forEach((loop) => (entry.isIntersecting ? loop.resume() : loop.pause()))
-        })
-        if (root.current) observer.observe(root.current)
-        return () => observer.disconnect()
+        return controlAmbient(loops, root.current)
       })
       return () => mm.revert()
     },

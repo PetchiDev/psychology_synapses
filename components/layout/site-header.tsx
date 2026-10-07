@@ -10,6 +10,7 @@ import { gsap, ScrollTrigger, useGSAP } from '@/components/animations/gsap'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { AmbientToggle } from './ambient-toggle'
 import { SiteLogo } from './site-logo'
 
 export function SiteHeader() {
@@ -105,7 +106,8 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <AmbientToggle />
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link href="/#book">
               Book an Appointment

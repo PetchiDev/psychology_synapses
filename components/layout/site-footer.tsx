@@ -2,11 +2,13 @@ import Link from 'next/link'
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { doctors } from '@/data/doctors'
 import { fullAddress, mainNav, siteConfig } from '@/lib/site'
+import { WaveDivider } from '@/components/animations/wave-divider'
 import { SiteLogo } from './site-logo'
 
 export function SiteFooter() {
   return (
-    <footer className="relative mt-12 bg-shadow text-paper/85">
+    <footer className="relative mt-24 bg-shadow text-paper/85">
+      <WaveDivider variant="cloud" className="absolute inset-x-0 bottom-[calc(100%-1px)] text-shadow" />
       <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] lg:py-20">
         <div className="grid content-start gap-5">
           <SiteLogo tone="light" />

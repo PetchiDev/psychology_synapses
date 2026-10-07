@@ -2,12 +2,16 @@ import { LifeBuoy, Mail, Phone } from 'lucide-react'
 import { siteConfig } from '@/lib/site'
 import { BookingFlow } from '@/components/booking/booking-flow'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { WaveDivider } from '@/components/animations/wave-divider'
 import { SectionHeading } from './section-heading'
 
 export function BookingSection() {
   return (
     <section id="book" aria-labelledby="book-title" className="relative py-14 lg:py-20">
-      <div aria-hidden="true" className="absolute inset-x-0 top-24 bottom-0 -z-10 bg-paper-deep/70" />
+      <div aria-hidden="true" className="absolute inset-x-0 top-16 bottom-0 -z-10 flex flex-col text-[#f1e5cf]">
+        <WaveDivider variant="cloud" drift={0.08} />
+        <div className="-mt-px flex-1 bg-[#f1e5cf]" />
+      </div>
       <div className="container-editorial">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
           <SectionHeading
