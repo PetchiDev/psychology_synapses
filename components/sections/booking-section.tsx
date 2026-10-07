@@ -6,7 +6,7 @@ import { SectionHeading } from './section-heading'
 
 export function BookingSection() {
   return (
-    <section id="book" aria-labelledby="book-title" className="relative py-20 lg:py-32">
+    <section id="book" aria-labelledby="book-title" className="relative py-14 lg:py-20">
       <div aria-hidden="true" className="absolute inset-x-0 top-24 bottom-0 -z-10 bg-paper-deep/70" />
       <div className="container-editorial">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
@@ -18,7 +18,7 @@ export function BookingSection() {
             description="Choose a date that suits you, tell us a little about yourself, and we’ll call within one working day to confirm a time."
             className="lg:col-span-7"
           />
-          <div data-reveal className="grid gap-3 text-[0.95rem] lg:col-span-4 lg:col-start-9">
+          <div data-reveal className="grid gap-3 text-[0.95rem] lg:col-span-5 lg:col-start-8 lg:justify-items-end lg:text-right">
             <p className="font-semibold text-shadow">Prefer to talk first?</p>
             <a href={siteConfig.phoneHref} className="inline-flex items-center gap-2 text-burgundy hover:underline hover:underline-offset-4">
               <Phone className="size-4" aria-hidden="true" />
@@ -31,7 +31,7 @@ export function BookingSection() {
           </div>
         </div>
 
-        <div data-reveal className="mt-12">
+        <div data-reveal className="mt-10">
           <BookingFlow />
         </div>
 

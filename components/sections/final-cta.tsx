@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 
 export function FinalCta() {
   return (
-    <section aria-labelledby="final-cta-title" className="relative py-16 lg:py-24">
+    <section aria-labelledby="final-cta-title" className="relative py-10 lg:py-14">
       <div className="container-editorial">
         <div className="relative overflow-hidden rounded-[2.5rem] bg-burgundy px-6 py-16 text-center text-paper sm:px-12 lg:py-24">
           <div aria-hidden="true" className="absolute inset-0 bg-(image:--grain) opacity-35" />

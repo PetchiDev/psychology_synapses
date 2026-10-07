@@ -30,6 +30,7 @@ export const bookingSchema = z.object({
     .date({ error: 'Please choose a preferred date.' })
     .refine((date) => date >= startOfToday(), 'Please choose today or a future date.')
     .refine((date) => !isClosedDay(date), 'We are closed on Sundays. Please choose another day.'),
+  time: z.string().regex(/^\d{2}:\d{2}$/, 'Please choose a time slot.'),
   name: z
     .string()
     .transform(sanitizeLine)
@@ -77,7 +78,7 @@ export type BookingFormInput = z.input<typeof bookingSchema>
 export type BookingFormValues = z.output<typeof bookingSchema>
 
 export const bookingSteps = [
-  { id: 'date', title: 'Choose a date', fields: ['date'] },
+  { id: 'date', title: 'Choose a date & time', fields: ['date', 'time'] },
   { id: 'about', title: 'About you', fields: ['name', 'address'] },
   { id: 'concern', title: 'Your concern', fields: ['concern'] },
   { id: 'contact', title: 'How to reach you', fields: ['phone', 'email'] },

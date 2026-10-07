@@ -1,18 +1,20 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowUpRight, Menu, Phone } from 'lucide-react'
+import { samePageHash, scrollToHash } from '@/lib/hash-scroll'
 import { mainNav, siteConfig } from '@/lib/site'
 import { gsap, ScrollTrigger, useGSAP } from '@/components/animations/gsap'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { SiteLogo } from './site-logo'
 
 export function SiteHeader() {
   const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
 
@@ -58,6 +60,14 @@ export function SiteHeader() {
     { scope: headerRef },
   )
 
+  const onMenuLink = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    setMenuOpen(false)
+    const hash = samePageHash(href)
+    if (!hash) return
+    event.preventDefault()
+    window.setTimeout(() => scrollToHash(hash), 320)
+  }
+
   const isActive = (href: string) => (href === '/specialists' ? pathname.startsWith('/specialists') : false)
 
   return (
@@ -68,19 +78,26 @@ export function SiteHeader() {
       >
         <SiteLogo />
 
-        <nav aria-label="Main" className="hidden xl:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Main" className="hidden lg:block">
+          <ul className="flex items-center gap-0.5 xl:gap-1">
             {mainNav.slice(1).map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? 'page' : undefined}
-                  className="group relative rounded-full px-3 py-2 text-[0.92rem] font-medium text-shadow/85 transition-colors hover:text-burgundy aria-[current=page]:text-burgundy"
+                  className="group relative rounded-full px-2.5 py-2 text-[0.88rem] font-medium whitespace-nowrap text-shadow/85 transition-colors hover:text-burgundy aria-[current=page]:text-burgundy xl:px-3 xl:text-[0.92rem]"
                 >
-                  {item.label}
+                  {item.shortLabel ? (
+                    <>
+                      <span className="xl:hidden">{item.shortLabel}</span>
+                      <span className="hidden xl:inline">{item.label}</span>
+                    </>
+                  ) : (
+                    item.label
+                  )}
                   <span
                     aria-hidden="true"
-                    className="absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-burgundy transition-transform duration-500 ease-(--ease-paper) group-hover:scale-x-100 group-aria-[current=page]:scale-x-100"
+                    className="absolute inset-x-2.5 bottom-1 h-px origin-left scale-x-0 bg-burgundy transition-transform duration-500 ease-(--ease-paper) group-hover:scale-x-100 group-aria-[current=page]:scale-x-100 xl:inset-x-3"
                   />
                 </Link>
               </li>
@@ -96,9 +113,9 @@ export function SiteHeader() {
             </Link>
           </Button>
 
-          <Sheet>
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="xl:hidden" aria-label="Open menu">
+              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu">
                 <Menu className="size-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
@@ -111,26 +128,25 @@ export function SiteHeader() {
                 <ul className="grid">
                   {mainNav.map((item, index) => (
                     <li key={item.href} className="border-b border-coffee/15">
-                      <SheetClose asChild>
-                        <Link
-                          href={item.href}
-                          aria-current={isActive(item.href) ? 'page' : undefined}
-                          className="flex items-baseline gap-4 py-4 font-serif text-2xl text-shadow transition-colors hover:text-burgundy aria-[current=page]:text-burgundy"
-                        >
-                          <span className="font-sans text-xs text-coffee tabular-nums">{String(index + 1).padStart(2, '0')}</span>
-                          {item.label}
-                        </Link>
-                      </SheetClose>
+                      <Link
+                        href={item.href}
+                        onClick={(event) => onMenuLink(event, item.href)}
+                        aria-current={isActive(item.href) ? 'page' : undefined}
+                        className="flex items-baseline gap-4 py-4 font-serif text-2xl text-shadow transition-colors hover:text-burgundy aria-[current=page]:text-burgundy"
+                      >
+                        <span className="font-sans text-xs text-coffee tabular-nums">{String(index + 1).padStart(2, '0')}</span>
+                        {item.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </nav>
               <div className="mt-auto grid gap-4 px-6 pb-8">
-                <SheetClose asChild>
-                  <Button asChild size="lg">
-                    <Link href="/#book">Book an Appointment</Link>
-                  </Button>
-                </SheetClose>
+                <Button asChild size="lg">
+                  <Link href="/#book" onClick={(event) => onMenuLink(event, '/#book')}>
+                    Book an Appointment
+                  </Link>
+                </Button>
                 <Button asChild variant="outline" size="lg">
                   <a href={siteConfig.phoneHref}>
                     <Phone aria-hidden="true" />

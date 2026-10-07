@@ -1,4 +1,4 @@
-#  Paper ,Skin & Synapses
+# Paper, Skin & Synapses
 
 Editorial psychology hospital website — Next.js 16 (App Router, Cache Components), Tailwind CSS v4, shadcn/ui (Radix), GSAP + ScrollTrigger, optional Spline 3D, EmailJS booking.
 
@@ -24,7 +24,7 @@ npm run dev
 
 Set the template's **To Email** to `petchidev22@gmail.com` (or `{{to_email}}`) and use these variables:
 
-`{{appointment_date}}`, `{{name}}`, `{{address}}`, `{{concern}}`, `{{phone}}`, `{{email}}`, `{{reply_to}}`, `{{submitted_at}}`
+`{{appointment_date}}`, `{{appointment_time}}`, `{{name}}`, `{{address}}`, `{{concern}}`, `{{phone}}`, `{{email}}`, `{{reply_to}}`, `{{submitted_at}}`
 
 ## Content
 

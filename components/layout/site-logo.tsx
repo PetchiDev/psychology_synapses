@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { siteConfig } from '@/lib/site'
 import { cn } from '@/lib/utils'
 
 export function LogoMark({ className }: { className?: string }) {
@@ -25,16 +26,16 @@ export function SiteLogo({ className, tone = 'dark' }: { className?: string; ton
   return (
     <Link
       href="/"
-      aria-label=" Paper ,Skin & Synapses, home"
+      aria-label={`${siteConfig.name}, home`}
       className={cn('group inline-flex items-center gap-3 rounded-full outline-offset-4', className)}
     >
       <LogoMark className="transition-transform duration-700 ease-(--ease-paper) group-hover:rotate-[-8deg]" />
       <span className="flex flex-col leading-none">
         <span className={cn('font-serif text-[1.4rem] tracking-tight', tone === 'dark' ? 'text-shadow' : 'text-paper')}>
-          Paper Skin
+          Paper, Skin
         </span>
         <span className={cn('type-eyebrow mt-1 text-[0.6rem]', tone === 'dark' ? 'text-coffee' : 'text-latte')}>
-          &amp; Psychology
+          &amp; Synapses
         </span>
       </span>
     </Link>

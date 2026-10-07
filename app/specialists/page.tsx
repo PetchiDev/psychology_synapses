@@ -11,14 +11,14 @@ import { Button } from '@/components/ui/button'
 export const metadata: Metadata = pageMetadata({
   title: 'Our Specialists — Psychologists in Chennai',
   description:
-    'Meet the clinical and counselling psychologists at  Paper ,Skin & Synapses: specialists in anxiety, depression, child and adolescent psychology, couples counselling, trauma, assessment and workplace stress.',
+    'Meet the clinical and counselling psychologists at Paper, Skin & Synapses: specialists in anxiety, depression, child and adolescent psychology, couples counselling, trauma, assessment and workplace stress.',
   path: '/specialists',
 })
 
 export default function SpecialistsPage() {
   return (
     <>
-      <section aria-labelledby="specialists-page-title" className="pt-32 pb-16 sm:pt-40 lg:pb-24">
+      <section aria-labelledby="specialists-page-title" className="pt-32 pb-12 sm:pt-40 lg:pb-16">
         <div className="container-editorial">
           <Breadcrumbs
             items={[
@@ -26,16 +26,16 @@ export default function SpecialistsPage() {
               { name: 'Our Specialists', path: '/specialists' },
             ]}
           />
-          <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:items-end">
-            <div className="lg:col-span-8">
+          <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:items-end lg:gap-12">
+            <div>
               <p data-hero-item className="type-eyebrow text-coffee">
                 {doctors.length} psychologists · {doctors.reduce((sum, d) => sum + d.yearsOfExperience, 0)}+ years of combined experience
               </p>
-              <h1 id="specialists-page-title" data-hero-item className="type-display mt-5 max-w-[16ch]">
+              <h1 id="specialists-page-title" data-hero-item className="type-display mt-5">
                 Meet the people who will <em className="text-burgundy">listen</em>.
               </h1>
             </div>
-            <div data-hero-item className="grid gap-5 lg:col-span-4">
+            <div data-hero-item className="grid max-w-xl gap-5 lg:pb-3">
               <p className="type-lead text-shadow/80">
                 Each of our specialists brings a different background and a shared commitment to warm, evidence-based care. Select a
                 profile to learn about their training, approach and availability.

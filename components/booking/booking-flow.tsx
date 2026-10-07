@@ -1,10 +1,10 @@
 'use client'
 
-import { useMemo, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
 import { useForm, useWatch, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format, isValid, parse } from 'date-fns'
-import { ArrowLeft, ArrowRight, CalendarHeart, Check, Info, Loader2, PencilLine, Send } from 'lucide-react'
+import { format } from 'date-fns'
+import { ArrowLeft, ArrowRight, CalendarHeart, Check, Clock, Info, Loader2, PencilLine, Send } from 'lucide-react'
 import {
   bookingSchema,
   bookingSteps,
@@ -14,6 +14,7 @@ import {
   type BookingFormInput,
   type BookingFormValues,
 } from '@/lib/booking/schema'
+import { formatSlot, isSlotAvailable, slotsFor } from '@/lib/booking/slots'
 import { BookingConfigError, formatAppointmentDate, sendBookingEmail } from '@/lib/email/send-booking'
 import { siteConfig } from '@/lib/site'
 import { cn } from '@/lib/utils'
@@ -27,10 +28,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { BookingField } from './booking-field'
 import { PrivacyDialog } from './privacy-dialog'
+import { TimeSlotPicker } from './time-slot-picker'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
 const defaultValues: Partial<BookingFormInput> = {
+  time: '',
   name: '',
   address: '',
   concern: '',
@@ -51,13 +54,22 @@ export function BookingFlow() {
   const [step, setStep] = useState(0)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [confirmedDate, setConfirmedDate] = useState<string | null>(null)
+  const [confirmed, setConfirmed] = useState<string | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const successRef = useRef<HTMLHeadingElement>(null)
   const hasNavigated = useRef(false)
+  const advanceTimer = useRef<number | null>(null)
   const todayKey = useSyncExternalStore(subscribeNoop, getTodayKey, getServerTodayKey)
   const range = useMemo(() => (todayKey ? bookingWindow() : null), [todayKey])
+  const now = useMemo(() => (todayKey ? new Date() : null), [todayKey])
+
+  useEffect(
+    () => () => {
+      if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
+    },
+    [],
+  )
 
   const form = useForm<BookingFormInput, unknown, BookingFormValues>({
     resolver: zodResolver(bookingSchema),
@@ -68,6 +80,7 @@ export function BookingFlow() {
   const { errors } = formState
   const values = useWatch({ control })
   const selectedDate = values.date instanceof Date ? values.date : undefined
+  const selectedTime = values.time || undefined
   const concernLength = values.concern?.length ?? 0
 
   useGSAP(
@@ -88,6 +101,7 @@ export function BookingFlow() {
   )
 
   const goTo = (index: number) => {
+    if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
     hasNavigated.current = true
     setStep(Math.max(0, Math.min(lastStep, index)))
     setErrorMessage(null)
@@ -97,16 +111,21 @@ export function BookingFlow() {
     const fields = [...bookingSteps[step].fields]
     const ok = await trigger(fields, { shouldFocus: true })
     if (ok) goTo(step + 1)
-    else if (bookingSteps[step].id === 'date') document.getElementById('appointment-date')?.focus()
   }
 
   const selectDate = (date: Date | undefined) => {
     setValue('date', date as Date, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
+    const time = values.time
+    if (!time) return
+    const stillValid = date && slotsFor(date).some((slot) => slot.value === time) && (!now || isSlotAvailable(date, time, now))
+    if (!stillValid) setValue('time', '', { shouldDirty: true })
   }
 
-  const onNativeDate = (raw: string) => {
-    const parsed = parse(raw, ISO, new Date())
-    selectDate(isValid(parsed) ? parsed : undefined)
+  const selectTime = (time: string) => {
+    setValue('time', time, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
+    if (!selectedDate) return
+    if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
+    advanceTimer.current = window.setTimeout(() => goTo(1), 450)
   }
 
   const onValid = async (data: BookingFormValues) => {
@@ -118,7 +137,7 @@ export function BookingFlow() {
     setStatus('submitting')
     try {
       await sendBookingEmail(data)
-      setConfirmedDate(formatAppointmentDate(data.date))
+      setConfirmed(`${formatAppointmentDate(data.date)} at ${formatSlot(data.time)}`)
       setStatus('success')
       reset(defaultValues)
       requestAnimationFrame(() => successRef.current?.focus())
@@ -148,7 +167,7 @@ export function BookingFlow() {
 
   const startOver = () => {
     setStatus('idle')
-    setConfirmedDate(null)
+    setConfirmed(null)
     hasNavigated.current = true
     setStep(0)
   }
@@ -165,12 +184,12 @@ export function BookingFlow() {
             Thank you. Your request is with us.
           </h3>
           <p className="type-lead max-w-xl text-shadow/85">
-            {confirmedDate ? (
+            {confirmed ? (
               <>
-                We’ve noted <strong className="font-semibold text-burgundy">{confirmedDate}</strong> as your preferred date.{' '}
+                We’ve noted <strong className="font-semibold text-burgundy">{confirmed}</strong> as your preferred slot.{' '}
               </>
             ) : null}
-            A member of our care team will call you within one working day to confirm a time that suits you.
+            A member of our care team will call you within one working day to confirm your appointment.
           </p>
           <p className="type-hand text-2xl text-burgundy">Reaching out takes courage — well done.</p>
           <p className="text-sm text-coffee">
@@ -194,34 +213,38 @@ export function BookingFlow() {
       noValidate
       onSubmit={onFormSubmit}
       aria-labelledby="booking-form-title"
-      className="grid gap-6 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:gap-10"
+      className="grid gap-6 xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] xl:gap-8"
     >
       <h3 id="booking-form-title" className="sr-only">
         Consultation request form
       </h3>
 
-      <aside className="latte-surface organic-edge-alt relative overflow-hidden p-6 sm:p-7 lg:sticky lg:top-28 lg:self-start">
+      <aside className="latte-surface organic-edge-alt relative overflow-hidden p-6 sm:p-7 xl:sticky xl:top-28 xl:self-start">
         <p className="type-eyebrow text-coffee-deep">Your consultation</p>
-        <div className="mt-4 flex items-start gap-3" aria-live="polite">
-          <CalendarHeart className="mt-1 size-6 shrink-0 text-burgundy" aria-hidden="true" />
-          <p className="font-serif text-2xl leading-tight text-shadow">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-1" aria-live="polite">
+          <p className="flex items-start gap-3 font-serif text-xl leading-tight text-shadow xl:text-2xl">
+            <CalendarHeart className="mt-0.5 size-6 shrink-0 text-burgundy" aria-hidden="true" />
             {selectedDate ? formatAppointmentDate(selectedDate) : 'No date chosen yet'}
+          </p>
+          <p className="flex items-center gap-3 font-serif text-xl leading-tight text-shadow">
+            <Clock className="size-6 shrink-0 text-burgundy" aria-hidden="true" />
+            {selectedTime ? formatSlot(selectedTime) : 'No time chosen yet'}
           </p>
         </div>
 
         <Separator className="my-6 bg-shadow/15" />
 
-        <p className="mb-3 text-sm font-semibold text-shadow lg:hidden">
+        <p className="mb-3 text-sm font-semibold text-shadow xl:hidden">
           Step {step + 1} of {bookingSteps.length}: {current.title}
         </p>
-        <div className="h-1 overflow-hidden rounded-full bg-shadow/10 lg:hidden" aria-hidden="true">
+        <div className="h-1 overflow-hidden rounded-full bg-shadow/10 xl:hidden" aria-hidden="true">
           <div
             className="h-full rounded-full bg-burgundy transition-[width] duration-500 ease-(--ease-paper)"
             style={{ width: `${((step + 1) / bookingSteps.length) * 100}%` }}
           />
         </div>
 
-        <ol className="hidden gap-1 lg:grid" aria-label="Booking steps">
+        <ol className="hidden gap-1 xl:grid" aria-label="Booking steps">
           {bookingSteps.map((s, index) => {
             const done = index < step
             const active = index === step
@@ -257,7 +280,7 @@ export function BookingFlow() {
           })}
         </ol>
 
-        <p className="type-hand mt-6 hidden text-xl text-burgundy lg:block">no pressure — take your time</p>
+        <p className="type-hand mt-6 hidden text-xl text-burgundy xl:block">no pressure — take your time</p>
       </aside>
 
       <div className="paper-surface organic-edge relative min-w-0 p-5 sm:p-8 lg:p-10">
@@ -272,53 +295,56 @@ export function BookingFlow() {
           </header>
 
           {current.id === 'date' ? (
-            <div className="grid gap-6">
+            <div className="grid gap-5">
               <p className="text-[0.95rem] leading-relaxed text-shadow/80">
-                Pick a day that feels manageable. We’re open Monday to Saturday, and we’ll confirm the exact time with you.
+                Pick a day, then a time that feels manageable. We’re open Monday to Saturday — once you choose a slot, we’ll move you
+                to the next step.
               </p>
-              <div
-                className={cn(
-                  'mx-auto w-full max-w-md rounded-[1.5rem] border bg-[#fffaf1]/70 p-3 sm:p-5',
-                  errors.date ? 'border-destructive/50' : 'border-coffee/15',
-                )}
-                aria-describedby={errors.date ? 'appointment-date-error' : undefined}
-              >
-                {range ? (
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={selectDate}
-                    defaultMonth={selectedDate ?? range.from}
-                    startMonth={range.from}
-                    endMonth={range.to}
-                    disabled={[{ before: range.from }, { after: range.to }, isClosedDay]}
-                    aria-label="Choose your preferred consultation date"
-                  />
-                ) : (
-                  <div aria-busy="true" aria-label="Loading calendar" className="grid aspect-square w-full animate-pulse place-items-center rounded-2xl bg-latte/30">
-                    <CalendarHeart className="size-8 text-coffee/50" aria-hidden="true" />
-                  </div>
-                )}
+              <div className="grid items-stretch gap-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+                <div
+                  className={cn(
+                    'w-full min-w-0 rounded-[1.5rem] border bg-[#fffaf1]/70 p-3 sm:p-5',
+                    errors.date ? 'border-destructive/50' : 'border-coffee/15',
+                  )}
+                >
+                  {range ? (
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={selectDate}
+                      defaultMonth={selectedDate ?? range.from}
+                      startMonth={range.from}
+                      endMonth={range.to}
+                      disabled={[{ before: range.from }, { after: range.to }, isClosedDay]}
+                      aria-label="Choose your preferred consultation date"
+                      className="[--cell-size:2.6rem] sm:[--cell-size:2.9rem]"
+                    />
+                  ) : (
+                    <div
+                      aria-busy="true"
+                      aria-label="Loading calendar"
+                      className="grid aspect-square w-full animate-pulse place-items-center rounded-2xl bg-latte/30"
+                    >
+                      <CalendarHeart className="size-8 text-coffee/50" aria-hidden="true" />
+                    </div>
+                  )}
+                </div>
+                <TimeSlotPicker date={selectedDate} value={selectedTime} now={now} error={errors.time?.message} onChange={selectTime} />
               </div>
-              <BookingField
-                id="appointment-date"
-                label="Prefer to type? Enter a date"
-                hint="Format: day, month, year. Sundays are unavailable."
-                error={errors.date?.message}
-              >
-                {(aria) => (
-                  <Input
-                    {...aria}
-                    type="date"
-                    name="appointment-date"
-                    min={range ? format(range.from, ISO) : undefined}
-                    max={range ? format(range.to, ISO) : undefined}
-                    value={selectedDate ? format(selectedDate, ISO) : ''}
-                    onChange={(event) => onNativeDate(event.target.value)}
-                    className="max-w-xs"
-                  />
-                )}
-              </BookingField>
+              {errors.date || errors.time ? (
+                <div className="grid gap-1">
+                  {errors.date ? (
+                    <p id="appointment-date-error" className="text-sm font-medium text-destructive">
+                      {errors.date.message}
+                    </p>
+                  ) : null}
+                  {errors.time ? (
+                    <p id="appointment-time-error" className="text-sm font-medium text-destructive">
+                      {errors.time.message}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           ) : null}
 
@@ -370,7 +396,7 @@ export function BookingFlow() {
 
           {current.id === 'contact' ? (
             <div className="grid gap-6">
-              <BookingField id="tel" label="Phone number" hint="We’ll call to confirm your appointment time." error={errors.phone?.message}>
+              <BookingField id="tel" label="Phone number" hint="We’ll call to confirm your appointment." error={errors.phone?.message}>
                 {(aria) => (
                   <Input {...aria} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel" placeholder="+91 98765 43210" />
                 )}
@@ -408,6 +434,7 @@ export function BookingFlow() {
               <dl className="divide-y divide-coffee/15 rounded-2xl border border-coffee/15 bg-[#fffaf1]/60">
                 {[
                   { label: 'Preferred date', value: selectedDate ? formatAppointmentDate(selectedDate) : '—', step: 0 },
+                  { label: 'Preferred time', value: selectedTime ? formatSlot(selectedTime) : '—', step: 0 },
                   { label: 'Name', value: values.name, step: 1 },
                   { label: 'Address', value: values.address, step: 1 },
                   { label: 'Concern', value: values.concern, step: 2 },
@@ -437,7 +464,7 @@ export function BookingFlow() {
                     aria-describedby={errors.consent ? 'consent-error' : undefined}
                     className="mt-1 size-5 shrink-0 cursor-pointer accent-burgundy"
                   />
-                  I agree that  Paper ,Skin & Synapses may contact me by phone or email about this request.
+                  I agree that {siteConfig.name.trim()} may contact me by phone or email about this request.
                 </label>
                 {errors.consent ? (
                   <p id="consent-error" className="pl-8 text-sm font-medium text-destructive">

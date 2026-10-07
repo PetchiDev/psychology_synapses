@@ -7,7 +7,7 @@ import { SectionHeading } from './section-heading'
 
 export function Specialists() {
   return (
-    <section id="specialists" aria-labelledby="specialists-title" className="relative py-20 lg:py-32">
+    <section id="specialists" aria-labelledby="specialists-title" className="relative py-14 lg:py-20">
       <div className="container-editorial">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <SectionHeading
@@ -28,8 +28,8 @@ export function Specialists() {
           </div>
         </div>
 
-        <ul data-reveal-group className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8" aria-label="Specialists">
-          {doctors.map((doctor) => (
+        <ul data-reveal-group className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8" aria-label="Specialists">
+          {doctors.slice(0, 3).map((doctor) => (
             <li key={doctor.slug} data-reveal-item>
               <DoctorCard doctor={doctor} />
             </li>

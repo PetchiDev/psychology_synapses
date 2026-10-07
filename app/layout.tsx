@@ -5,6 +5,7 @@ import { services } from '@/data/content'
 import { siteConfig } from '@/lib/site'
 import { JsonLd } from '@/lib/seo/json-ld'
 import { graph, organizationSchema, websiteSchema } from '@/lib/seo/schemas'
+import { HashLinkHandler } from '@/components/layout/hash-link-handler'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -98,6 +99,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           </main>
           <SiteFooter />
         </TooltipProvider>
+        <HashLinkHandler />
         <JsonLd
           data={graph(
             organizationSchema(

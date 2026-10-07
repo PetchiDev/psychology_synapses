@@ -48,7 +48,7 @@ export const doctors: Doctor[] = [
     yearsOfExperience: 18,
     image: { src: '/images/specialists/meera-raghavan.svg', alt: 'Portrait of Dr. Meera Raghavan, Senior Clinical Psychologist' },
     bio: [
-      'Dr. Meera Raghavan leads the clinical team at  Paper ,Skin & Synapses. Over eighteen years she has worked with adults facing anxiety, depression, burnout and difficult life changes, in hospital, community and private settings.',
+      'Dr. Meera Raghavan leads the clinical team at Paper, Skin & Synapses. Over eighteen years she has worked with adults facing anxiety, depression, burnout and difficult life changes, in hospital, community and private settings.',
       'She is known for making therapy feel less intimidating. Sessions with Meera are collaborative: together you set goals that matter to you, and she explains each step in plain language.',
     ],
     education: [
@@ -64,7 +64,7 @@ export const doctors: Doctor[] = [
     specializations: ['Anxiety disorders', 'Depression', 'Adult psychotherapy'],
     expertise: ['Generalised anxiety', 'Panic attacks', 'Low mood and depression', 'Burnout', 'Life transitions', 'Perfectionism'],
     experience: [
-      { role: 'Clinical Director', organisation: ' Paper ,Skin & Synapses', period: '2016 – present' },
+      { role: 'Clinical Director', organisation: 'Paper, Skin & Synapses', period: '2016 – present' },
       { role: 'Consultant Clinical Psychologist', organisation: 'City Multispeciality Hospital, Chennai', period: '2010 – 2016' },
       { role: 'Clinical Psychologist', organisation: 'Community Mental Health Programme, Bengaluru', period: '2006 – 2010' },
     ],
@@ -104,7 +104,7 @@ export const doctors: Doctor[] = [
     specializations: ['Child psychology', 'Adolescent mental health', 'Parent guidance'],
     expertise: ['School-related anxiety', 'Attention and behaviour concerns', 'Emotional regulation', 'Exam stress', 'Screen-time and sleep routines', 'Learning difficulties assessment'],
     experience: [
-      { role: 'Lead, Child & Adolescent Service', organisation: ' Paper ,Skin & Synapses', period: '2018 – present' },
+      { role: 'Lead, Child & Adolescent Service', organisation: 'Paper, Skin & Synapses', period: '2018 – present' },
       { role: 'Child Psychologist', organisation: 'Paediatric Development Centre, Kochi', period: '2013 – 2018' },
     ],
     languages: ['English', 'Malayalam', 'Tamil'],
@@ -143,7 +143,7 @@ export const doctors: Doctor[] = [
     specializations: ['Couples counselling', 'Relationship difficulties', 'Family therapy'],
     expertise: ['Communication and conflict', 'Trust and infidelity', 'Pre-marital counselling', 'Separation and co-parenting', 'Family adjustment', 'Intercultural relationships'],
     experience: [
-      { role: 'Senior Counselling Psychologist', organisation: ' Paper ,Skin & Synapses', period: '2017 – present' },
+      { role: 'Senior Counselling Psychologist', organisation: 'Paper, Skin & Synapses', period: '2017 – present' },
       { role: 'Family Therapist', organisation: 'Family Wellbeing Centre, Hyderabad', period: '2010 – 2017' },
     ],
     languages: ['English', 'Hindi', 'Urdu', 'Telugu'],
@@ -182,7 +182,7 @@ export const doctors: Doctor[] = [
     specializations: ['Trauma support', 'Grief and loss', 'Stress management'],
     expertise: ['Post-traumatic stress', 'Complicated grief', 'Workplace stress', 'Sleep difficulties linked to stress', 'Medical and accident trauma', 'Emotional numbness'],
     experience: [
-      { role: 'Clinical Psychologist, Trauma Service', organisation: ' Paper ,Skin & Synapses', period: '2019 – present' },
+      { role: 'Clinical Psychologist, Trauma Service', organisation: 'Paper, Skin & Synapses', period: '2019 – present' },
       { role: 'Psychologist, Disaster Mental Health Response', organisation: 'State Disaster Management Programme', period: '2012 – 2019' },
       { role: 'Clinical Psychologist', organisation: 'General Hospital, Pune', period: '2008 – 2012' },
     ],
@@ -222,7 +222,7 @@ export const doctors: Doctor[] = [
     specializations: ['Psychological assessment', 'Behavioural therapy', 'Addiction-related psychological support'],
     expertise: ['Cognitive and personality assessment', 'Obsessive-compulsive patterns', 'Habit change', 'Addiction recovery support', 'Self-esteem', 'Adult attention concerns'],
     experience: [
-      { role: 'Psychologist, Assessment Unit', organisation: ' Paper ,Skin & Synapses', period: '2020 – present' },
+      { role: 'Psychologist, Assessment Unit', organisation: 'Paper, Skin & Synapses', period: '2020 – present' },
       { role: 'Clinical Psychologist', organisation: 'De-addiction & Recovery Centre, Coimbatore', period: '2016 – 2020' },
     ],
     languages: ['English', 'Tamil', 'Hindi'],
@@ -261,7 +261,7 @@ export const doctors: Doctor[] = [
     specializations: ['Stress management', 'Sleep problems', 'Mental wellness programmes'],
     expertise: ['Burnout', 'Work–life balance', 'Insomnia and sleep routines', 'Performance pressure', 'Mindfulness skills', 'Team wellbeing workshops'],
     experience: [
-      { role: 'Lead, Mental Wellness Programmes', organisation: ' Paper ,Skin & Synapses', period: '2021 – present' },
+      { role: 'Lead, Mental Wellness Programmes', organisation: 'Paper, Skin & Synapses', period: '2021 – present' },
       { role: 'Employee Wellbeing Consultant', organisation: 'Corporate Wellbeing Network, Mumbai', period: '2016 – 2021' },
     ],
     languages: ['English', 'Hindi', 'Gujarati'],

@@ -10,7 +10,7 @@ const stagger = (index: number) => ({ '--i': index }) as CSSProperties
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-title" className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:pt-40 lg:pb-24">
+    <section aria-labelledby="hero-title" className="relative overflow-hidden pt-28 pb-10 sm:pt-36 lg:pt-40 lg:pb-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-40 -right-32 size-[34rem] rounded-full bg-latte/45 blur-3xl"

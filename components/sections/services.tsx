@@ -7,7 +7,7 @@ import { SectionHeading } from './section-heading'
 
 export function Services() {
   return (
-    <section id="services" aria-labelledby="services-title" className="relative py-20 lg:py-32">
+    <section id="services" aria-labelledby="services-title" className="relative py-14 lg:py-20">
       <div className="container-editorial grid gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
           <SectionHeading

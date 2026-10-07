@@ -1,4 +1,5 @@
 import type { BookingFormValues } from '@/lib/booking/schema'
+import { formatSlot } from '@/lib/booking/slots'
 
 export class BookingConfigError extends Error {
   constructor() {
@@ -31,6 +32,7 @@ export async function sendBookingEmail(values: BookingFormValues) {
   const templateParams = {
     to_email: RECIPIENT,
     appointment_date: formatAppointmentDate(values.date),
+    appointment_time: formatSlot(values.time),
     name: values.name,
     address: values.address,
     concern: values.concern,

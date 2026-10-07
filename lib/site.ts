@@ -1,10 +1,10 @@
 export const siteConfig = {
-  name: ' Paper ,Skin & Synapses',
-  shortName: 'Paper Skin',
-  legalName: ' Paper ,Skin & Synapses Hospital',
+  name: 'Paper, Skin & Synapses',
+  shortName: 'Paper, Skin',
+  legalName: 'Paper, Skin & Synapses Hospital',
   tagline: 'A calm, human place for psychological care',
   description:
-    ' Paper ,Skin & Synapses is a psychology and mental health hospital offering confidential counselling, psychological assessment, child and adolescent psychology, couples counselling, trauma support and wellness programmes with experienced specialists.',
+    'Paper, Skin & Synapses is a psychology and mental health hospital offering confidential counselling, psychological assessment, child and adolescent psychology, couples counselling, trauma support and wellness programmes with experienced specialists.',
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://paperskinpsychology.com').replace(/\/$/, ''),
   locale: 'en_IN',
   email: 'care@paperskinpsychology.com',
@@ -46,14 +46,15 @@ export const fullAddress = () => {
 export interface NavItem {
   label: string
   href: string
+  shortLabel?: string
 }
 
 export const mainNav: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/#about' },
   { label: 'Services', href: '/#services' },
-  { label: 'Psychological Concerns', href: '/#concerns' },
-  { label: 'Our Specialists', href: '/specialists' },
+  { label: 'Psychological Concerns', shortLabel: 'Concerns', href: '/#concerns' },
+  { label: 'Our Specialists', shortLabel: 'Specialists', href: '/specialists' },
   { label: 'FAQs', href: '/#faq' },
   { label: 'Contact', href: '/#book' },
 ]

@@ -6,7 +6,7 @@ import { SiteLogo } from './site-logo'
 
 export function SiteFooter() {
   return (
-    <footer className="relative mt-24 bg-shadow text-paper/85">
+    <footer className="relative mt-12 bg-shadow text-paper/85">
       <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] lg:py-20">
         <div className="grid content-start gap-5">
           <SiteLogo tone="light" />

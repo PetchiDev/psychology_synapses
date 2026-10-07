@@ -11,7 +11,7 @@ const reassurances = [
 
 export function SafeSpace() {
   return (
-    <section id="talk" aria-labelledby="talk-title" className="relative overflow-hidden py-20 lg:py-32">
+    <section id="talk" aria-labelledby="talk-title" className="relative overflow-hidden py-14 lg:py-20">
       <div className="container-editorial">
         <div className="relative grid gap-12 overflow-hidden rounded-[2.5rem] bg-shadow px-6 py-14 text-paper sm:px-12 lg:grid-cols-12 lg:gap-10 lg:px-16 lg:py-20">
           <div aria-hidden="true" className="absolute inset-0 bg-(image:--grain) opacity-30" />

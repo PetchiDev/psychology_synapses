@@ -5,7 +5,7 @@ import { SectionHeading } from './section-heading'
 
 export function Concerns() {
   return (
-    <section id="concerns" aria-labelledby="concerns-title" className="relative py-20 lg:py-32">
+    <section id="concerns" aria-labelledby="concerns-title" className="relative py-14 lg:py-20">
       <div aria-hidden="true" className="latte-surface torn-top absolute inset-x-0 top-0 bottom-0 -z-10 opacity-60" />
       <div className="container-editorial pt-6">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
@@ -16,13 +16,13 @@ export function Concerns() {
             title="Psychological Support for Different Life Challenges"
             className="lg:col-span-7"
           />
-          <p data-reveal className="text-[1.02rem] leading-relaxed text-shadow/85 lg:col-span-4 lg:col-start-9">
+          <p data-reveal className="text-[1.02rem] leading-relaxed text-shadow/85 lg:col-span-5 lg:col-start-8">
             These are some of the areas where our psychologists may be able to offer support. Everyone’s experience is different — your
             first consultation helps us understand what kind of help would suit you.
           </p>
         </div>
 
-        <ul data-reveal-group className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Areas of psychological support">
+        <ul data-reveal-group className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Areas of psychological support">
           {concerns.map((concern, index) => {
             const Icon = concern.icon
             const number = String(index + 1).padStart(2, '0')

@@ -5,9 +5,9 @@ import { SectionHeading } from './section-heading'
 
 export function AboutTrust() {
   return (
-    <section id="about" aria-labelledby="about-title" className="relative py-20 lg:py-32">
-      <div className="container-editorial grid gap-14 lg:grid-cols-12 lg:gap-10">
-        <div className="lg:col-span-5">
+    <section id="about" aria-labelledby="about-title" className="relative pt-10 pb-14 lg:pt-14 lg:pb-20">
+      <div className="container-editorial grid gap-8 lg:grid-cols-2 lg:items-end lg:gap-12">
+        <div>
           <SectionHeading
             id="about-title"
             index="01"
@@ -20,7 +20,7 @@ export function AboutTrust() {
             note="you are more than a diagnosis"
           />
         </div>
-        <div data-reveal className="grid content-end gap-5 text-[1.05rem] leading-relaxed text-shadow/85 lg:col-span-6 lg:col-start-7">
+        <div data-reveal className="grid max-w-2xl gap-4 text-[1.05rem] leading-relaxed text-shadow/85 lg:pb-2">
           <p>
             <strong className="font-semibold text-shadow">{siteConfig.name}</strong> is a psychology and mental health hospital in{' '}
             {siteConfig.address.locality}, {siteConfig.address.countryName}. Since {siteConfig.foundingYear}, our psychologists have
@@ -35,7 +35,7 @@ export function AboutTrust() {
         </div>
       </div>
 
-      <ul data-reveal-group className="container-editorial mt-16 grid gap-5 sm:grid-cols-2 lg:mt-20 lg:grid-cols-6" aria-label="Why people trust us">
+      <ul data-reveal-group className="container-editorial mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-6" aria-label="Why people trust us">
         {trustPoints.map((point, index) => {
           const Icon = point.icon
           return (

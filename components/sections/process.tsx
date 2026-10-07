@@ -3,7 +3,7 @@ import { SectionHeading } from './section-heading'
 
 export function Process() {
   return (
-    <section id="process" aria-labelledby="process-title" className="relative py-20 lg:py-32">
+    <section id="process" aria-labelledby="process-title" className="relative py-14 lg:py-20">
       <div className="container-editorial">
         <SectionHeading
           id="process-title"
@@ -15,7 +15,7 @@ export function Process() {
           className="mx-auto"
         />
 
-        <div data-timeline className="relative mt-16 lg:mt-24">
+        <div data-timeline className="relative mt-12 lg:mt-16">
           <div
             aria-hidden="true"
             className="absolute top-0 bottom-0 left-[1.4rem] w-px bg-coffee/20 lg:top-[1.4rem] lg:right-[10%] lg:bottom-auto lg:left-[10%] lg:h-px lg:w-auto"

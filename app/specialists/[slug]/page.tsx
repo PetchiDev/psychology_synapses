@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps<'/specialists/[slug
   if (!doctor) return { title: 'Specialist not found', robots: { index: false } }
   return pageMetadata({
     title: `${doctor.name}, ${doctor.title}`,
-    description: `${doctor.name} is a ${doctor.title.toLowerCase()} at  Paper ,Skin & Synapses with ${doctor.yearsOfExperience} years of experience in ${doctor.specialization.toLowerCase()}. ${doctor.intro}`,
+    description: `${doctor.name} is a ${doctor.title.toLowerCase()} at Paper, Skin & Synapses with ${doctor.yearsOfExperience} years of experience in ${doctor.specialization.toLowerCase()}. ${doctor.intro}`,
     path: `/specialists/${doctor.slug}`,
     type: 'profile',
   })
