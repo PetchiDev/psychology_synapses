@@ -43,9 +43,14 @@ export function DoctorCard({ doctor, headingLevel: Heading = 'h3', className }: 
 
       <div className="hover-panel flex flex-1 flex-col gap-3 p-6 sm:p-7 doctor-panel">
         <p className="type-eyebrow text-[0.68rem] leading-snug text-burgundy">{doctor.specialization}</p>
-        <p aria-hidden="true" className="hover-panel-only font-serif text-[1.35rem] leading-tight text-shadow">
-          {doctor.name}
-        </p>
+        <div aria-hidden="true" className="hover-panel-only">
+          <div className="flex items-center justify-between gap-4">
+            <p className="font-serif text-[1.35rem] leading-tight text-shadow">{doctor.name}</p>
+            <span className="relative size-14 shrink-0 overflow-hidden rounded-full bg-latte ring-2 ring-paper shadow-[0_0_0_3px_rgb(106_31_38/0.25),0_10px_20px_-12px_rgb(43_30_26/0.6)]">
+              <Image src={doctor.image.src} alt="" fill sizes="56px" className="scale-[1.6] object-cover object-[50%_42%]" />
+            </span>
+          </div>
+        </div>
         <p className="text-[0.95rem] leading-relaxed text-shadow/80">{doctor.intro}</p>
         <p className="flex items-center gap-2 text-sm text-coffee-deep">
           <Languages className="size-4 shrink-0 text-burgundy" aria-hidden="true" />
