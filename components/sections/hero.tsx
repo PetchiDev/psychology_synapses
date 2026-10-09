@@ -27,7 +27,7 @@ export function Hero() {
   const { scrollYProgress: progress } = useScroll({ target: root, offset: ['start start', 'end end'] })
 
   const sceneScale = useTransform(progress, [0, 0.8], [1, wide ? 1.32 : 1.18])
-  const sceneOpacity = useTransform(progress, [0.78, 0.96], [1, 0])
+  const sceneOpacity = useTransform(progress, [0.72, 0.86], [1, 0])
   const shelfLeft = useTransform(progress, [0, 0.6], ['0%', wide ? '-70%' : '-100%'])
   const shelfRight = useTransform(progress, [0, 0.6], ['0%', wide ? '70%' : '100%'])
   const windowScale = useTransform(progress, [0, 0.8], [1, 1.45])
@@ -39,7 +39,7 @@ export function Hero() {
   const roseOpacity = useTransform(progress, [0.04, 0.22], [1, 0])
   const roseScale = useTransform(progress, [0, 0.22], [1, 0.85])
   const hintOpacity = useTransform(progress, [0, 0.06], [1, 0])
-  const pageOpacity = useTransform(progress, [0.9, 1], [0, 1])
+  const pageOpacity = useTransform(progress, [0.76, 0.88], [0, 1])
 
   return (
     <section

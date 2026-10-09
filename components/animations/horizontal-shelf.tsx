@@ -30,9 +30,9 @@ export function HorizontalShelf({ intro, label, children }: HorizontalShelfProps
   const pin = motionAllowed && desktop
 
   const travel = useMotionValue(0)
-  const height = useTransform(() => `calc(100vh + ${travel.get()}px)`)
+  const height = useTransform(travel, (distance) => `calc(100vh + ${distance}px)`)
   const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
-  const x = useTransform(() => -travel.get() * clamp01((scrollYProgress.get() - 0.04) / 0.92))
+  const x = useTransform([scrollYProgress, travel], ([progress, distance]: number[]) => -distance * clamp01((progress - 0.04) / 0.92))
 
   useEffect(() => {
     const trackEl = track.current
@@ -44,40 +44,39 @@ export function HorizontalShelf({ intro, label, children }: HorizontalShelfProps
     return () => observer.disconnect()
   }, [pin, travel])
 
-  if (!pin) {
-    return (
-      <div ref={section}>
-        <div className="container-editorial">{intro}</div>
-        <div className="mt-10">
-          <SwipeRail
-            label={label}
-            tone="light"
-            hint="swipe the shelf"
-            base={<ShelfPlank />}
-            indicatorClassName="container-editorial mt-5"
-            className="flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto scroll-px-4 px-4 pt-2 pb-5 sm:gap-5 sm:scroll-px-7 sm:px-7"
-          >
-            {children}
-          </SwipeRail>
-        </div>
-      </div>
-    )
-  }
-
+  // One root element for both layouts: useScroll binds to the node it first sees, so swapping roots would freeze the shelf.
   return (
-    <motion.div ref={section} className="relative" style={{ height }}>
-      <div ref={viewport} className="sticky top-0 flex h-dvh flex-col justify-center overflow-hidden pt-16">
-        <motion.ul
-          ref={track}
-          aria-label={label}
-          style={{ x }}
-          className="flex w-max items-end gap-8 px-[max(2.5rem,calc((100vw-82rem)/2+2.5rem))] will-change-transform"
-        >
-          <li className="w-[30rem] shrink-0 self-center pr-6">{intro}</li>
-          {children}
-        </motion.ul>
-        <ShelfPlank />
-      </div>
+    <motion.div ref={section} className="relative" style={pin ? { height } : undefined}>
+      {pin ? (
+        <div ref={viewport} className="sticky top-0 flex h-dvh flex-col justify-center overflow-hidden pt-16">
+          <motion.ul
+            ref={track}
+            aria-label={label}
+            style={{ x }}
+            className="flex w-max items-end gap-8 px-[max(2.5rem,calc((100vw-82rem)/2+2.5rem))] will-change-transform"
+          >
+            <li className="w-[30rem] shrink-0 self-center pr-6">{intro}</li>
+            {children}
+          </motion.ul>
+          <ShelfPlank />
+        </div>
+      ) : (
+        <>
+          <div className="container-editorial">{intro}</div>
+          <div className="mt-10">
+            <SwipeRail
+              label={label}
+              tone="light"
+              hint="swipe the shelf"
+              base={<ShelfPlank />}
+              indicatorClassName="container-editorial mt-5"
+              className="flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto scroll-px-4 px-4 pt-2 pb-5 sm:gap-5 sm:scroll-px-7 sm:px-7"
+            >
+              {children}
+            </SwipeRail>
+          </div>
+        </>
+      )}
     </motion.div>
   )
 }

@@ -19,14 +19,14 @@ export function DoctorCard({ doctor, headingLevel: Heading = 'h3', className }: 
         className,
       )}
     >
-      <div className="relative m-2.5 aspect-[4/5] overflow-hidden rounded-[0.3rem] bg-latte ring-1 ring-gilt/40">
+      <div className="relative m-2.5 aspect-[6/5] overflow-hidden rounded-[0.3rem] bg-latte ring-1 ring-gilt/40 sm:aspect-[4/5]">
         <Image
           data-hover-media
           src={doctor.image.src}
           alt={doctor.image.alt}
           fill
           sizes="(min-width: 1280px) 26rem, (min-width: 640px) 45vw, 92vw"
-          className="object-cover sepia-[0.3]"
+          className="object-cover object-[50%_30%] sepia-[0.3] sm:object-center"
         />
         <span className="absolute top-3 left-3 rounded-full border border-gilt/40 bg-paper/90 px-3 py-1 text-xs font-semibold text-shadow backdrop-blur-sm">
           {doctor.yearsOfExperience} years’ experience

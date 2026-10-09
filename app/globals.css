@@ -746,6 +746,18 @@
   filter: drop-shadow(0 20px 22px rgb(42 26 16 / 0.22)) drop-shadow(0 0 16px rgb(248 217 143 / 0.4));
 }
 
+/* Each notebook page is a hard stop for touch flings, so a fast swipe turns one page, not three. */
+[data-page-snap] {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 1023px) and (pointer: coarse) {
+  html:has([data-page-snap]) {
+    scroll-snap-type: y proximity;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   [data-hover-lift]:hover {
     filter: drop-shadow(0 20px 22px rgb(42 26 16 / 0.22)) drop-shadow(0 0 16px rgb(248 217 143 / 0.4));

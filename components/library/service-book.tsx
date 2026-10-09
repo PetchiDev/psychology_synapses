@@ -1,10 +1,12 @@
 'use client'
 
-import { useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Image from 'next/image'
 import {
+  animate,
   easeInOut,
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useScroll,
   useSpring,
@@ -53,7 +55,7 @@ function useBookScroll(total: number) {
   const [page, setPage] = useState(0)
   const turns = total - 1
 
-  useMotionValueEvent(progress, 'change', (value) => {
+  useMotionValueEvent(scrollYProgress, 'change', (value) => {
     const turned = Array.from({ length: turns }, (_, leaf) => turnRange(leaf, turns)).filter(
       ([start, end]) => value > (start + end) / 2,
     ).length
@@ -162,12 +164,35 @@ function PageStack({ side }: { side: 'left' | 'right' }) {
 
 /* Phones and tablets: a single page, turned upward like a notebook. */
 
+const NOTEBOOK_TURN_SVH = 52
+
 function Notebook({ services, chapter }: ServiceBookProps) {
   const total = services.length
-  const { ref, progress, page, turns } = useBookScroll(total)
+  const { ref, page, turns } = useBookScroll(total)
+  const turn = useMotionValue(0)
+
+  useEffect(() => {
+    const distance = Math.abs(page - turn.get())
+    const controls = animate(turn, page, { duration: Math.max(0.45, 0.75 * distance), ease: 'linear' })
+    return () => controls.stop()
+  }, [page, turn])
+
+  const restingPoints = Array.from({ length: total }, (_, index) => {
+    if (index === 0) return 0
+    if (index === turns) return 1
+    return (turnRange(index - 1, turns)[1] + turnRange(index, turns)[0]) / 2
+  })
 
   return (
-    <div ref={ref} aria-hidden="true" className="relative" style={{ height: `calc(100svh + ${turns * 52}svh)` }}>
+    <div ref={ref} aria-hidden="true" className="relative" style={{ height: `calc(100svh + ${turns * NOTEBOOK_TURN_SVH}svh)` }}>
+      {restingPoints.map((point, index) => (
+        <span
+          key={index}
+          data-page-snap
+          className="absolute inset-x-0 h-px"
+          style={{ top: `calc(${point} * ${turns * NOTEBOOK_TURN_SVH}svh + 6rem)` }}
+        />
+      ))}
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center gap-5 pt-24 pb-20 sm:pb-8">
         <div
           className="relative w-[min(100%,25rem)] [container-type:inline-size] [perspective:1600px]"
@@ -179,7 +204,7 @@ function Notebook({ services, chapter }: ServiceBookProps) {
             <NotebookPage service={services[turns]} index={turns} total={total} chapter={chapter} />
           </div>
           {services.slice(0, turns).map((service, leaf) => (
-            <NotebookLeaf key={service.slug} leaf={leaf} turns={turns} progress={progress}>
+            <NotebookLeaf key={service.slug} leaf={leaf} turn={turn}>
               <NotebookPage service={service} index={leaf} total={total} chapter={chapter} />
             </NotebookLeaf>
           ))}
@@ -195,9 +220,9 @@ function Notebook({ services, chapter }: ServiceBookProps) {
   )
 }
 
-function NotebookLeaf({ leaf, turns, progress, children }: Omit<LeafProps, 'front' | 'back'> & { children: ReactNode }) {
-  const angle = useTransform(progress, turnRange(leaf, turns), [0, 172], { ease: easeInOut })
-  const zIndex = useTransform(angle, (value) => (value < 0.5 ? 100 + turns - leaf : 300))
+function NotebookLeaf({ leaf, turn, children }: { leaf: number; turn: MotionValue<number>; children: ReactNode }) {
+  const angle = useTransform(turn, [leaf, leaf + 1], [0, 172], { ease: easeInOut })
+  const zIndex = useTransform(angle, (value) => (value < 0.5 ? 100 - leaf : 300))
   const opacity = useTransform(angle, [120, 172], [1, 0])
   const visibility = useTransform(angle, (value) => (value > 171.5 ? 'hidden' : 'visible'))
   const shade = useTransform(angle, [0, 90], [0, 0.45])

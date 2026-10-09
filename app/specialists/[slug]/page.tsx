@@ -79,10 +79,10 @@ async function SpecialistProfile({ params }: { params: Promise<{ slug: string }>
             ]}
           />
 
-          <header className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-12">
-            <div className="relative lg:col-span-5">
-              <div aria-hidden="true" className="latte-surface organic-edge absolute inset-x-4 -top-4 bottom-4 rotate-2" />
-              <div data-hero-item className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-coffee/15 bg-latte shadow-lifted">
+          <header className="mt-8 grid gap-14 sm:mt-10 lg:grid-cols-12 lg:gap-12">
+            <div className="relative mx-auto w-full max-w-[19rem] sm:max-w-sm lg:col-span-5 lg:max-w-none">
+              <div aria-hidden="true" className="latte-surface organic-edge absolute inset-x-4 -top-3 bottom-4 rotate-2" />
+              <div data-hero-item className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-coffee/15 bg-latte shadow-lifted sm:rounded-[2rem]">
                 <Image
                   src={doctor.image.src}
                   alt={doctor.image.alt}
@@ -92,7 +92,7 @@ async function SpecialistProfile({ params }: { params: Promise<{ slug: string }>
                   className="object-cover"
                 />
               </div>
-              <p data-hero-item aria-hidden="true" className="type-hand absolute -bottom-6 left-6 -rotate-3 text-3xl text-burgundy">
+              <p data-hero-item aria-hidden="true" className="type-hand absolute -bottom-9 left-4 z-10 -rotate-3 text-[1.7rem] text-burgundy sm:-bottom-7 sm:left-6 sm:text-3xl">
                 hello, I’m {firstName}
               </p>
             </div>
@@ -133,7 +133,7 @@ async function SpecialistProfile({ params }: { params: Promise<{ slug: string }>
             </div>
           </header>
 
-          <div className="mt-24 grid gap-14 lg:grid-cols-12 lg:gap-12">
+          <div className="mt-16 grid gap-14 sm:mt-24 lg:grid-cols-12 lg:gap-12">
             <div className="grid content-start gap-14 lg:col-span-7">
               <section data-reveal aria-labelledby="bio-title" className="grid gap-5">
                 <h2 id="bio-title" className="type-h3 text-[2rem]">
