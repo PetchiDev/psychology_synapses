@@ -6,7 +6,7 @@ import { SectionHeading } from './section-heading'
 
 export function AboutTrust() {
   return (
-    <section aria-labelledby="about-title" className="relative z-40 pb-14 motion-safe:-mt-[100vh] lg:pb-20">
+    <section aria-labelledby="about-title" className="relative z-[35] pb-14 motion-safe:-mt-[100vh] lg:pb-20">
       <span id="about" aria-hidden="true" className="absolute top-24 left-0" />
       <AfterHero>
         <div className="container-editorial grid gap-10 pt-24 lg:grid-cols-12 lg:items-center lg:gap-12 lg:pt-28">
