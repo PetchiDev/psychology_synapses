@@ -742,9 +742,14 @@
   transition: filter 0.9s var(--ease-paper);
 }
 
-[data-hover-lift]:hover,
 [data-hover-lift]:focus-within {
   filter: drop-shadow(0 20px 22px rgb(42 26 16 / 0.22)) drop-shadow(0 0 16px rgb(248 217 143 / 0.4));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-hover-lift]:hover {
+    filter: drop-shadow(0 20px 22px rgb(42 26 16 / 0.22)) drop-shadow(0 0 16px rgb(248 217 143 / 0.4));
+  }
 }
 
 svg .ambient-twinkle {
@@ -765,6 +770,16 @@ svg .ambient-twinkle {
 .page-flutter-left {
   transform-box: fill-box;
   transform-origin: 100% 50%;
+}
+
+.swipe-rail {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.swipe-rail::-webkit-scrollbar {
+  display: none;
 }
 
 .scroll-tint {
@@ -813,6 +828,17 @@ svg .ambient-twinkle {
 
   .glass-shine {
     animation: glass-shine 7s ease-in-out infinite;
+  }
+
+  .swipe-nudge {
+    animation: swipe-nudge 2.2s ease-in-out infinite;
+  }
+
+  @supports (animation-timeline: view()) {
+    .swipe-rail .rail-card {
+      animation: rail-focus linear both;
+      animation-timeline: view(inline);
+    }
   }
 
   @supports (animation-timeline: scroll()) {
@@ -961,6 +987,35 @@ svg .ambient-twinkle {
     translate: 14px 70px;
     rotate: 140deg;
     opacity: 0;
+  }
+}
+
+@keyframes swipe-nudge {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 5px 0;
+  }
+}
+
+@keyframes rail-focus {
+  0% {
+    scale: 0.9;
+    opacity: 0.55;
+    rotate: 2deg;
+  }
+  30%,
+  70% {
+    scale: 1;
+    opacity: 1;
+    rotate: 0deg;
+  }
+  100% {
+    scale: 0.9;
+    opacity: 0.55;
+    rotate: -2deg;
   }
 }
 

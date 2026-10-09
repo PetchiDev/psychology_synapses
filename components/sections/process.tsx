@@ -8,7 +8,7 @@ export function Process() {
       <div className="container-editorial">
         <SectionHeading
           id="process-title"
-          index="06"
+          index="05"
           eyebrow="Your first steps"
           title="What to *Expect*"
           description="Reaching out is often the hardest part. Here is exactly what happens next, so there are no surprises."

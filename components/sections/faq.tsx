@@ -10,7 +10,7 @@ export function Faq() {
         <div className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
           <SectionHeading
             id="faq-title"
-            index="08"
+            index="07"
             eyebrow="Questions"
             title="Frequently Asked *Questions*"
             description={

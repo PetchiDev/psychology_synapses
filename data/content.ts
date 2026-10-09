@@ -98,17 +98,86 @@ export interface Service {
   summary: string
   forWhom: string
   icon: LucideIcon
+  /** A short storybook caption shown beneath the illustration. */
+  caption: string
+  image: { src: string; alt: string }
 }
 
+const serviceImage = (slug: string, alt: string) => ({ src: `/images/services/${slug}.jpg`, alt })
+
 export const services: Service[] = [
-  { slug: 'individual-counselling', title: 'Individual Counselling', summary: 'One-to-one sessions to talk through what you are facing and work towards change at your own pace.', forWhom: 'Adults and young adults', icon: MessageCircle },
-  { slug: 'psychological-assessment', title: 'Psychological Assessment', summary: 'Structured assessments that clarify emotional, cognitive and behavioural patterns and guide next steps.', forWhom: 'Children, teens and adults', icon: ClipboardList },
-  { slug: 'child-psychology', title: 'Child Psychology', summary: 'Play-based and conversational support for children, with practical guidance for parents.', forWhom: 'Ages 4 – 17 and families', icon: Baby },
-  { slug: 'couples-counselling', title: 'Couples & Relationship Counselling', summary: 'Balanced, non-judgemental sessions to improve communication and work through conflict.', forWhom: 'Couples and individuals', icon: HeartHandshake },
-  { slug: 'stress-management', title: 'Stress Management', summary: 'Practical, skills-based sessions to understand stress and build sustainable coping routines.', forWhom: 'Students and professionals', icon: Waves },
-  { slug: 'behavioural-therapy', title: 'Behavioural Therapy', summary: 'Evidence-based therapies such as CBT and ERP that focus on thoughts, habits and actions.', forWhom: 'Adolescents and adults', icon: BrainCircuit },
-  { slug: 'trauma-support', title: 'Trauma Support', summary: 'Trauma-informed therapy that prioritises safety, stability and gentle processing.', forWhom: 'Adults and adolescents', icon: HandHeart },
-  { slug: 'wellness-programmes', title: 'Mental Wellness Programmes', summary: 'Workshops and group programmes on stress, sleep and resilience for schools and workplaces.', forWhom: 'Groups and organisations', icon: Users },
+  {
+    slug: 'individual-counselling',
+    title: 'Individual Counselling',
+    summary: 'One-to-one sessions to talk through what you are facing and work towards change at your own pace.',
+    forWhom: 'Adults and young adults',
+    icon: MessageCircle,
+    caption: 'two chairs, a warm cup, and all the time you need',
+    image: serviceImage('individual-counselling', 'Engraved illustration of two armchairs facing each other beside a candle and a cup of tea in a quiet library'),
+  },
+  {
+    slug: 'psychological-assessment',
+    title: 'Psychological Assessment',
+    summary: 'Structured assessments that clarify emotional, cognitive and behavioural patterns and guide next steps.',
+    forWhom: 'Children, teens and adults',
+    icon: ClipboardList,
+    caption: 'careful notes, gentle questions, a clearer picture',
+    image: serviceImage('psychological-assessment', 'Engraved illustration of an open notebook, fountain pen, magnifying glass and hourglass on a candlelit desk'),
+  },
+  {
+    slug: 'child-psychology',
+    title: 'Child Psychology',
+    summary: 'Play-based and conversational support for children, with practical guidance for parents.',
+    forWhom: 'Ages 4 – 17 and families',
+    icon: Baby,
+    caption: 'blocks, stories and a bear to hold on to',
+    image: serviceImage('child-psychology', 'Engraved illustration of a young child hugging a teddy bear beside building blocks, a toy boat and a picture book'),
+  },
+  {
+    slug: 'couples-counselling',
+    title: 'Couples & Relationship Counselling',
+    summary: 'Balanced, non-judgemental sessions to improve communication and work through conflict.',
+    forWhom: 'Couples and individuals',
+    icon: HeartHandshake,
+    caption: 'two cups, one table, and room to listen',
+    image: serviceImage('couples-counselling', 'Engraved illustration of two teacups with intertwining steam and a single rose on a small table'),
+  },
+  {
+    slug: 'stress-management',
+    title: 'Stress Management',
+    summary: 'Practical, skills-based sessions to understand stress and build sustainable coping routines.',
+    forWhom: 'Students and professionals',
+    icon: Waves,
+    caption: 'still water, slow breath, a quieter morning',
+    image: serviceImage('stress-management', 'Engraved illustration of a calm lake at dawn with a rowing boat by a jetty under a willow tree'),
+  },
+  {
+    slug: 'behavioural-therapy',
+    title: 'Behavioural Therapy',
+    summary: 'Evidence-based therapies such as CBT and ERP that focus on thoughts, habits and actions.',
+    forWhom: 'Adolescents and adults',
+    icon: BrainCircuit,
+    caption: 'one stepping stone, then the next',
+    image: serviceImage('behavioural-therapy', 'Engraved illustration of a stepping-stone garden path leading through seedlings to an open rose-covered gate'),
+  },
+  {
+    slug: 'trauma-support',
+    title: 'Trauma Support',
+    summary: 'Trauma-informed therapy that prioritises safety, stability and gentle processing.',
+    forWhom: 'Adults and adolescents',
+    icon: HandHeart,
+    caption: 'a steady light on a calm shore',
+    image: serviceImage('trauma-support', 'Engraved illustration of a stone lighthouse casting a warm beam over a calm twilight sea'),
+  },
+  {
+    slug: 'wellness-programmes',
+    title: 'Mental Wellness Programmes',
+    summary: 'Workshops and group programmes on stress, sleep and resilience for schools and workplaces.',
+    forWhom: 'Groups and organisations',
+    icon: Users,
+    caption: 'many voices, gathered beneath one tree',
+    image: serviceImage('wellness-programmes', 'Engraved illustration of people of different ages sitting in a circle beneath an oak tree hung with lanterns'),
+  },
 ]
 
 export interface ProcessStep {

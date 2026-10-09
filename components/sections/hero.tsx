@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from 'motion/react'
 import { ArrowDown, ArrowRight, ChevronsDown } from 'lucide-react'
 import { heroHighlights } from '@/data/content'
 import { siteConfig } from '@/lib/site'
-import { useMotionAllowed } from '@/lib/use-motion-allowed'
+import { useMediaQuery, useMotionAllowed } from '@/lib/use-motion-allowed'
 import { FairyParticles } from '@/components/animations/fairy-particles'
 import { ArchedWindow } from '@/components/library/arched-window'
 import { Bookshelf } from '@/components/library/bookshelf'
@@ -23,17 +23,18 @@ const stagger = (index: number) => ({ '--i': index }) as CSSProperties
 export function Hero() {
   const root = useRef<HTMLElement>(null)
   const animate = useMotionAllowed()
+  const wide = useMediaQuery('(min-width: 768px)', true)
   const { scrollYProgress: progress } = useScroll({ target: root, offset: ['start start', 'end end'] })
 
-  const sceneScale = useTransform(progress, [0, 0.8], [1, 1.32])
+  const sceneScale = useTransform(progress, [0, 0.8], [1, wide ? 1.32 : 1.18])
   const sceneOpacity = useTransform(progress, [0.78, 0.96], [1, 0])
-  const shelfLeft = useTransform(progress, [0, 0.6], ['0%', '-70%'])
-  const shelfRight = useTransform(progress, [0, 0.6], ['0%', '70%'])
+  const shelfLeft = useTransform(progress, [0, 0.6], ['0%', wide ? '-70%' : '-100%'])
+  const shelfRight = useTransform(progress, [0, 0.6], ['0%', wide ? '70%' : '100%'])
   const windowScale = useTransform(progress, [0, 0.8], [1, 1.45])
-  const nearBooks = useTransform(progress, [0, 0.7], [0, -260])
-  const farBooks = useTransform(progress, [0, 0.7], [0, -120])
+  const nearBooks = useTransform(progress, [0, 0.7], [0, wide ? -260 : -160])
+  const farBooks = useTransform(progress, [0, 0.7], [0, wide ? -120 : -70])
   const textOpacity = useTransform(progress, [0, 0.2], [1, 0])
-  const textY = useTransform(progress, [0, 0.2], [0, -70])
+  const textY = useTransform(progress, [0, 0.2], [0, wide ? -70 : -40])
   const textVisibility = useTransform(progress, (value) => (value > 0.21 ? 'hidden' : 'visible'))
   const roseOpacity = useTransform(progress, [0.04, 0.22], [1, 0])
   const roseScale = useTransform(progress, [0, 0.22], [1, 0.85])
@@ -44,9 +45,9 @@ export function Hero() {
     <section
       ref={root}
       aria-labelledby="hero-title"
-      className="relative bg-mahogany text-paper motion-safe:h-[260vh]"
+      className="relative bg-mahogany text-paper motion-safe:h-[210vh] motion-safe:md:h-[260vh]"
     >
-      <div className="relative h-dvh min-h-[42rem] overflow-hidden motion-safe:sticky motion-safe:top-0">
+      <div className="relative h-svh min-h-[38rem] overflow-hidden motion-safe:sticky motion-safe:top-0 md:h-dvh md:min-h-[42rem]">
         <motion.div
           style={animate ? { scale: sceneScale, opacity: sceneOpacity } : undefined}
           className="absolute inset-0 will-change-transform"
@@ -99,15 +100,17 @@ export function Hero() {
 
         <motion.div
           style={animate ? { opacity: textOpacity, y: textY, visibility: textVisibility } : undefined}
-          className="container-editorial relative z-10 grid h-full items-center pt-28 pb-20 lg:grid-cols-12 lg:gap-8"
+          className="container-editorial relative z-10 grid h-full items-center pt-24 pb-16 sm:pt-28 sm:pb-20 lg:grid-cols-12 lg:gap-8"
         >
           <div className="lg:col-span-7">
             <p data-hero-item style={stagger(0)} className="type-eyebrow flex items-center gap-3 text-gold">
-              <span aria-hidden="true" className="h-px w-10 bg-gold/60" />
-              Psychology &amp; Mental Health Hospital · {siteConfig.address.locality}
+              <span aria-hidden="true" className="h-px w-6 shrink-0 bg-gold/60 sm:w-10" />
+              <span>
+                <span className="hidden sm:inline">Psychology &amp; </span>Mental Health Hospital · {siteConfig.address.locality}
+              </span>
             </p>
 
-            <h1 id="hero-title" className="type-display mt-5 max-w-[15ch] text-[clamp(2.6rem,1.4rem+4vw,5.6rem)] text-paper">
+            <h1 id="hero-title" className="type-display mt-4 max-w-[15ch] text-[clamp(2.5rem,1.4rem+4vw,5.6rem)] text-paper sm:mt-5">
               <span data-line style={line(0)}>
                 <span className="gilt-text gilt-shift">A quieter mind</span>
               </span>
@@ -117,15 +120,20 @@ export function Hero() {
               </span>
             </h1>
 
-            <Ornament className="mt-5 text-gold" />
+            <Ornament className="mt-4 text-gold sm:mt-5" />
 
-            <p data-hero-item style={stagger(5)} className="type-lead mt-5 max-w-xl text-paper/85">
-              {siteConfig.name} offers confidential, evidence-based psychological care for anxiety, stress, low mood, relationships,
-              trauma and more, for adults, children, couples and families. Unhurried conversations with experienced psychologists, in
-              person or online.
+            <p data-hero-item style={stagger(5)} className="type-lead mt-4 max-w-xl text-paper/85 sm:mt-5">
+              <span className="sm:hidden">
+                Confidential, unhurried psychological care for adults, children, couples and families, in person or online.
+              </span>
+              <span className="hidden sm:inline">
+                {siteConfig.name} offers confidential, evidence-based psychological care for anxiety, stress, low mood, relationships,
+                trauma and more, for adults, children, couples and families. Unhurried conversations with experienced psychologists, in
+                person or online.
+              </span>
             </p>
 
-            <div data-hero-item style={stagger(6)} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div data-hero-item style={stagger(6)} className="mt-7 grid gap-3 sm:mt-8 sm:flex sm:items-center">
               <Button asChild size="lg">
                 <Link href="#book">
                   Book an Appointment
@@ -140,11 +148,13 @@ export function Hero() {
               </Button>
             </div>
 
-            <dl data-hero-item style={stagger(7)} className="mt-9 grid max-w-lg grid-cols-3 gap-4 border-t border-gold/25 pt-5">
+            <dl data-hero-item style={stagger(7)} className="mt-7 grid max-w-lg grid-cols-3 gap-3 border-t border-gold/25 pt-4 sm:mt-9 sm:gap-4 sm:pt-5">
               {heroHighlights.map((item) => (
-                <div key={item.label} className="grid gap-1">
-                  <dt className="order-2 font-ui text-[0.65rem] tracking-[0.18em] text-gold/80 uppercase">{item.label}</dt>
-                  <dd className="order-1 font-serif text-3xl text-paper sm:text-4xl">{item.value}</dd>
+                <div key={item.label} className="grid content-start gap-1">
+                  <dt className="order-2 font-ui text-[0.6rem] leading-snug tracking-[0.14em] text-gold/80 uppercase sm:text-[0.65rem] sm:tracking-[0.18em]">
+                    {item.label}
+                  </dt>
+                  <dd className="order-1 font-serif text-[1.75rem] leading-none text-paper sm:text-4xl">{item.value}</dd>
                 </div>
               ))}
             </dl>
@@ -162,15 +172,16 @@ export function Hero() {
         <motion.p
           aria-hidden="true"
           style={animate ? { opacity: hintOpacity } : undefined}
-          className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 font-ui lg:left-auto lg:right-[22%] lg:translate-x-0 text-[0.62rem] tracking-[0.3em] text-gold/80 uppercase motion-reduce:hidden"
+          className="absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1 font-ui text-[0.62rem] tracking-[0.3em] whitespace-nowrap text-gold/80 uppercase motion-reduce:hidden [@media(min-height:46rem)]:flex lg:right-[22%] lg:bottom-6 lg:left-auto lg:translate-x-0"
         >
-          Scroll to open the storybook
+          <span className="sm:hidden">Scroll to open</span>
+          <span className="hidden sm:inline">Scroll to open the storybook</span>
           <ChevronsDown className="hint-bob size-4" />
         </motion.p>
 
         {animate ? (
           <>
-            <Storybook progress={progress} />
+            <Storybook key={wide ? 'spread' : 'flip'} progress={progress} layout={wide ? 'spread' : 'flip'} />
             <motion.div
               aria-hidden="true"
               style={{ opacity: pageOpacity }}

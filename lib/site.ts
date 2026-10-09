@@ -53,7 +53,6 @@ export const mainNav: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/#about' },
   { label: 'Services', href: '/#services' },
-  { label: 'Psychological Concerns', shortLabel: 'Concerns', href: '/#concerns' },
   { label: 'Our Specialists', shortLabel: 'Specialists', href: '/specialists' },
   { label: 'FAQs', href: '/#faq' },
   { label: 'Contact', href: '/#book' },

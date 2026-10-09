@@ -49,7 +49,7 @@ export function SafeSpace() {
 
           <div className="relative lg:col-span-7">
             <p data-reveal className="type-eyebrow flex items-center gap-3 text-gold">
-              <span className="font-serif text-lg tracking-normal text-paper normal-case italic">Chapter V</span>
+              <span className="font-serif text-lg tracking-normal text-paper normal-case italic">Chapter IV</span>
               <span aria-hidden="true" className="h-px w-10 bg-gold/60" />
               How we help
             </p>

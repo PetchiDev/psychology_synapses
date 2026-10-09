@@ -6,7 +6,6 @@ import { faqSchema, graph } from '@/lib/seo/schemas'
 import { MotionController } from '@/components/animations/motion-controller'
 import { AboutTrust } from '@/components/sections/about-trust'
 import { BookingSection } from '@/components/sections/booking-section'
-import { Concerns } from '@/components/sections/concerns'
 import { Faq } from '@/components/sections/faq'
 import { FinalCta } from '@/components/sections/final-cta'
 import { Hero } from '@/components/sections/hero'
@@ -22,7 +21,6 @@ export default function HomePage() {
     <>
       <Hero />
       <AboutTrust />
-      <Concerns />
       <Services />
       <Specialists />
       <SafeSpace />

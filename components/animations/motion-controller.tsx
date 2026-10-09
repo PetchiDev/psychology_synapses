@@ -4,8 +4,20 @@ import { gsap, ScrollTrigger, useGSAP } from './gsap'
 
 const toArray = (selector: string) => gsap.utils.toArray<HTMLElement>(selector)
 
-const REVEAL_FROM = { autoAlpha: 0, y: 40, filter: 'blur(8px)' }
-const REVEAL_TO = { autoAlpha: 1, y: 0, filter: 'blur(0px)', clearProps: 'filter' }
+const REVEAL = {
+  desktop: {
+    from: { autoAlpha: 0, y: 40, filter: 'blur(8px)' },
+    to: { autoAlpha: 1, y: 0, filter: 'blur(0px)', clearProps: 'filter', duration: 1.4 },
+    start: 'top 80%',
+    stagger: 0.13,
+  },
+  mobile: {
+    from: { autoAlpha: 0, y: 26, rotate: -0.8, transformOrigin: '0% 100%' },
+    to: { autoAlpha: 1, y: 0, rotate: 0, clearProps: 'rotate', duration: 0.95 },
+    start: 'top 90%',
+    stagger: 0.09,
+  },
+}
 
 function bindHover(el: HTMLElement) {
   const media = el.querySelector<HTMLElement>('[data-hover-media]')
@@ -33,25 +45,27 @@ export function MotionController() {
   useGSAP(() => {
     const mm = gsap.matchMedia()
 
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    mm.add({ motion: '(prefers-reduced-motion: no-preference)', mobile: '(max-width: 767px)' }, (context) => {
+      const { motion, mobile } = context.conditions as { motion: boolean; mobile: boolean }
+      if (!motion) return
+      const reveal = mobile ? REVEAL.mobile : REVEAL.desktop
+
       toArray('[data-reveal]').forEach((el) => {
-        gsap.fromTo(el, REVEAL_FROM, {
-          ...REVEAL_TO,
-          duration: 1.4,
+        gsap.fromTo(el, reveal.from, {
+          ...reveal.to,
           ease: 'power2.out',
-          scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+          scrollTrigger: { trigger: el, start: reveal.start, once: true },
         })
       })
 
       toArray('[data-reveal-group]').forEach((group) => {
         const items = group.querySelectorAll<HTMLElement>('[data-reveal-item]')
         if (!items.length) return
-        gsap.fromTo(items, REVEAL_FROM, {
-          ...REVEAL_TO,
-          duration: 1.3,
+        gsap.fromTo(items, reveal.from, {
+          ...reveal.to,
           ease: 'power2.out',
-          stagger: 0.13,
-          scrollTrigger: { trigger: group, start: 'top 80%', once: true },
+          stagger: reveal.stagger,
+          scrollTrigger: { trigger: group, start: reveal.start, once: true },
         })
       })
 
@@ -83,7 +97,8 @@ export function MotionController() {
         ScrollTrigger.create({ trigger: el, start: 'top 82%', once: true, onEnter: () => el.classList.add('is-painted') })
       })
 
-      const unbind = toArray('[data-hover-lift]').map(bindHover)
+      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+      const unbind = finePointer ? toArray('[data-hover-lift]').map(bindHover) : []
       return () => {
         unbind.forEach((fn) => fn())
         highlights.forEach((el) => el.classList.remove('will-paint', 'is-painted'))

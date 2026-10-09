@@ -16,7 +16,7 @@ export function BookingSection() {
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
           <SectionHeading
             id="book-title"
-            index="07"
+            index="06"
             eyebrow="Appointments"
             title="Book a *Consultation*"
             description="Choose a date that suits you, tell us a little about yourself, and we’ll call within one working day to confirm a time."

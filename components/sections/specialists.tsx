@@ -21,14 +21,14 @@ export function Specialists() {
           <div className="grid gap-8">
             <SectionHeading
               id="specialists-title"
-              index="04"
+              index="03"
               eyebrow="Our team"
               title="Meet Our *Specialists*"
               tone="light"
               description="Licensed psychologists with deep experience across adult, child, couples and trauma care. Browse the shelf: choose someone specific, or let us match you."
             />
             <div data-reveal className="flex items-end gap-6">
-              <Button asChild variant="outline" size="lg" className="border-gold/50 text-paper hover:border-paper hover:bg-paper hover:text-shadow">
+              <Button asChild variant="outline" size="lg" className="w-full border-gold/50 text-paper hover:border-paper hover:bg-paper hover:text-shadow sm:w-auto">
                 <Link href="/specialists">
                   View all specialists
                   <ArrowRight aria-hidden="true" />
@@ -40,12 +40,12 @@ export function Specialists() {
         }
       >
         {doctors.map((doctor) => (
-          <li key={doctor.slug} className="w-[78vw] max-w-[20rem] shrink-0 snap-start lg:w-[19rem]">
-            <DoctorCard doctor={doctor} />
+          <li key={doctor.slug} className="w-[80vw] max-w-[20rem] shrink-0 snap-center sm:snap-start lg:w-[19rem]">
+            <DoctorCard doctor={doctor} className="rail-card" />
           </li>
         ))}
-        <li className="w-[78vw] max-w-[20rem] shrink-0 snap-start self-stretch lg:w-[19rem]">
-          <div className="leather-surface flex h-full min-h-[22rem] flex-col justify-end gap-4 rounded-[0.5rem] p-8">
+        <li className="w-[80vw] max-w-[20rem] shrink-0 snap-center self-stretch sm:snap-start lg:w-[19rem]">
+          <div className="rail-card leather-surface flex h-full min-h-[22rem] flex-col justify-end gap-4 rounded-[0.5rem] p-8">
             <p className="type-hand text-2xl text-gold">not sure who to choose?</p>
             <p className="font-serif text-[1.6rem] leading-tight text-paper">We’ll gently match you with the right person.</p>
             <Link href="#book" className="inline-flex w-fit items-center gap-2 font-ui text-[0.72rem] tracking-[0.16em] text-gold uppercase hover:text-paper">
