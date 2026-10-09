@@ -4,20 +4,17 @@ import { gsap, ScrollTrigger, useGSAP } from './gsap'
 
 const toArray = (selector: string) => gsap.utils.toArray<HTMLElement>(selector)
 
-const SHADOW_REST = '0px 1px 0px 0px rgba(43,30,26,0.04), 0px 12px 30px -18px rgba(43,30,26,0.35), 0px 0px 0px 0px rgba(243,201,168,0)'
-const SHADOW_LIFT = '0px 2px 0px 0px rgba(43,30,26,0.04), 0px 24px 44px -26px rgba(43,30,26,0.4), 0px 0px 36px 2px rgba(243,201,168,0.45)'
-
 const REVEAL_FROM = { autoAlpha: 0, y: 40, filter: 'blur(8px)' }
 const REVEAL_TO = { autoAlpha: 1, y: 0, filter: 'blur(0px)', clearProps: 'filter' }
 
 function bindHover(el: HTMLElement) {
   const media = el.querySelector<HTMLElement>('[data-hover-media]')
   const enter = () => {
-    gsap.to(el, { y: -5, boxShadow: SHADOW_LIFT, duration: 0.9, ease: 'power2.out', overwrite: 'auto' })
+    gsap.to(el, { y: -5, duration: 0.9, ease: 'power2.out', overwrite: 'auto' })
     if (media) gsap.to(media, { scale: 1.03, duration: 1.4, ease: 'power2.out', overwrite: 'auto' })
   }
   const leave = () => {
-    gsap.to(el, { y: 0, boxShadow: SHADOW_REST, duration: 1.1, ease: 'power2.out', overwrite: 'auto' })
+    gsap.to(el, { y: 0, duration: 1.1, ease: 'power2.out', overwrite: 'auto' })
     if (media) gsap.to(media, { scale: 1, duration: 1.4, ease: 'power2.out', overwrite: 'auto' })
   }
   el.addEventListener('pointerenter', enter)
@@ -80,8 +77,17 @@ export function MotionController() {
         )
       })
 
+      const highlights = toArray('[data-highlight]')
+      highlights.forEach((el) => {
+        el.classList.add('will-paint')
+        ScrollTrigger.create({ trigger: el, start: 'top 82%', once: true, onEnter: () => el.classList.add('is-painted') })
+      })
+
       const unbind = toArray('[data-hover-lift]').map(bindHover)
-      return () => unbind.forEach((fn) => fn())
+      return () => {
+        unbind.forEach((fn) => fn())
+        highlights.forEach((el) => el.classList.remove('will-paint', 'is-painted'))
+      }
     })
 
     const refresh = () => ScrollTrigger.refresh()

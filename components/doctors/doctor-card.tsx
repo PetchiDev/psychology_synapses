@@ -15,20 +15,20 @@ export function DoctorCard({ doctor, headingLevel: Heading = 'h3', className }: 
     <article
       data-hover-lift
       className={cn(
-        'group paper-surface relative isolate flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-coffee/15',
+        'group paper-surface relative isolate flex h-full flex-col overflow-hidden rounded-[0.5rem] border border-gilt/40',
         className,
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-latte">
+      <div className="relative m-2.5 aspect-[4/5] overflow-hidden rounded-[0.3rem] bg-latte ring-1 ring-gilt/40">
         <Image
           data-hover-media
           src={doctor.image.src}
           alt={doctor.image.alt}
           fill
           sizes="(min-width: 1280px) 26rem, (min-width: 640px) 45vw, 92vw"
-          className="object-cover"
+          className="object-cover sepia-[0.3]"
         />
-        <span className="absolute top-4 left-4 rounded-full bg-paper/90 px-3 py-1 text-xs font-semibold text-shadow backdrop-blur-sm">
+        <span className="absolute top-3 left-3 rounded-full border border-gilt/40 bg-paper/90 px-3 py-1 text-xs font-semibold text-shadow backdrop-blur-sm">
           {doctor.yearsOfExperience} years’ experience
         </span>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-shadow/90 via-shadow/55 to-transparent px-6 pt-20 pb-6">
@@ -66,7 +66,7 @@ export function DoctorCard({ doctor, headingLevel: Heading = 'h3', className }: 
       <Link
         href={`/specialists/${doctor.slug}`}
         aria-label={`View profile of ${doctor.name}, ${doctor.title}`}
-        className="absolute inset-0 z-20 rounded-[1.75rem] outline-none focus-visible:ring-[3px] focus-visible:ring-burgundy/50 focus-visible:ring-inset"
+        className="absolute inset-0 z-20 rounded-[0.5rem] outline-none focus-visible:ring-[3px] focus-visible:ring-burgundy/50 focus-visible:ring-inset"
       />
     </article>
   )

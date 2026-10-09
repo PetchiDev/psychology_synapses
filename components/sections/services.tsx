@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { services } from '@/data/content'
-import { cn } from '@/lib/utils'
+import { StackedPages } from '@/components/animations/stacked-pages'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from './section-heading'
 
@@ -14,8 +14,8 @@ export function Services() {
             id="services-title"
             index="03"
             eyebrow="What we offer"
-            title="Our Psychological Services"
-            description="Every service begins with listening. From one-to-one counselling to structured assessment, we shape support around your goals and your pace."
+            title="Our Psychological *Services*"
+            description="Every service begins with listening. Turn the pages: from one-to-one counselling to structured assessment, we shape support around your goals and your pace."
             note="one size never fits all"
           />
           <div data-reveal className="mt-8">
@@ -28,41 +28,41 @@ export function Services() {
           </div>
         </div>
 
-        <ol data-reveal-group className="grid gap-6 sm:grid-cols-2 lg:col-span-8 lg:gap-x-8 lg:gap-y-10" aria-label="Psychological services">
-          {services.map((service, index) => {
-            const Icon = service.icon
-            const offset = index % 2 === 1
-            return (
-              <li key={service.slug} data-reveal-item className={cn(offset && 'sm:mt-16')}>
+        <div className="lg:col-span-8">
+          <StackedPages label="Psychological services">
+            {services.map((service, index) => {
+              const Icon = service.icon
+              return (
                 <article
+                  key={service.slug}
                   data-hover-lift
-                  className={cn(
-                    'group relative flex h-full flex-col gap-5 rounded-[1.75rem] border border-coffee/15 p-7 shadow-paper sm:p-8',
-                    index % 4 === 0 || index % 4 === 3 ? 'paper-surface' : 'latte-surface',
-                  )}
+                  className="group paper-surface relative grid min-h-[17rem] gap-6 rounded-[0.5rem] border border-gilt/35 p-7 sm:p-9 md:grid-cols-[8.5rem_1fr] md:gap-10"
                 >
-                  <div className="flex items-start justify-between">
-                    <span
-                      aria-hidden="true"
-                      className="font-serif text-[3.25rem] leading-none text-transparent [-webkit-text-stroke:1px_var(--coffee)] transition-colors duration-500 group-hover:text-burgundy/10"
-                    >
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-2.5 rounded-[0.3rem] border border-gilt/25" />
+                  <div className="flex items-center gap-4 md:flex-col md:items-start md:justify-between">
+                    <span aria-hidden="true" className="font-serif text-[3.6rem] leading-none text-burgundy/85 md:text-[4.6rem]">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span className="inline-flex size-12 items-center justify-center rounded-full bg-shadow text-paper transition-colors duration-500 group-hover:bg-burgundy">
+                    <span className="leather-surface inline-flex size-14 items-center justify-center rounded-full text-gold transition-transform duration-700 ease-(--ease-paper) group-hover:rotate-[-8deg]">
                       <Icon className="size-5" aria-hidden="true" />
                     </span>
                   </div>
-                  <h3 className="type-h3">{service.title}</h3>
-                  <p className="text-[0.98rem] leading-relaxed text-shadow/80">{service.summary}</p>
-                  <p className="mt-auto inline-flex w-fit items-center gap-2 rounded-full border border-coffee/25 px-3 py-1 text-xs font-semibold text-coffee-deep">
-                    <span className="sr-only">Suitable for:</span>
-                    {service.forWhom}
-                  </p>
+                  <div className="grid content-start gap-4">
+                    <p aria-hidden="true" className="font-ui text-[0.62rem] tracking-[0.28em] text-coffee uppercase">
+                      Page {index + 1} of {services.length}
+                    </p>
+                    <h3 className="type-h3">{service.title}</h3>
+                    <p className="drop-cap text-[1.05rem] leading-relaxed text-shadow/80">{service.summary}</p>
+                    <p className="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-gilt/40 bg-paper/60 px-3.5 py-1 text-sm font-semibold text-coffee-deep">
+                      <span className="sr-only">Suitable for:</span>
+                      {service.forWhom}
+                    </p>
+                  </div>
                 </article>
-              </li>
-            )
-          })}
-        </ol>
+              )
+            })}
+          </StackedPages>
+        </div>
       </div>
     </section>
   )

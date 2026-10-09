@@ -5,39 +5,49 @@ import { SectionHeading } from './section-heading'
 
 export function AboutTrust() {
   return (
-    <section id="about" aria-labelledby="about-title" className="relative pt-10 pb-14 lg:pt-14 lg:pb-20">
-      <div className="container-editorial grid gap-8 lg:grid-cols-2 lg:items-end lg:gap-12">
-        <div>
+    <section id="about" aria-labelledby="about-title" className="relative pt-16 pb-14 lg:pt-24 lg:pb-20">
+      <div className="container-editorial grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+        <div className="lg:col-span-5">
           <SectionHeading
             id="about-title"
             index="01"
             eyebrow="About us"
-            title={
-              <>
-                Care that feels <em className="text-burgundy">human</em>, from the very first hello.
-              </>
-            }
+            title="Care that feels *human*, from the very first hello."
             note="you are more than a diagnosis"
           />
         </div>
-        <div data-reveal className="grid max-w-2xl gap-4 text-[1.05rem] leading-relaxed text-shadow/85 lg:pb-2">
-          <p>
-            <strong className="font-semibold text-shadow">{siteConfig.name}</strong> is a psychology and mental health hospital in{' '}
-            {siteConfig.address.locality}, {siteConfig.address.countryName}. Since {siteConfig.foundingYear}, our psychologists have
-            offered counselling, psychological assessment, child and adolescent psychology, couples counselling, trauma support and
-            wellness programmes.
-          </p>
-          <p>
-            We built this place to feel less like a clinic and more like a quiet study — somewhere you can sit down, take a breath and
-            talk without being rushed. Consultations are available in {siteConfig.languages.slice(0, -1).join(', ')} and{' '}
-            {siteConfig.languages.at(-1)}.
-          </p>
+
+        <div className="page-settle relative lg:col-span-7">
+          <div aria-hidden="true" className="latte-surface absolute inset-0 translate-x-2 translate-y-2 rotate-[0.6deg] rounded-[0.5rem]" />
+          <div className="paper-surface relative grid gap-6 rounded-[0.5rem] border border-gilt/30 p-7 text-[1.08rem] leading-relaxed text-shadow/85 sm:p-10 md:grid-cols-2 md:gap-12">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-6 left-1/2 hidden w-10 -translate-x-1/2 bg-[linear-gradient(90deg,transparent,rgb(110_78_51/0.16)_45%,rgb(110_78_51/0.22)_50%,rgb(110_78_51/0.16)_55%,transparent)] md:block"
+            />
+            <p className="drop-cap">
+              <strong className="font-semibold text-shadow">{siteConfig.name}</strong> is a psychology and mental health hospital in{' '}
+              {siteConfig.address.locality}, {siteConfig.address.countryName}. Since {siteConfig.foundingYear}, our psychologists have
+              offered counselling, psychological assessment, child and adolescent psychology, couples counselling, trauma support and
+              wellness programmes.
+            </p>
+            <div className="grid content-between gap-6">
+              <p>
+                We built this place to feel less like a clinic and more like a quiet old library: somewhere you can sit down, take a
+                breath and talk without being rushed. Consultations are available in{' '}
+                {siteConfig.languages.slice(0, -1).join(', ')} and {siteConfig.languages.at(-1)}.
+              </p>
+              <p aria-hidden="true" className="text-center font-serif text-sm tracking-[0.3em] text-coffee">
+                — i —
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <ul data-reveal-group className="container-editorial mt-12 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-6" aria-label="Why people trust us">
+      <ul data-reveal-group className="container-editorial mt-14 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-6" aria-label="Why people trust us">
         {trustPoints.map((point, index) => {
           const Icon = point.icon
+          const leather = index === 0
           return (
             <li
               key={point.title}
@@ -51,27 +61,25 @@ export function AboutTrust() {
               <article
                 data-hover-lift
                 className={cn(
-                  'group relative flex h-full flex-col gap-5 overflow-hidden rounded-[1.75rem] border border-coffee/15 p-7 shadow-paper sm:p-8',
-                  index === 0 ? 'bg-shadow text-paper' : index % 2 === 0 ? 'latte-surface' : 'paper-surface',
+                  'group relative flex h-full flex-col gap-5 overflow-hidden rounded-[0.5rem] p-7 sm:p-8',
+                  leather ? 'leather-surface' : cn('border border-gilt/30', index % 2 === 0 ? 'latte-surface shadow-paper' : 'paper-surface'),
                 )}
               >
                 <div className="flex items-start justify-between gap-4">
                   <span
                     className={cn(
                       'inline-flex size-12 items-center justify-center rounded-full border',
-                      index === 0 ? 'border-paper/30 text-latte' : 'border-coffee/25 text-burgundy',
+                      leather ? 'border-gold/50 text-gold' : 'border-gilt/50 text-burgundy',
                     )}
                   >
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
-                  <span aria-hidden="true" className={cn('type-hand text-xl', index === 0 ? 'text-latte' : 'text-burgundy')}>
+                  <span aria-hidden="true" className={cn('type-hand text-xl', leather ? 'text-gold' : 'text-burgundy')}>
                     {point.note}
                   </span>
                 </div>
-                <h3 className={cn('type-h3', index === 0 && 'text-paper')}>{point.title}</h3>
-                <p className={cn('text-[0.98rem] leading-relaxed', index === 0 ? 'text-paper/80' : 'text-shadow/80')}>
-                  {point.description}
-                </p>
+                <h3 className={cn('type-h3', leather && 'text-paper')}>{point.title}</h3>
+                <p className={cn('text-[1rem] leading-relaxed', leather ? 'text-paper/85' : 'text-shadow/80')}>{point.description}</p>
               </article>
             </li>
           )

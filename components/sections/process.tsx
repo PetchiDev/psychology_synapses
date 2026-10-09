@@ -10,7 +10,7 @@ export function Process() {
           id="process-title"
           index="06"
           eyebrow="Your first steps"
-          title="What to Expect"
+          title="What to *Expect*"
           description="Reaching out is often the hardest part. Here is exactly what happens next, so there are no surprises."
           note="one gentle step at a time"
           align="center"

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { isAmbientPaused } from '@/lib/ambient'
 import { gsap } from './gsap'
 
 const DOTS = 7
@@ -11,7 +10,7 @@ export function ButtonSparkles() {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
     const onClick = (event: MouseEvent) => {
-      if (reduceMotion.matches || isAmbientPaused()) return
+      if (reduceMotion.matches) return
       const button = (event.target as Element | null)?.closest('.btn-shimmer')
       if (!button) return
       const rect = button.getBoundingClientRect()

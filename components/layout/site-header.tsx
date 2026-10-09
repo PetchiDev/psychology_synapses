@@ -10,7 +10,6 @@ import { gsap, ScrollTrigger, useGSAP } from '@/components/animations/gsap'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { AmbientToggle } from './ambient-toggle'
 import { SiteLogo } from './site-logo'
 
 export function SiteHeader() {
@@ -27,9 +26,9 @@ export function SiteHeader() {
       const duration = reduce ? 0 : 0.5
       const solid = () =>
         gsap.to(bar, {
-          backgroundColor: 'rgba(247, 238, 220, 0.92)',
-          borderColor: 'rgba(107, 79, 58, 0.18)',
-          boxShadow: '0 12px 30px -24px rgba(43, 30, 26, 0.55)',
+          backgroundColor: 'rgba(243, 230, 200, 0.95)',
+          borderColor: 'rgba(184, 137, 59, 0.5)',
+          boxShadow: '0 14px 30px -20px rgba(36, 21, 13, 0.7)',
           paddingTop: 10,
           paddingBottom: 10,
           duration,
@@ -38,9 +37,9 @@ export function SiteHeader() {
         })
       const clear = () =>
         gsap.to(bar, {
-          backgroundColor: 'rgba(247, 238, 220, 0)',
-          borderColor: 'rgba(107, 79, 58, 0)',
-          boxShadow: '0 0 0 0 rgba(43, 30, 26, 0)',
+          backgroundColor: 'rgba(243, 230, 200, 0.86)',
+          borderColor: 'rgba(184, 137, 59, 0.35)',
+          boxShadow: '0 10px 30px -22px rgba(36, 21, 13, 0.6)',
           paddingTop: 18,
           paddingBottom: 18,
           duration,
@@ -75,7 +74,7 @@ export function SiteHeader() {
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-2 pt-2 sm:px-4 sm:pt-3">
       <div
         ref={barRef}
-        className="mx-auto flex max-w-[84rem] items-center justify-between gap-4 rounded-full border border-transparent px-4 py-[18px] backdrop-blur-md sm:px-6"
+        className="mx-auto flex max-w-[84rem] items-center justify-between gap-4 rounded-full border border-gilt/35 bg-paper/85 px-4 py-[18px] shadow-[0_10px_30px_-22px_rgb(36_21_13/0.6)] backdrop-blur-md sm:px-6"
       >
         <SiteLogo />
 
@@ -107,7 +106,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <AmbientToggle />
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link href="/#book">
               Book an Appointment

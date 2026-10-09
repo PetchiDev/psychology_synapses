@@ -1,99 +1,183 @@
-import type { CSSProperties } from 'react'
+'use client'
+
+import { useRef, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { ArrowDown, ArrowRight } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'motion/react'
+import { ArrowDown, ArrowRight, ChevronsDown } from 'lucide-react'
 import { heroHighlights } from '@/data/content'
 import { siteConfig } from '@/lib/site'
-import { HeroVisual } from '@/components/animations/hero-visual'
-import { StorybookScene } from '@/components/animations/storybook-scene'
+import { useMotionAllowed } from '@/lib/use-motion-allowed'
+import { FairyParticles } from '@/components/animations/fairy-particles'
+import { ArchedWindow } from '@/components/library/arched-window'
+import { Bookshelf } from '@/components/library/bookshelf'
+import { Candle } from '@/components/library/candle'
+import { FloatingBook } from '@/components/library/floating-book'
+import { Ornament } from '@/components/library/ornament'
+import { RoseDome } from '@/components/library/rose-dome'
+import { Storybook } from '@/components/library/storybook'
 import { Button } from '@/components/ui/button'
 
+const line = (index: number) => ({ '--l': index }) as CSSProperties
 const stagger = (index: number) => ({ '--i': index }) as CSSProperties
-const word = (index: number) => ({ '--w': index }) as CSSProperties
-
-const headline = [['A', 'quieter', 'mind'], ['begins', 'with', 'being']]
 
 export function Hero() {
+  const root = useRef<HTMLElement>(null)
+  const animate = useMotionAllowed()
+  const { scrollYProgress: progress } = useScroll({ target: root, offset: ['start start', 'end end'] })
+
+  const sceneScale = useTransform(progress, [0, 0.8], [1, 1.32])
+  const sceneOpacity = useTransform(progress, [0.78, 0.96], [1, 0])
+  const shelfLeft = useTransform(progress, [0, 0.6], ['0%', '-70%'])
+  const shelfRight = useTransform(progress, [0, 0.6], ['0%', '70%'])
+  const windowScale = useTransform(progress, [0, 0.8], [1, 1.45])
+  const nearBooks = useTransform(progress, [0, 0.7], [0, -260])
+  const farBooks = useTransform(progress, [0, 0.7], [0, -120])
+  const textOpacity = useTransform(progress, [0, 0.2], [1, 0])
+  const textY = useTransform(progress, [0, 0.2], [0, -70])
+  const textVisibility = useTransform(progress, (value) => (value > 0.21 ? 'hidden' : 'visible'))
+  const roseOpacity = useTransform(progress, [0.04, 0.22], [1, 0])
+  const roseScale = useTransform(progress, [0, 0.22], [1, 0.85])
+  const hintOpacity = useTransform(progress, [0, 0.06], [1, 0])
+  const pageOpacity = useTransform(progress, [0.9, 1], [0, 1])
+
   return (
-    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden pt-28 pb-32 sm:pt-36 sm:pb-40 lg:pt-40 lg:pb-48">
-      <StorybookScene />
+    <section
+      ref={root}
+      aria-labelledby="hero-title"
+      className="relative bg-mahogany text-paper motion-safe:h-[260vh]"
+    >
+      <div className="relative h-dvh min-h-[42rem] overflow-hidden motion-safe:sticky motion-safe:top-0">
+        <motion.div
+          style={animate ? { scale: sceneScale, opacity: sceneOpacity } : undefined}
+          className="absolute inset-0 will-change-transform"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_70%,#4a2c18_0%,#2a180e_45%,#140a05_100%)]" />
 
-      <div className="container-editorial relative grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
-        <div className="relative lg:col-span-7">
-          <div
-            aria-hidden="true"
-            className="ambient-breathe pointer-events-none absolute -top-16 -left-24 -z-10 size-[26rem] rounded-full bg-[radial-gradient(circle,rgb(243_201_168/0.55)_0%,rgb(243_223_160/0.25)_42%,transparent_70%)] sm:size-[34rem]"
-          />
-
-          <p data-hero-item style={stagger(0)} className="type-eyebrow flex items-start gap-3 leading-snug text-coffee-deep">
-            <span className="mt-[0.2rem] inline-block size-2 shrink-0 rounded-full bg-burgundy" aria-hidden="true" />
-            Psychology &amp; Mental Health Hospital · {siteConfig.address.locality}
-          </p>
-
-          <h1 id="hero-title" className="type-display mt-6 max-w-[14ch]">
-            {headline.map((line, lineIndex) => (
-              <span key={line.join('-')} className="block">
-                {line.map((text, index) => (
-                  <span key={text}>
-                    <span data-word style={word(lineIndex * 3 + index)}>
-                      {text}
-                    </span>{' '}
-                  </span>
-                ))}
-                {line[0] === 'begins' ? (
-                  <em data-word style={word(6)} className="underline-hand font-serif text-burgundy italic">
-                    heard.
-                  </em>
-                ) : null}
-              </span>
-            ))}
-          </h1>
-
-          <p data-hero-item style={stagger(5)} className="type-lead mt-7 max-w-xl text-shadow/85">
-            {siteConfig.name} offers confidential, evidence-based psychological care for anxiety, stress, low mood, relationships,
-            trauma and more — for adults, children, couples and families. Unhurried conversations with experienced psychologists,
-            in person or online.
-          </p>
-
-          <div data-hero-item style={stagger(6)} className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button asChild size="lg">
-              <Link href="#book">
-                Book an Appointment
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="bg-paper/60 backdrop-blur-sm">
-              <Link href="#services">
-                Explore Our Services
-                <ArrowDown aria-hidden="true" />
-              </Link>
-            </Button>
-          </div>
-
-          <dl data-hero-item style={stagger(7)} className="mt-12 grid max-w-lg grid-cols-3 gap-4 border-t border-coffee/20 pt-6">
-            {heroHighlights.map((item) => (
-              <div key={item.label} className="grid gap-1">
-                <dt className="order-2 text-xs font-medium tracking-wide text-coffee-deep uppercase">{item.label}</dt>
-                <dd className="order-1 font-serif text-3xl text-shadow sm:text-4xl">{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-
-        <div className="ambient-float relative mx-auto w-full max-w-[34rem] lg:col-span-5 lg:max-w-none">
-          <div aria-hidden="true" data-parallax="0.08" className="latte-surface organic-edge absolute inset-x-6 top-6 bottom-0 rotate-3" />
-          <div data-hero-item style={stagger(4)} className="paper-surface organic-edge-alt relative -rotate-1 overflow-hidden p-4 shadow-lifted sm:p-6">
-            <HeroVisual />
-          </div>
-          <div
-            data-hero-item
-            style={stagger(8)}
-            className="paper-surface absolute -bottom-8 -left-2 max-w-[15rem] rotate-[-4deg] rounded-xl p-4 sm:-left-8 sm:p-5"
+          <motion.div
+            style={animate ? { scale: windowScale } : undefined}
+            className="absolute bottom-[14%] left-1/2 h-[68%] w-[min(46vw,22rem)] -translate-x-1/2 origin-bottom"
           >
-            <span aria-hidden="true" className="absolute -top-3 left-1/2 h-6 w-16 -translate-x-1/2 rotate-2 bg-latte/80" />
-            <p className="type-hand text-[1.45rem] text-burgundy">You don’t have to have it all figured out.</p>
-            <p className="mt-2 text-xs text-coffee">— a note from our team</p>
+            <ArchedWindow className="h-full w-full" />
+          </motion.div>
+
+          <motion.div
+            style={animate ? { x: shelfLeft } : undefined}
+            className="absolute inset-y-0 left-0 w-[30vw] min-w-36 max-w-[26rem]"
+          >
+            <Bookshelf side="left" seed={11} />
+          </motion.div>
+          <motion.div
+            style={animate ? { x: shelfRight } : undefined}
+            className="absolute inset-y-0 right-0 w-[30vw] min-w-36 max-w-[26rem]"
+          >
+            <Bookshelf side="right" seed={29} />
+          </motion.div>
+
+          <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[linear-gradient(180deg,#2b1a10_0%,#1a0f08_100%)]">
+            <div className="absolute inset-x-[18%] top-[18%] h-[60%] rounded-[50%] bg-[radial-gradient(ellipse,rgb(122_35_38/0.55),rgb(90_24_27/0.2)_60%,transparent_72%)]" />
           </div>
-        </div>
+
+          <motion.div style={animate ? { y: farBooks } : undefined} className="absolute inset-0">
+            <FloatingBook className="absolute top-[18%] left-[34%] w-20 opacity-70 sm:w-24" cover="#24364f" delay={2} />
+            <FloatingBook className="absolute top-[12%] right-[30%] hidden w-16 opacity-60 md:block" cover="#2f4a3a" delay={4} />
+          </motion.div>
+          <motion.div style={animate ? { y: nearBooks } : undefined} className="absolute inset-0">
+            <FloatingBook className="absolute top-[30%] right-[6%] w-28 sm:w-36 lg:right-[26%] lg:top-[16%]" delay={1} />
+            <FloatingBook className="absolute bottom-[30%] left-[4%] hidden w-32 sm:block lg:left-[24%] lg:bottom-[22%]" cover="#5a3b1f" delay={3} />
+          </motion.div>
+
+          <Candle className="absolute bottom-[9%] left-[6%] w-7 sm:w-9" />
+          <Candle className="absolute bottom-[8%] left-[11%] hidden w-6 sm:block" height={0.6} delay={1.3} />
+          <Candle className="absolute right-[7%] bottom-[9%] w-8 sm:w-10" height={0.8} delay={0.7} />
+          <Candle className="absolute right-[13%] bottom-[8%] hidden w-6 md:block" height={0.5} delay={2.1} />
+
+          <FairyParticles contained density={0.8} />
+
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_35%,rgb(10_5_2/0.75)_100%)]" />
+          <div className="absolute inset-y-0 left-0 w-full bg-[linear-gradient(90deg,rgb(20_10_5/0.82)_0%,rgb(20_10_5/0.55)_45%,transparent_75%)] lg:w-[70%]" />
+        </motion.div>
+
+        <motion.div
+          style={animate ? { opacity: textOpacity, y: textY, visibility: textVisibility } : undefined}
+          className="container-editorial relative z-10 grid h-full items-center pt-28 pb-20 lg:grid-cols-12 lg:gap-8"
+        >
+          <div className="lg:col-span-7">
+            <p data-hero-item style={stagger(0)} className="type-eyebrow flex items-center gap-3 text-gold">
+              <span aria-hidden="true" className="h-px w-10 bg-gold/60" />
+              Psychology &amp; Mental Health Hospital · {siteConfig.address.locality}
+            </p>
+
+            <h1 id="hero-title" className="type-display mt-5 max-w-[15ch] text-[clamp(2.6rem,1.4rem+4vw,5.6rem)] text-paper">
+              <span data-line style={line(0)}>
+                <span className="gilt-text gilt-shift">A quieter mind</span>
+              </span>
+              <span data-line style={line(1)}>
+                begins with being{' '}
+                <em className="text-[#f0b9a6] italic">heard.</em>
+              </span>
+            </h1>
+
+            <Ornament className="mt-5 text-gold" />
+
+            <p data-hero-item style={stagger(5)} className="type-lead mt-5 max-w-xl text-paper/85">
+              {siteConfig.name} offers confidential, evidence-based psychological care for anxiety, stress, low mood, relationships,
+              trauma and more, for adults, children, couples and families. Unhurried conversations with experienced psychologists, in
+              person or online.
+            </p>
+
+            <div data-hero-item style={stagger(6)} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Button asChild size="lg">
+                <Link href="#book">
+                  Book an Appointment
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-gold/50 bg-mahogany/40 text-paper backdrop-blur-sm hover:border-paper hover:bg-paper hover:text-shadow">
+                <Link href="#services">
+                  Explore Our Services
+                  <ArrowDown aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+
+            <dl data-hero-item style={stagger(7)} className="mt-9 grid max-w-lg grid-cols-3 gap-4 border-t border-gold/25 pt-5">
+              {heroHighlights.map((item) => (
+                <div key={item.label} className="grid gap-1">
+                  <dt className="order-2 font-ui text-[0.65rem] tracking-[0.18em] text-gold/80 uppercase">{item.label}</dt>
+                  <dd className="order-1 font-serif text-3xl text-paper sm:text-4xl">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <motion.div
+            style={animate ? { opacity: roseOpacity, scale: roseScale } : undefined}
+            className="hidden lg:col-span-5 lg:block"
+          >
+            <RoseDome className="mx-auto w-full max-w-[19rem]" />
+            <p className="type-hand mt-4 text-center text-xl text-gold/90">some stories begin with a single, brave page</p>
+          </motion.div>
+        </motion.div>
+
+        <motion.p
+          aria-hidden="true"
+          style={animate ? { opacity: hintOpacity } : undefined}
+          className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 font-ui lg:left-auto lg:right-[22%] lg:translate-x-0 text-[0.62rem] tracking-[0.3em] text-gold/80 uppercase motion-reduce:hidden"
+        >
+          Scroll to open the storybook
+          <ChevronsDown className="hint-bob size-4" />
+        </motion.p>
+
+        {animate ? (
+          <>
+            <Storybook progress={progress} />
+            <motion.div
+              aria-hidden="true"
+              style={{ opacity: pageOpacity }}
+              className="pointer-events-none absolute inset-0 z-30 bg-paper bg-(image:--fibres) motion-reduce:hidden"
+            />
+          </>
+        ) : null}
       </div>
     </section>
   )

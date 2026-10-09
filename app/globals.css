@@ -17,6 +17,10 @@
   --color-sage: var(--sage);
   --color-gold: var(--gold);
   --color-dusk: var(--dusk);
+  --color-gilt: var(--gilt);
+  --color-candle: var(--candle);
+  --color-mahogany: var(--mahogany);
+  --color-mahogany-soft: var(--mahogany-soft);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,9 +41,9 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-body), ui-serif, Georgia, serif;
   --font-serif: var(--font-display), ui-serif, Georgia, serif;
-  --font-hand: var(--font-hand), cursive;
+  --font-hand: var(--font-display), ui-serif, Georgia, serif;
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -58,27 +62,31 @@
 :root {
   color-scheme: light;
 
-  --paper: #f7eedc;
-  --paper-deep: #efe2c9;
-  --latte: #d7c1a7;
-  --coffee: #6b4f3a;
-  --coffee-deep: #5a412f;
-  --burgundy: #6a1f26;
-  --burgundy-deep: #52161c;
-  --shadow: #2b1e1a;
-  --lavender: #cdc3e3;
-  --moonlight: #b9c7e3;
-  --peach: #f3c9a8;
-  --sage: #b7c4a4;
-  --gold: #f3dfa0;
-  --dusk: #2a2238;
+  --paper: #f3e6c8;
+  --paper-deep: #e9d6ae;
+  --latte: #cdb085;
+  --coffee: #6e4e33;
+  --coffee-deep: #563b25;
+  --burgundy: #7a2326;
+  --burgundy-deep: #5a181b;
+  --shadow: #2a1a10;
+  --lavender: #b8a8c8;
+  --moonlight: #a8b6c8;
+  --peach: #e3ae86;
+  --sage: #9fad8a;
+  --gold: #e2c27a;
+  --dusk: #22171c;
+  --gilt: #b8893b;
+  --candle: #f8d98f;
+  --mahogany: #24150d;
+  --mahogany-soft: #3a2416;
 
-  --radius: 0.75rem;
+  --radius: 0.6rem;
   --background: var(--paper);
   --foreground: var(--shadow);
-  --card: #fbf5e9;
+  --card: #f8eed6;
   --card-foreground: var(--shadow);
-  --popover: #fbf5e9;
+  --popover: #f8eed6;
   --popover-foreground: var(--shadow);
   --primary: var(--burgundy);
   --primary-foreground: var(--paper);
@@ -108,11 +116,16 @@
     scroll-padding-top: 6rem;
   }
 
+  html.lenis {
+    scroll-behavior: auto;
+  }
+
   body {
     @apply bg-background font-sans text-foreground antialiased;
     background-image: var(--fibres);
     text-rendering: optimizeLegibility;
     overflow-x: clip;
+    font-size-adjust: 0.5;
   }
 
   body::before {
@@ -130,9 +143,10 @@
   h3,
   h4 {
     @apply font-serif text-shadow;
-    font-optical-sizing: auto;
+    font-size-adjust: none;
+    font-weight: 400;
     text-wrap: balance;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.005em;
   }
 
   p {
@@ -178,68 +192,154 @@
 
 @utility type-display {
   font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-size: clamp(2.6rem, 1.6rem + 4.6vw, 6.25rem);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.7rem, 1.6rem + 4.8vw, 6.4rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
   font-weight: 400;
-  font-variation-settings: "SOFT" 60;
+  font-size-adjust: none;
 }
 
 @utility type-display-sm {
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: clamp(2.4rem, 1.6rem + 3.4vw, 4.75rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
   font-weight: 400;
-  font-variation-settings: "SOFT" 60;
+  font-size-adjust: none;
 }
 
 @utility type-h2 {
   font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-size: clamp(2rem, 1.35rem + 2.6vw, 3.75rem);
-  line-height: 1.04;
-  letter-spacing: -0.025em;
+  font-size: clamp(2.1rem, 1.4rem + 2.7vw, 3.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
   font-weight: 400;
-  font-variation-settings: "SOFT" 50;
+  font-size-adjust: none;
 }
 
 @utility type-h3 {
   font-family: var(--font-display), ui-serif, Georgia, serif;
-  font-size: clamp(1.35rem, 1.15rem + 0.7vw, 1.75rem);
+  font-size: clamp(1.4rem, 1.2rem + 0.7vw, 1.8rem);
   line-height: 1.15;
-  letter-spacing: -0.01em;
-  font-weight: 450;
+  font-weight: 400;
+  font-size-adjust: none;
 }
 
 @utility type-lead {
-  font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem);
-  line-height: 1.6;
+  font-size: clamp(1.08rem, 1rem + 0.35vw, 1.32rem);
+  line-height: 1.65;
 }
 
 @utility type-eyebrow {
-  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.75rem;
-  line-height: 1;
-  letter-spacing: 0.18em;
+  font-family: var(--font-caps), ui-serif, Georgia, serif;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 600;
+  font-size-adjust: none;
 }
 
 @utility type-hand {
-  font-family: var(--font-hand), cursive;
-  font-weight: 500;
-  line-height: 1.1;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+  font-size-adjust: none;
+}
+
+@utility font-ui {
+  font-family: var(--font-caps), ui-serif, Georgia, serif;
+  font-size-adjust: none;
 }
 
 @utility paper-surface {
-  background-color: #fbf5e9;
-  background-image: var(--fibres);
+  background-color: var(--card);
+  background-image: radial-gradient(ellipse at 50% 45%, transparent 55%, rgb(110 78 51 / 0.13) 100%), var(--fibres);
   box-shadow: var(--shadow-paper);
 }
 
 @utility latte-surface {
-  background-color: var(--latte);
-  background-image: var(--fibres);
+  background-color: #e6d1a7;
+  background-image: radial-gradient(ellipse at 50% 45%, transparent 50%, rgb(110 78 51 / 0.16) 100%), var(--fibres);
+}
+
+@utility leather-surface {
+  background-color: var(--burgundy);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgb(255 220 180 / 0.1), transparent 55%),
+    radial-gradient(ellipse at 50% 50%, transparent 50%, rgb(20 8 4 / 0.45) 100%),
+    var(--grain);
+  color: var(--paper);
+  box-shadow:
+    inset 0 0 0 1px rgb(226 194 122 / 0.5),
+    inset 0 0 0 7px rgb(92 26 28 / 0.9),
+    inset 0 0 0 8px rgb(226 194 122 / 0.32),
+    var(--shadow-paper);
+}
+
+@utility ink-surface {
+  background-color: var(--mahogany);
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgb(248 217 143 / 0.12), transparent 60%),
+    radial-gradient(ellipse at 50% 50%, transparent 45%, rgb(0 0 0 / 0.4) 100%),
+    var(--grain);
+  color: var(--paper);
+  box-shadow:
+    inset 0 0 0 1px rgb(226 194 122 / 0.4),
+    inset 0 0 0 7px rgb(26 15 9 / 0.85),
+    inset 0 0 0 8px rgb(226 194 122 / 0.2),
+    var(--shadow-paper);
+}
+
+@utility gilt-frame {
+  box-shadow:
+    inset 0 0 0 1px rgb(184 137 59 / 0.55),
+    inset 0 0 0 5px var(--card),
+    inset 0 0 0 6px rgb(184 137 59 / 0.35),
+    var(--shadow-paper);
+}
+
+@utility gilt-text {
+  background-image: linear-gradient(100deg, #f6e3b0 0%, #d6a64c 22%, #fff3cf 42%, #c48b36 62%, #f2d798 82%, #d6a64c 100%);
+  background-size: 260% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility catalogue-card {
+  background-color: var(--card);
+  background-image:
+    linear-gradient(180deg, transparent 5.1rem, rgb(122 35 38 / 0.4) 5.1rem, rgb(122 35 38 / 0.4) calc(5.1rem + 1px), transparent calc(5.1rem + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 1.75rem, rgb(110 78 51 / 0.09) 1.75rem calc(1.75rem + 1px)),
+    var(--fibres);
+  box-shadow: var(--shadow-paper);
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0.65rem;
+    left: 50%;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 9999px;
+    translate: -50% 0;
+    background: var(--paper-deep);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.3);
+  }
+}
+
+@utility drop-cap {
+  &::first-letter {
+    float: left;
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-size: 3.7em;
+    line-height: 0.82;
+    padding: 0.06em 0.12em 0 0;
+    color: var(--burgundy);
+    font-size-adjust: none;
+  }
 }
 
 @utility rule-line {
@@ -305,13 +405,6 @@
     animation: twinkle 4.5s ease-in-out infinite alternate;
   }
 
-  html[data-ambient="paused"] .ambient-breathe,
-  html[data-ambient="paused"] .ambient-float,
-  html[data-ambient="paused"] .ambient-dusk,
-  html[data-ambient="paused"] .ambient-mist,
-  html[data-ambient="paused"] .ambient-twinkle {
-    animation-play-state: paused;
-  }
 }
 
 @keyframes dusk-shift {
@@ -340,6 +433,136 @@
   to {
     opacity: 0.9;
     scale: 1;
+  }
+}
+
+.butterfly-wing {
+  transform-box: fill-box;
+}
+
+.butterfly-wing-left {
+  transform-origin: right center;
+}
+
+.butterfly-wing-right {
+  transform-origin: left center;
+}
+
+.doodle {
+  display: inline-block;
+  vertical-align: top;
+  transform-origin: center;
+}
+
+.magic-highlight {
+  position: relative;
+  isolation: isolate;
+  white-space: nowrap;
+}
+
+.magic-highlight::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -0.12em;
+  right: -0.12em;
+  bottom: 0.06em;
+  height: 0.46em;
+  border-radius: 999px 60% 999px 40%;
+  background: linear-gradient(100deg, rgb(226 194 122 / 0.55), rgb(214 160 130 / 0.45) 50%, rgb(226 194 122 / 0.5));
+  rotate: -1.2deg;
+  transform-origin: left center;
+}
+
+.magic-highlight[data-tone="light"]::before {
+  background: linear-gradient(100deg, rgb(226 194 122 / 0.32), rgb(214 160 130 / 0.26) 50%, rgb(226 194 122 / 0.3));
+}
+
+.magic-highlight.will-paint::before {
+  scale: 0 1;
+}
+
+.magic-highlight.will-paint.is-painted::before {
+  scale: 1 1;
+  transition: scale 1.6s cubic-bezier(0.33, 1, 0.68, 1) 0.2s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .butterfly-wing {
+    animation: flap 0.55s ease-in-out infinite alternate;
+  }
+
+  .doodle-twinkle {
+    animation: doodle-twinkle 3.2s ease-in-out infinite alternate;
+  }
+
+  .doodle-spin {
+    animation: doodle-spin 24s linear infinite;
+  }
+
+  .doodle-float {
+    animation: doodle-float 5s ease-in-out infinite alternate;
+  }
+
+  .calm-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid rgb(226 194 122 / 0.8);
+    animation: calm-glow 4s ease-out infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes flap {
+  from {
+    scale: 1 1;
+  }
+  to {
+    scale: 0.35 1;
+  }
+}
+
+@keyframes doodle-twinkle {
+  from {
+    opacity: 0.55;
+    scale: 0.85;
+    rotate: -6deg;
+  }
+  to {
+    opacity: 1;
+    scale: 1.05;
+    rotate: 6deg;
+  }
+}
+
+@keyframes doodle-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes doodle-float {
+  from {
+    translate: 0 0;
+    rotate: -4deg;
+  }
+  to {
+    translate: 0 -5px;
+    rotate: 4deg;
+  }
+}
+
+@keyframes calm-glow {
+  0% {
+    opacity: 0.9;
+    scale: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    scale: 1.45;
   }
 }
 
@@ -476,8 +699,9 @@
   .doctor-panel {
     inset-inline: 0.75rem;
     bottom: 0.75rem;
-    border-radius: 1.35rem;
-    background-color: rgb(251 245 233 / 0.97);
+    border-radius: 0.4rem;
+    border: 1px solid rgb(184 137 59 / 0.4);
+    background-color: rgb(248 238 214 / 0.97);
     box-shadow: 0 24px 40px -24px rgb(43 30 26 / 0.6);
     backdrop-filter: blur(6px);
   }
@@ -505,5 +729,260 @@
 @media not ((hover: hover) and (pointer: fine)) {
   .hover-hint {
     display: none;
+  }
+}
+
+/* Library & storybook atmosphere */
+
+[data-line] {
+  display: block;
+}
+
+[data-hover-lift] {
+  transition: filter 0.9s var(--ease-paper);
+}
+
+[data-hover-lift]:hover,
+[data-hover-lift]:focus-within {
+  filter: drop-shadow(0 20px 22px rgb(42 26 16 / 0.22)) drop-shadow(0 0 16px rgb(248 217 143 / 0.4));
+}
+
+svg .ambient-twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.flame {
+  transform-box: fill-box;
+  transform-origin: 50% 92%;
+}
+
+.page-flutter {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+}
+
+.page-flutter-left {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+}
+
+.scroll-tint {
+  opacity: 0;
+  background: linear-gradient(180deg, rgb(205 168 112 / 0.18) 0%, rgb(186 140 84 / 0.3) 100%);
+}
+
+.ornament-draw [data-draw] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-line] {
+    animation: word-in 1.7s cubic-bezier(0.33, 1, 0.68, 1) both;
+    animation-delay: calc(var(--l, 0) * 180ms + 200ms);
+  }
+
+  .gilt-shift {
+    animation: gilt-shift 14s ease-in-out infinite alternate;
+  }
+
+  .flame {
+    animation: flicker 2.8s ease-in-out infinite;
+  }
+
+  .candle-halo {
+    animation: halo 3.4s ease-in-out infinite alternate;
+  }
+
+  .page-flutter {
+    animation: flutter 3.6s ease-in-out infinite alternate;
+  }
+
+  .page-flutter-left {
+    animation: flutter 4.2s ease-in-out infinite alternate-reverse;
+  }
+
+  .petal-fall {
+    animation: petal-fall 11s ease-in infinite;
+  }
+
+  .hint-bob {
+    animation: hint-bob 2.4s ease-in-out infinite;
+  }
+
+  .glass-shine {
+    animation: glass-shine 7s ease-in-out infinite;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .gilt-shift {
+      animation: gilt-shift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 140vh;
+    }
+
+    .scroll-tint {
+      animation: age-tint linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    .ornament-draw [data-draw] {
+      animation: ornament-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 40%;
+    }
+
+    .ornament-draw [data-bloom] {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: ornament-bloom linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
+
+    .page-settle {
+      animation: page-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@keyframes gilt-shift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes age-tint {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ornament-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ornament-bloom {
+  from {
+    scale: 0;
+    rotate: -90deg;
+  }
+  to {
+    scale: 1;
+    rotate: 0deg;
+  }
+}
+
+@keyframes page-settle {
+  from {
+    opacity: 0.4;
+    rotate: -1.5deg;
+    translate: 0 24px;
+  }
+  to {
+    opacity: 1;
+    rotate: 0deg;
+    translate: 0 0;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    scale: 1 1;
+    rotate: 0deg;
+    opacity: 1;
+  }
+  22% {
+    scale: 0.94 1.06;
+    rotate: -2deg;
+  }
+  48% {
+    scale: 1.04 0.95;
+    rotate: 1.5deg;
+    opacity: 0.92;
+  }
+  71% {
+    scale: 0.97 1.08;
+    rotate: -1deg;
+  }
+}
+
+@keyframes halo {
+  from {
+    opacity: 0.65;
+    scale: 0.94;
+  }
+  to {
+    opacity: 1;
+    scale: 1.06;
+  }
+}
+
+@keyframes flutter {
+  from {
+    scale: 1 1;
+  }
+  to {
+    scale: 0.9 1.02;
+  }
+}
+
+@keyframes petal-fall {
+  0%,
+  35% {
+    translate: 0 0;
+    rotate: 0deg;
+    opacity: 0;
+  }
+  42% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    translate: 14px 70px;
+    rotate: 140deg;
+    opacity: 0;
+  }
+}
+
+@keyframes hint-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 6px;
+  }
+}
+
+@keyframes glass-shine {
+  0%,
+  60% {
+    opacity: 0.25;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.25;
   }
 }

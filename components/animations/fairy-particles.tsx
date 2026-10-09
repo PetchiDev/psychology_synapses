@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { isAmbientPaused, subscribeAmbient } from '@/lib/ambient'
 import { cn } from '@/lib/utils'
 
 interface Firefly {
@@ -25,11 +24,23 @@ interface Petal {
   spin: number
   sway: number
   phase: number
+  flip: number
+  flipSpeed: number
   color: string
 }
 
-const GLOW_COLORS = ['243, 223, 160', '243, 201, 168', '205, 195, 227', '255, 244, 214']
-const PETAL_COLORS = ['rgba(243, 201, 168, 0.55)', 'rgba(205, 195, 227, 0.5)', 'rgba(183, 196, 164, 0.5)', 'rgba(215, 193, 167, 0.55)']
+interface Orb {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  phase: number
+  sprite: HTMLCanvasElement
+}
+
+const GLOW_COLORS = ['248, 217, 143', '242, 190, 110', '255, 236, 190', '226, 194, 122']
+const PETAL_COLORS = ['rgba(165, 33, 44, 0.55)', 'rgba(196, 70, 80, 0.5)', 'rgba(226, 194, 122, 0.55)', 'rgba(243, 230, 200, 0.7)']
+const ORB_COLORS = ['248, 217, 143', '226, 174, 120', '214, 160, 130', '226, 194, 122']
 
 const random = (min: number, max: number) => min + Math.random() * (max - min)
 
@@ -43,6 +54,21 @@ function makeSprite(rgb: string, radius: number) {
   gradient.addColorStop(0, `rgba(${rgb}, 1)`)
   gradient.addColorStop(0.18, `rgba(${rgb}, 0.85)`)
   gradient.addColorStop(0.45, `rgba(${rgb}, 0.25)`)
+  gradient.addColorStop(1, `rgba(${rgb}, 0)`)
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, size, size)
+  return canvas
+}
+
+function makeOrb(rgb: string, radius: number) {
+  const size = Math.ceil(radius * 2)
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = size
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return canvas
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
+  gradient.addColorStop(0, `rgba(${rgb}, 0.55)`)
+  gradient.addColorStop(0.55, `rgba(${rgb}, 0.22)`)
   gradient.addColorStop(1, `rgba(${rgb}, 0)`)
   ctx.fillStyle = gradient
   ctx.fillRect(0, 0, size, size)
@@ -71,6 +97,7 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
     let height = 0
     let fireflies: Firefly[] = []
     let petals: Petal[] = []
+    let orbs: Orb[] = []
     let frame = 0
     let last = performance.now()
     let running = false
@@ -80,12 +107,14 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
       x: random(-0.1, 1) * width,
       y: initial ? random(0, height) : random(-60, -20),
       size: random(5, 9),
-      vx: random(8, 18),
-      vy: random(12, 22),
+      vx: random(6, 16),
+      vy: random(10, 20),
       rotation: random(0, Math.PI * 2),
       spin: random(-0.4, 0.4),
       sway: random(10, 26),
       phase: random(0, Math.PI * 2),
+      flip: random(0, Math.PI * 2),
+      flipSpeed: random(0.6, 1.4),
       color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
     })
 
@@ -101,7 +130,8 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
 
       const mobile = window.innerWidth < 768
       const fireflyCount = Math.round((mobile ? 10 : 26) * density)
-      const petalCount = Math.round((mobile ? 3 : 7) * density)
+      const petalCount = Math.round((mobile ? 4 : 9) * density)
+      const orbCount = Math.round((mobile ? 3 : 6) * density)
       fireflies = Array.from({ length: fireflyCount }, () => {
         const r = random(1.2, 2.6)
         return {
@@ -116,17 +146,29 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
         }
       })
       petals = Array.from({ length: petalCount }, () => spawnPetal(true))
+      orbs = Array.from({ length: orbCount }, (_, index) => ({
+        x: random(0, width),
+        y: random(0, height),
+        vx: random(-5, 5),
+        vy: random(-4, 4),
+        phase: random(0, Math.PI * 2),
+        sprite: makeOrb(ORB_COLORS[index % ORB_COLORS.length], random(mobile ? 60 : 90, mobile ? 120 : 190)),
+      }))
     }
 
     const drawPetal = (petal: Petal) => {
       ctx.save()
       ctx.translate(petal.x, petal.y)
       ctx.rotate(petal.rotation)
+      ctx.scale(1, 0.35 + 0.65 * Math.abs(Math.cos(petal.flip)))
+      const s = petal.size
       ctx.fillStyle = petal.color
       ctx.beginPath()
-      ctx.moveTo(0, -petal.size)
-      ctx.quadraticCurveTo(petal.size * 0.9, 0, 0, petal.size)
-      ctx.quadraticCurveTo(-petal.size * 0.9, 0, 0, -petal.size)
+      ctx.moveTo(0, s)
+      ctx.bezierCurveTo(s, s * 0.4, s * 0.85, -s * 0.75, s * 0.2, -s)
+      ctx.lineTo(0, -s * 0.72)
+      ctx.lineTo(-s * 0.2, -s)
+      ctx.bezierCurveTo(-s * 0.85, -s * 0.75, -s, s * 0.4, 0, s)
       ctx.fill()
       ctx.restore()
     }
@@ -136,6 +178,18 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
       last = now
       const t = now / 1000
       ctx.clearRect(0, 0, width, height)
+
+      for (const orb of orbs) {
+        orb.x += (orb.vx + Math.sin(t * 0.08 + orb.phase) * 4) * dt
+        orb.y += (orb.vy + Math.cos(t * 0.07 + orb.phase) * 3) * dt
+        const half = orb.sprite.width / 2
+        if (orb.x < -half) orb.x = width + half
+        if (orb.x > width + half) orb.x = -half
+        if (orb.y < -half) orb.y = height + half
+        if (orb.y > height + half) orb.y = -half
+        ctx.globalAlpha = 0.55 + 0.35 * Math.sin(t * 0.25 + orb.phase)
+        ctx.drawImage(orb.sprite, orb.x - half, orb.y - half)
+      }
 
       for (const fly of fireflies) {
         fly.x += (fly.vx + Math.sin(t * 0.3 + fly.phase) * 10) * dt
@@ -154,6 +208,7 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
         petal.x += (petal.vx + Math.sin(t * 0.6 + petal.phase) * petal.sway) * dt
         petal.y += petal.vy * dt
         petal.rotation += petal.spin * dt
+        petal.flip += petal.flipSpeed * dt
         if (petal.y > height + 30 || petal.x > width + 30) Object.assign(petal, spawnPetal())
         drawPetal(petal)
       }
@@ -162,7 +217,7 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
     }
 
     const start = () => {
-      if (running || !inView || isAmbientPaused() || document.hidden) return
+      if (running || !inView || document.hidden) return
       running = true
       last = performance.now()
       frame = requestAnimationFrame(tick)
@@ -171,13 +226,6 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
     const stop = () => {
       running = false
       cancelAnimationFrame(frame)
-    }
-
-    const onPause = (paused: boolean) => {
-      if (paused) {
-        stop()
-        ctx.clearRect(0, 0, width, height)
-      } else start()
     }
 
     const onVisibility = () => (document.hidden ? stop() : start())
@@ -209,14 +257,12 @@ export function FairyParticles({ contained = false, density = 1, className }: Fa
       resizeObserver = new ResizeObserver(onResize)
       resizeObserver.observe(canvas.parentElement)
     }
-    const unsubscribe = subscribeAmbient(onPause)
     document.addEventListener('visibilitychange', onVisibility)
     window.addEventListener('resize', onResize)
     reduceMotion.addEventListener('change', onMotionChange)
 
     return () => {
       stop()
-      unsubscribe()
       observer?.disconnect()
       resizeObserver?.disconnect()
       window.clearTimeout(resizeTimer)

@@ -12,7 +12,7 @@ export function Faq() {
             id="faq-title"
             index="08"
             eyebrow="Questions"
-            title="Frequently Asked Questions"
+            title="Frequently Asked *Questions*"
             description={
               <p>
                 Clear answers to what people most often ask before their first visit. Still unsure?{' '}

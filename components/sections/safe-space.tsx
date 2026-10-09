@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { ArrowRight, Phone } from 'lucide-react'
 import { siteConfig } from '@/lib/site'
 import { BreathingOrb } from '@/components/animations/breathing-orb'
+import { KineticText } from '@/components/animations/kinetic-text'
+import { Ornament } from '@/components/library/ornament'
 import { Button } from '@/components/ui/button'
 
 const reassurances = [
@@ -18,11 +20,11 @@ export function SafeSpace() {
   return (
     <section id="talk" aria-labelledby="talk-title" className="relative overflow-hidden py-14 lg:py-20">
       <div className="container-editorial">
-        <div className="relative isolate grid gap-12 overflow-hidden rounded-[2.5rem] px-6 py-14 text-paper sm:px-12 lg:grid-cols-12 lg:gap-10 lg:px-16 lg:py-20">
-          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,#2a2238_0%,#3a2a3d_45%,#2b1e1a_100%)]" />
+        <div className="relative isolate grid gap-12 overflow-hidden rounded-[0.6rem] px-6 py-14 text-paper shadow-[inset_0_0_0_1px_rgb(226_194_122/0.4),inset_0_0_0_9px_rgb(36_21_13),inset_0_0_0_10px_rgb(226_194_122/0.22)] sm:px-12 lg:grid-cols-12 lg:gap-10 lg:px-16 lg:py-20">
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,#24150d_0%,#3a2416_50%,#2a1a10_100%)]" />
           <div
             aria-hidden="true"
-            className="ambient-dusk absolute inset-0 -z-10 bg-[linear-gradient(200deg,#2c3247_0%,#3b2a40_50%,#45262c_100%)]"
+            className="ambient-dusk absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_75%_40%,rgb(248_217_143/0.18),transparent_55%),linear-gradient(200deg,#2b1a10_0%,#3d2618_50%,#4a1c24_100%)]"
           />
           <div aria-hidden="true" className="absolute inset-0 -z-10 bg-(image:--grain) opacity-25" />
           {stars.map(([x, y], index) => (
@@ -46,14 +48,15 @@ export function SafeSpace() {
           />
 
           <div className="relative lg:col-span-7">
-            <p data-reveal className="type-eyebrow flex items-center gap-3 text-latte">
-              <span className="font-serif text-base tracking-normal text-paper normal-case">No. 05</span>
-              <span aria-hidden="true" className="h-px w-10 bg-latte/60" />
+            <p data-reveal className="type-eyebrow flex items-center gap-3 text-gold">
+              <span className="font-serif text-lg tracking-normal text-paper normal-case italic">Chapter V</span>
+              <span aria-hidden="true" className="h-px w-10 bg-gold/60" />
               How we help
             </p>
-            <h2 id="talk-title" data-reveal className="type-h2 mt-5 text-paper">
-              A Safe Space to <em className="text-peach">Be Heard</em>
+            <h2 id="talk-title" className="type-h2 mt-5 text-paper">
+              <KineticText text="A Safe Space to *Be* *Heard*" emphasisClassName="text-[#f0b9a6] italic" />
             </h2>
+            <Ornament className="mt-5 text-gold" />
             <div data-reveal className="type-lead mt-6 grid max-w-2xl gap-4 text-paper/85">
               <p>
                 If you’ve been feeling overwhelmed, anxious, low, or simply not like yourself, you’re welcome to reach out. Many people
@@ -83,8 +86,8 @@ export function SafeSpace() {
 
           <ul data-reveal-group className="relative grid gap-4 md:grid-cols-3 lg:col-span-12" aria-label="What to know before reaching out">
             {reassurances.map((item) => (
-              <li key={item.note} data-reveal-item className="relative rounded-2xl border border-paper/15 bg-paper/[0.06] p-6 backdrop-blur-sm">
-                <span aria-hidden="true" className="type-hand absolute -top-4 right-5 text-2xl text-peach">
+              <li key={item.note} data-reveal-item className="relative rounded-[0.4rem] border border-gold/25 bg-paper/[0.05] p-6 backdrop-blur-sm">
+                <span aria-hidden="true" className="type-hand absolute -top-4 right-5 text-2xl text-gold">
                   {item.note}
                 </span>
                 <p className="text-[1.02rem] leading-relaxed text-paper/90">{item.text}</p>

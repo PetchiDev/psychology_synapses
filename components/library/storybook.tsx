@@ -1,0 +1,50 @@
+'use client'
+
+import { motion, useTransform, type MotionValue } from 'motion/react'
+import { siteConfig } from '@/lib/site'
+import { Ornament } from './ornament'
+
+interface StorybookProps {
+  progress: MotionValue<number>
+}
+
+export function Storybook({ progress }: StorybookProps) {
+  const opacity = useTransform(progress, [0.16, 0.3], [0, 1])
+  const y = useTransform(progress, [0.16, 0.42], ['38vh', '0vh'])
+  const x = useTransform(progress, [0.44, 0.7, 0.78, 1], ['0%', '50%', '50%', '0%'])
+  const scale = useTransform(progress, [0.16, 0.42, 0.78, 1], [0.7, 1, 1, 4.4])
+  const coverAngle = useTransform(progress, [0.44, 0.72], [0, -172])
+  const glow = useTransform(progress, [0.3, 0.5, 0.8], [0, 1, 0])
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center motion-reduce:hidden">
+      <motion.div style={{ opacity, x, y, scale }} className="relative w-[min(64vw,20rem)] will-change-transform">
+        <motion.span
+          style={{ opacity: glow }}
+          className="absolute -inset-16 rounded-full bg-[radial-gradient(circle,rgb(248_217_143/0.5)_0%,transparent_70%)]"
+        />
+        <div className="relative aspect-[5/7] [perspective:2000px]">
+          <div className="paper-surface absolute inset-0 overflow-hidden rounded-r-[0.35rem] px-[9%] py-[12%] text-center shadow-[6px_6px_0_-2px_#e2cfa3,10px_10px_0_-4px_#d8c08f,0_30px_60px_-20px_rgb(0_0_0/0.7)]">
+            <p className="font-ui text-[0.6rem] tracking-[0.3em] text-coffee uppercase">Chapter I</p>
+            <Ornament className="mx-auto mt-3 h-3 w-28" />
+            <p className="mt-4 font-serif text-[1.35rem] leading-tight text-shadow">A gentle beginning</p>
+            <p className="drop-cap mt-4 text-left text-[0.72rem] leading-relaxed text-shadow/80">
+              Once upon a time, someone felt a little lost, and decided to ask for help. That small, brave step is where every story
+              in this house begins.
+            </p>
+          </div>
+
+          <motion.div style={{ rotateY: coverAngle }} className="absolute inset-0 origin-left [transform-style:preserve-3d]">
+            <div className="leather-surface absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-r-[0.35rem] px-6 text-center [backface-visibility:hidden]">
+              <Ornament className="h-3 w-28 text-gold" />
+              <p className="gilt-text font-serif text-[1.7rem] leading-tight">{siteConfig.name}</p>
+              <p className="font-ui text-[0.55rem] tracking-[0.3em] text-gold/80 uppercase">A book of gentle care</p>
+              <Ornament className="h-3 w-28 rotate-180 text-gold" />
+            </div>
+            <div className="absolute inset-0 rounded-l-[0.35rem] bg-[#3a2416] bg-[radial-gradient(circle_at_20%_30%,rgb(122_35_38/0.6),transparent_40%),radial-gradient(circle_at_70%_60%,rgb(184_137_59/0.35),transparent_45%),radial-gradient(circle_at_40%_80%,rgb(47_74_58/0.6),transparent_40%)] shadow-[inset_0_0_0_10px_#f3e6c8] [backface-visibility:hidden] [transform:rotateY(180deg)]" />
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  )
+}

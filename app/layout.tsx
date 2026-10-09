@@ -1,37 +1,42 @@
 import type { Metadata, Viewport } from 'next'
-import { Caveat, DM_Sans, Fraunces } from 'next/font/google'
+import { Cinzel, EB_Garamond, IM_Fell_English } from 'next/font/google'
 import { doctors } from '@/data/doctors'
 import { services } from '@/data/content'
 import { siteConfig } from '@/lib/site'
 import { JsonLd } from '@/lib/seo/json-ld'
 import { graph, organizationSchema, websiteSchema } from '@/lib/seo/schemas'
 import { ButtonSparkles } from '@/components/animations/button-sparkles'
+import { CursorSparkles } from '@/components/animations/cursor-sparkles'
+import { CalmCorner } from '@/components/layout/calm-corner'
 import { FairyParticles } from '@/components/animations/fairy-particles'
+import { ReadingProgress } from '@/components/animations/reading-progress'
+import { SmoothScroll } from '@/components/animations/smooth-scroll'
 import { HashLinkHandler } from '@/components/layout/hash-link-handler'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import 'lenis/dist/lenis.css'
 import './globals.css'
 
-const display = Fraunces({
+const display = IM_Fell_English({
   subsets: ['latin'],
-  variable: '--font-display',
-  axes: ['SOFT', 'opsz'],
+  weight: '400',
   style: ['normal', 'italic'],
+  variable: '--font-display',
   display: 'swap',
 })
 
-const body = DM_Sans({
+const body = EB_Garamond({
   subsets: ['latin'],
+  style: ['normal', 'italic'],
   variable: '--font-body',
   display: 'swap',
 })
 
-const hand = Caveat({
+const caps = Cinzel({
   subsets: ['latin'],
-  variable: '--font-hand',
+  variable: '--font-caps',
   display: 'swap',
-  preload: false,
 })
 
 const defaultTitle = `${siteConfig.name} — Psychology & Mental Health Hospital in ${siteConfig.address.locality}`
@@ -86,7 +91,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en-IN" data-scroll-behavior="smooth" className={`${display.variable} ${body.variable} ${hand.variable}`}>
+    <html lang="en-IN" data-scroll-behavior="smooth" className={`${display.variable} ${body.variable} ${caps.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <a
           href="#main"
@@ -94,6 +99,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         >
           Skip to main content
         </a>
+        <div aria-hidden="true" className="scroll-tint pointer-events-none fixed inset-0 -z-10" />
+        <SmoothScroll />
+        <ReadingProgress />
         <FairyParticles />
         <TooltipProvider delayDuration={200}>
           <SiteHeader />
@@ -104,6 +112,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         </TooltipProvider>
         <HashLinkHandler />
         <ButtonSparkles />
+        <CursorSparkles />
+        <CalmCorner />
         <JsonLd
           data={graph(
             organizationSchema(

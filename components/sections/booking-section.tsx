@@ -8,9 +8,9 @@ import { SectionHeading } from './section-heading'
 export function BookingSection() {
   return (
     <section id="book" aria-labelledby="book-title" className="relative py-14 lg:py-20">
-      <div aria-hidden="true" className="absolute inset-x-0 top-16 bottom-0 -z-10 flex flex-col text-[#f1e5cf]">
+      <div aria-hidden="true" className="absolute inset-x-0 top-16 bottom-0 -z-10 flex flex-col text-[#ecdbb8]">
         <WaveDivider variant="cloud" drift={0.08} />
-        <div className="-mt-px flex-1 bg-[#f1e5cf]" />
+        <div className="-mt-px flex-1 bg-[#ecdbb8] bg-(image:--fibres)" />
       </div>
       <div className="container-editorial">
         <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
@@ -18,7 +18,7 @@ export function BookingSection() {
             id="book-title"
             index="07"
             eyebrow="Appointments"
-            title="Book a Consultation"
+            title="Book a *Consultation*"
             description="Choose a date that suits you, tell us a little about yourself, and we’ll call within one working day to confirm a time."
             className="lg:col-span-7"
           />

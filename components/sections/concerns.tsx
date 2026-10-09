@@ -7,9 +7,9 @@ import { SectionHeading } from './section-heading'
 export function Concerns() {
   return (
     <section id="concerns" aria-labelledby="concerns-title" className="relative py-14 lg:py-20">
-      <div aria-hidden="true" className="absolute inset-0 -z-10 flex flex-col text-[#e4d3bc]">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 flex flex-col text-[#e6d1a7]">
         <WaveDivider variant="cloud" />
-        <div className="-mt-px flex-1 bg-[#e4d3bc]" />
+        <div className="-mt-px flex-1 bg-[#e6d1a7] bg-(image:--fibres)" />
         <WaveDivider variant="wave" flip className="-mt-px" />
       </div>
       <div className="container-editorial pt-6">
@@ -18,7 +18,7 @@ export function Concerns() {
             id="concerns-title"
             index="02"
             eyebrow="Psychological concerns"
-            title="Psychological Support for Different Life Challenges"
+            title="Psychological Support for Different Life *Challenges*"
             className="lg:col-span-7"
           />
           <p data-reveal className="text-[1.02rem] leading-relaxed text-shadow/85 lg:col-span-5 lg:col-start-8">
@@ -37,7 +37,7 @@ export function Concerns() {
                 <li key={concern.slug} data-reveal-item className="sm:col-span-2 lg:col-span-1 xl:col-span-2 xl:row-span-2">
                   <article
                     data-hover-lift
-                    className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-[1.5rem] bg-burgundy p-7 text-paper shadow-paper xl:p-9"
+                    className="group leather-surface relative flex h-full flex-col gap-4 overflow-hidden rounded-[0.5rem] p-7 xl:p-9"
                   >
                     <Icon
                       aria-hidden="true"
@@ -45,7 +45,7 @@ export function Concerns() {
                       className="pointer-events-none absolute -top-6 -right-6 size-56 text-paper/10 transition-transform duration-700 ease-(--ease-paper) group-hover:-rotate-6 xl:size-72"
                     />
                     <div className="relative flex items-center justify-between">
-                      <span className="inline-flex size-14 items-center justify-center rounded-full bg-paper text-burgundy">
+                      <span className="inline-flex size-14 items-center justify-center rounded-full bg-paper text-burgundy ring-2 ring-gold/50 ring-offset-2 ring-offset-burgundy">
                         <Icon className="size-6" aria-hidden="true" />
                       </span>
                       <span aria-hidden="true" className="font-serif text-sm text-latte tabular-nums">
@@ -53,7 +53,7 @@ export function Concerns() {
                       </span>
                     </div>
                     <div className="relative mt-auto grid gap-4 pt-10">
-                      <p aria-hidden="true" className="type-hand text-2xl text-latte">the most common reason people reach out</p>
+                      <p aria-hidden="true" className="type-hand text-2xl text-gold">the most common reason people reach out</p>
                       <h3 className="font-serif text-[2.2rem] leading-none text-paper xl:text-[3.2rem]">{concern.title}</h3>
                       <p className="max-w-md text-[1.02rem] leading-relaxed text-paper/85 xl:text-lg">{concern.summary}</p>
                       <p className="max-w-md border-t border-paper/20 pt-4 text-[0.95rem] leading-relaxed text-paper/75">{concern.detail}</p>
@@ -74,17 +74,17 @@ export function Concerns() {
               <li key={concern.slug} data-reveal-item>
                 <article
                   data-hover-lift
-                  className="group paper-surface relative flex h-full min-h-[14.5rem] flex-col overflow-hidden rounded-[1.5rem] border border-coffee/15 p-6"
+                  className="group catalogue-card relative flex h-full min-h-[15.5rem] flex-col overflow-hidden rounded-[0.35rem] border border-gilt/35 p-6 pb-8"
                 >
                   <div className="flex items-start justify-between">
-                    <span className="inline-flex size-12 items-center justify-center rounded-full bg-latte/60 text-burgundy transition-colors duration-500 group-hover:bg-burgundy group-hover:text-paper">
+                    <span className="inline-flex size-12 items-center justify-center rounded-full border border-gilt/40 bg-paper text-burgundy transition-colors duration-500 group-hover:bg-burgundy group-hover:text-paper">
                       <Icon className="size-5" aria-hidden="true" />
                     </span>
-                    <span aria-hidden="true" className="font-serif text-sm text-coffee tabular-nums">
-                      {number}
+                    <span aria-hidden="true" className="font-ui text-[0.65rem] tracking-[0.2em] text-burgundy">
+                      Nº {number}
                     </span>
                   </div>
-                  <h3 className="mt-6 font-serif text-[1.4rem] leading-tight">{concern.title}</h3>
+                  <h3 className="mt-7 font-serif text-[1.45rem] leading-tight">{concern.title}</h3>
                   <p className="mt-2 text-[0.95rem] leading-relaxed text-shadow/80">{concern.summary}</p>
                   <p aria-hidden="true" className="hover-hint mt-auto items-center gap-1.5 pt-4 text-xs font-semibold tracking-wide text-coffee uppercase">
                     Hover to learn more
@@ -111,9 +111,9 @@ export function Concerns() {
             )
           })}
           <li data-reveal-item className="xl:col-span-3">
-            <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-[1.5rem] bg-shadow p-7 text-paper sm:flex-row sm:items-end xl:p-9">
+            <div className="ink-surface relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-[0.5rem] p-7 sm:flex-row sm:items-end xl:p-9">
               <div className="grid gap-3">
-                <p aria-hidden="true" className="type-hand text-2xl text-latte">not sure where you fit?</p>
+                <p aria-hidden="true" className="type-hand text-2xl text-gold">not sure where you fit?</p>
                 <h3 className="font-serif text-[1.6rem] leading-tight text-paper xl:text-[2rem]">That’s completely okay.</h3>
                 <p className="max-w-lg text-[0.95rem] leading-relaxed text-paper/80">
                   You don’t need a label to reach out. Tell us what’s been happening in your own words, and we’ll help you find the right

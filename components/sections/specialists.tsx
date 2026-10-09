@@ -1,41 +1,60 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { doctors } from '@/data/doctors'
+import { HorizontalShelf } from '@/components/animations/horizontal-shelf'
 import { DoctorCard } from '@/components/doctors/doctor-card'
+import { Candle } from '@/components/library/candle'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from './section-heading'
 
 export function Specialists() {
   return (
-    <section id="specialists" aria-labelledby="specialists-title" className="relative py-14 lg:py-20">
-      <div className="container-editorial">
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <SectionHeading
-            id="specialists-title"
-            index="04"
-            eyebrow="Our team"
-            title="Meet Our Specialists"
-            description="Licensed psychologists with deep experience across adult, child, couples and trauma care. Choose someone specific, or let us match you."
-            className="lg:col-span-8"
-          />
-          <div data-reveal className="lg:col-span-4 lg:justify-self-end">
-            <Button asChild variant="outline" size="lg">
-              <Link href="/specialists">
-                View all specialists
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        <ul data-reveal-group className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8" aria-label="Specialists">
-          {doctors.slice(0, 3).map((doctor) => (
-            <li key={doctor.slug} data-reveal-item>
-              <DoctorCard doctor={doctor} />
-            </li>
-          ))}
-        </ul>
+    <section id="specialists" aria-labelledby="specialists-title" className="relative isolate bg-mahogany py-14 text-paper lg:py-0">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-24 left-1/4 size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(248_217_143/0.14),transparent_65%)]" />
+        <div className="absolute right-0 bottom-0 size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(122_35_38/0.3),transparent_65%)]" />
       </div>
+
+      <HorizontalShelf
+        label="Specialists"
+        intro={
+          <div className="grid gap-8">
+            <SectionHeading
+              id="specialists-title"
+              index="04"
+              eyebrow="Our team"
+              title="Meet Our *Specialists*"
+              tone="light"
+              description="Licensed psychologists with deep experience across adult, child, couples and trauma care. Browse the shelf: choose someone specific, or let us match you."
+            />
+            <div data-reveal className="flex items-end gap-6">
+              <Button asChild variant="outline" size="lg" className="border-gold/50 text-paper hover:border-paper hover:bg-paper hover:text-shadow">
+                <Link href="/specialists">
+                  View all specialists
+                  <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+              <Candle className="hidden w-7 lg:block" height={0.7} />
+            </div>
+          </div>
+        }
+      >
+        {doctors.map((doctor) => (
+          <li key={doctor.slug} className="w-[78vw] max-w-[20rem] shrink-0 snap-start lg:w-[19rem]">
+            <DoctorCard doctor={doctor} />
+          </li>
+        ))}
+        <li className="w-[78vw] max-w-[20rem] shrink-0 snap-start self-stretch lg:w-[19rem]">
+          <div className="leather-surface flex h-full min-h-[22rem] flex-col justify-end gap-4 rounded-[0.5rem] p-8">
+            <p className="type-hand text-2xl text-gold">not sure who to choose?</p>
+            <p className="font-serif text-[1.6rem] leading-tight text-paper">We’ll gently match you with the right person.</p>
+            <Link href="#book" className="inline-flex w-fit items-center gap-2 font-ui text-[0.72rem] tracking-[0.16em] text-gold uppercase hover:text-paper">
+              Ask our team
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </li>
+      </HorizontalShelf>
     </section>
   )
 }
