@@ -1,6 +1,8 @@
 import { faqs, libraryChapters, workAreas } from '@/data/content'
 import { absoluteUrl, siteConfig } from '@/lib/site'
 
+export const dynamic = 'force-static'
+
 export function GET() {
   const body = [
     `# ${siteConfig.name}`,

@@ -26,12 +26,16 @@ const securityHeaders = [
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
 ]
 
+/**
+ * The site is a static export for shared hosting: `next build` writes plain HTML, CSS and JS to `out/`.
+ * Production security headers live in `public/.htaccess`; `headers()` below only applies to `next dev`.
+ */
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
+  output: 'export',
+  trailingSlash: true,
   poweredByHeader: false,
   images: {
-    formats: ['image/avif', 'image/webp'],
+    unoptimized: true,
   },
   experimental: {
     agentUpgrade: 'security',
@@ -45,9 +49,11 @@ const nextConfig: NextConfig = {
       },
     },
   },
-  async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }]
-  },
+  ...(isDev && {
+    async headers() {
+      return [{ source: '/:path*', headers: securityHeaders }]
+    },
+  }),
 }
 
 export default nextConfig

@@ -7,6 +7,8 @@ import { legalNav } from '@/lib/site'
 import { pageMetadata } from '@/lib/seo/metadata'
 import { PageHero } from '@/components/sections/page-hero'
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return legalPages.map((page) => ({ slug: page.slug }))
 }

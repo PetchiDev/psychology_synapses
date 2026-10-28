@@ -247,7 +247,7 @@ export const psychologist = {
     'Paper Skin & Synapses is built around different areas of psychology, from clinical settings and individual counselling to organisational consulting, psychoeducation and research. My expertise has taken me through organisational psychology and business, and clinical psychology, giving me opportunities to explore how psychological knowledge can be understood and applied in different contexts.',
     'Paper Skin & Synapses grew from that interest. It brings these directions together through individual work, organisational programmes, psychoeducation, talks, research collaborations and a library of resources for curious readers.',
   ],
-  portrait: { src: '/images/portrait/psychologist.png', alt: 'Portrait of the psychologist behind Paper Skin & Synapses, smiling and seated at a table' },
+  portrait: { src: '/images/portrait/psychologist.jpg', alt: 'Portrait of the psychologist behind Paper Skin & Synapses, smiling and seated at a table' },
   sections: [
     {
       id: 'foundation',
