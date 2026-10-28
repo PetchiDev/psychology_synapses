@@ -13,14 +13,14 @@ export function Portrait({ priority = false }: { priority?: boolean }) {
         aria-hidden="true"
         className="absolute inset-0 translate-x-2 translate-y-3 rounded-[1.1rem] border border-gilt/50 sm:-inset-3 sm:translate-x-4 sm:translate-y-4"
       />
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[1rem] bg-latte shadow-lifted">
+      <div className="paper-float relative aspect-[4/5] overflow-hidden rounded-[1rem] bg-latte shadow-lifted">
         <Image
           src={psychologist.portrait.src}
           alt={psychologist.portrait.alt}
           fill
           priority={priority}
           sizes="(min-width: 1024px) 26rem, 90vw"
-          className="object-cover object-[50%_32%]"
+          className="object-cover object-[50%_32%] transition-transform duration-[1.2s] ease-out hover:scale-[1.03]"
         />
       </div>
       <figcaption className="surface-card absolute -bottom-6 left-1/2 flex w-[min(92%,22rem)] -translate-x-1/2 items-center gap-3 rounded-full border border-coffee/12 px-4 py-2.5 text-[0.82rem] text-shadow/85">
