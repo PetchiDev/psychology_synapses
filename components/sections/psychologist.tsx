@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, BadgeCheck } from 'lucide-react'
@@ -13,7 +14,10 @@ export function Portrait({ priority = false }: { priority?: boolean }) {
         aria-hidden="true"
         className="absolute inset-0 translate-x-2 translate-y-3 rounded-[1.1rem] border border-gilt/50 sm:-inset-3 sm:translate-x-4 sm:translate-y-4"
       />
-      <div className="paper-float relative aspect-[4/5] overflow-hidden rounded-[1rem] bg-latte shadow-lifted">
+      <div
+        className="paper-idle-lift relative aspect-[4/5] overflow-hidden rounded-[1rem] bg-latte shadow-lifted"
+        style={{ '--tilt': '0.8deg' } as CSSProperties}
+      >
         <Image
           src={psychologist.portrait.src}
           alt={psychologist.portrait.alt}

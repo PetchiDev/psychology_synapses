@@ -64,7 +64,7 @@ export function Hero() {
 
         <div data-hero-item style={stagger(3)} className="lg:col-span-5">
           <div data-parallax="0.06">
-            <ScrollPaper float tilt={1.4} seed={7} contentClassName="px-[12%] py-12 sm:py-14">
+            <ScrollPaper motion="roll" tilt={1.4} seed={7} contentClassName="px-[12%] py-12 sm:py-14">
               <p className="drop-cap text-[1.05rem] leading-[1.75] text-shadow/90">
                 Psychology extends far beyond any one setting. At {siteConfig.name}, this spans clinical practice, individual counselling,
                 organisational consulting, psychoeducation, workshops, and research collaborations.

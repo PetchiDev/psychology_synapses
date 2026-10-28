@@ -12,7 +12,7 @@ export function AboutPractice() {
         </div>
         <div data-reveal className="lg:col-span-7">
           <div data-parallax="0.05">
-            <ScrollPaper tilt={-0.8} seed={12} contentClassName="grid gap-5 px-[11%] py-12 text-[1.06rem] leading-[1.8] text-shadow/90 sm:py-14">
+            <ScrollPaper motion="sway" tilt={-0.8} seed={12} contentClassName="grid gap-5 px-[11%] py-12 text-[1.06rem] leading-[1.8] text-shadow/90 sm:py-14">
               <p className="drop-cap">
                 {siteConfig.name} brings together my work across different areas of psychology. This includes clinical work and individual
                 counselling, consulting with organisations, developing mental health programmes, conducting workshops and talks, and
