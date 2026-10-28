@@ -15,16 +15,12 @@ npm run dev
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin used for metadata, sitemap and JSON-LD |
-| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | EmailJS service |
-| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | EmailJS template |
-| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | EmailJS public key (restrict allowed origins in the EmailJS dashboard) |
+| `NEXT_PUBLIC_BOOKING_API` | Booking API base URL; defaults to `https://api.paperskinandsynapses.com/api/v1` |
 | `NEXT_PUBLIC_SPLINE_SCENE_URL` | Optional `.splinecode` URL; without it the hero uses the built-in GSAP synapse animation |
 
-### EmailJS template
+### Booking
 
-Set the template's **To Email** to `petchidev22@gmail.com` (or `{{to_email}}`) and use these variables:
-
-`{{appointment_date}}`, `{{appointment_time}}`, `{{name}}`, `{{address}}`, `{{concern}}`, `{{phone}}`, `{{email}}`, `{{reply_to}}`, `{{submitted_at}}`
+The booking form (`components/booking/booking-flow.tsx`) reads live availability from the booking API and creates a request with `POST /bookings`. The API holds the slot, emails Megha a confirm/decline link and emails the visitor a link to `/booking/manage/`, where they can view, move or cancel it. Each enquiry type maps to a service in the API (`lib/booking/api.ts`). API reference: `docs/API.md` in the booking-api repository.
 
 ## Content
 

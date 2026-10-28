@@ -8,7 +8,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.spline.design",
   "font-src 'self' data:",
-  "connect-src 'self' https://api.emailjs.com https://*.spline.design https://unpkg.com",
+  "connect-src 'self' https://api.paperskinandsynapses.com http://127.0.0.1:8080 https://*.spline.design https://unpkg.com",
   "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",

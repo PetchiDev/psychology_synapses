@@ -16,8 +16,18 @@ import {
   type BookingFormInput,
   type BookingFormValues,
 } from '@/lib/booking/schema'
-import { formatSlot, isSlotAvailable, slotsFor } from '@/lib/booking/slots'
-import { BookingConfigError, formatAppointmentDate, sendBookingEmail } from '@/lib/email/send-booking'
+import {
+  BookingApiError,
+  createBooking,
+  fetchCalendar,
+  fetchDay,
+  formFieldFor,
+  SERVICE_FOR_ENQUIRY,
+  toIsoDate,
+  type ApiDay,
+  type ApiDaySummary,
+} from '@/lib/booking/api'
+import { formatAppointmentDate, formatSlot, isSlotAvailable, slotsFor } from '@/lib/booking/slots'
 import { siteConfig } from '@/lib/site'
 import { cn } from '@/lib/utils'
 import { gsap, useGSAP } from '@/components/animations/gsap'
@@ -66,7 +76,11 @@ export function BookingFlow() {
   const [step, setStep] = useState(0)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [confirmed, setConfirmed] = useState<{ slot: string; type: string } | null>(null)
+  const [confirmed, setConfirmed] = useState<{ slot: string; type: string; reference: string | null } | null>(null)
+  // Live availability from the booking API; null until loaded (or if it can't be reached).
+  const [calendar, setCalendar] = useState<Map<string, ApiDaySummary> | null>(null)
+  const [day, setDay] = useState<{ key: string; data: ApiDay | null } | null>(null)
+  const [reloadSlots, setReloadSlots] = useState(0)
   const panelRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const successRef = useRef<HTMLHeadingElement>(null)
@@ -81,7 +95,7 @@ export function BookingFlow() {
     mode: 'onTouched',
     defaultValues,
   })
-  const { register, control, setValue, trigger, handleSubmit, reset, formState } = form
+  const { register, control, setValue, setError, trigger, handleSubmit, reset, formState } = form
   const { errors } = formState
   const values = useWatch({ control })
   const selectedType = values.enquiryType
@@ -100,6 +114,47 @@ export function BookingFlow() {
     },
     [],
   )
+
+  const service = selectedType ? SERVICE_FOR_ENQUIRY[selectedType] : undefined
+  const selectedKey = selectedDate ? toIsoDate(selectedDate) : null
+
+  // Which days still have free slots, for the whole booking window.
+  useEffect(() => {
+    if (!range) return
+    let active = true
+    fetchCalendar(range.from, range.to, service)
+      .then((days) => active && setCalendar(days))
+      .catch(() => active && setCalendar(null))
+    return () => {
+      active = false
+    }
+  }, [range, service, reloadSlots])
+
+  // The chosen day's slots, with the ones already booked marked unavailable.
+  useEffect(() => {
+    if (!selectedDate || !selectedKey) return
+    let active = true
+    fetchDay(selectedDate, service)
+      .then((data) => {
+        if (!active) return
+        setDay({ key: selectedKey, data })
+        const time = form.getValues('time')
+        if (time && !data.slots.some((slot) => slot.time === time && slot.available)) setValue('time', '', { shouldDirty: true })
+      })
+      .catch(() => active && setDay({ key: selectedKey, data: null }))
+    return () => {
+      active = false
+    }
+    // selectedDate is represented by selectedKey; form is stable.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedKey, service, reloadSlots, setValue])
+
+  const isFullyBooked = (date: Date) => {
+    const summary = calendar?.get(toIsoDate(date))
+    return summary ? !summary.open : false
+  }
+  const daySlots = day && day.key === selectedKey ? day : null
+  const slotsLoading = Boolean(selectedKey) && !daySlots
 
   useGSAP(
     () => {
@@ -162,17 +217,45 @@ export function BookingFlow() {
     }
     setStatus('submitting')
     try {
-      await sendBookingEmail(data)
-      setConfirmed({ slot: `${formatAppointmentDate(data.date)} at ${formatSlot(data.time)}`, type: enquiryLabel(data.enquiryType) })
+      const { booking } = await createBooking(data)
+      setConfirmed({
+        slot: `${formatAppointmentDate(data.date)} at ${formatSlot(data.time)}`,
+        type: enquiryLabel(data.enquiryType),
+        reference: booking.reference ?? null,
+      })
       setStatus('success')
       reset(defaultValues)
+      setReloadSlots((n) => n + 1)
       requestAnimationFrame(() => successRef.current?.focus())
     } catch (error) {
       setStatus('error')
+      if (!(error instanceof BookingApiError)) {
+        setErrorMessage(`Your enquiry couldn’t be sent just now. Please try again, or email ${siteConfig.email}.`)
+        return
+      }
+      if (error.code === 'SLOT_UNAVAILABLE') {
+        // Someone took the slot meanwhile: refresh the times and send them back to pick another.
+        setValue('time', '', { shouldDirty: true })
+        setReloadSlots((n) => n + 1)
+        goTo(1)
+        setError('time', { message: error.message })
+        return
+      }
+      const fields = Object.entries(error.fields)
+      if (error.status === 422 && fields.length) {
+        for (const [field, message] of fields) {
+          const name = formFieldFor(field)
+          if (name in defaultValues || name === 'date' || name === 'enquiryType') setError(name as keyof BookingFormInput, { message })
+        }
+        const firstStep = bookingSteps.findIndex((s) => s.fields.some((f) => fields.some(([field]) => formFieldFor(field) === f)))
+        if (firstStep >= 0 && firstStep !== step) goTo(firstStep)
+        setErrorMessage(error.message)
+        return
+      }
       setErrorMessage(
-        error instanceof BookingConfigError
-          ? `Online booking is temporarily unavailable. Please email ${siteConfig.email} or call ${siteConfig.phone}.`
-          : `Your enquiry couldn’t be sent just now. Please check your connection and try again, or email ${siteConfig.email}.`,
+        error.code === 'NETWORK' || error.status >= 500
+          ? `${error.message} You can also email ${siteConfig.email} or call ${siteConfig.phone}.`
+          : error.message,
       )
     }
   }
@@ -218,6 +301,12 @@ export function BookingFlow() {
             ) : null}
             I’ll reply by email to confirm the slot and share the details for our online conversation.
           </p>
+          {confirmed?.reference ? (
+            <p className="text-[0.95rem] leading-relaxed text-shadow/85">
+              Your reference is <strong className="font-semibold tracking-wide text-burgundy tabular-nums">{confirmed.reference}</strong>. I’ve also
+              emailed you a link to view, change or cancel this request.
+            </p>
+          ) : null}
           <p className="text-sm text-coffee">
             Need to add something? Write to{' '}
             <a href={`mailto:${siteConfig.email}`} className="font-semibold text-burgundy underline underline-offset-4">
@@ -398,7 +487,7 @@ export function BookingFlow() {
                       defaultMonth={selectedDate ?? range.from}
                       startMonth={range.from}
                       endMonth={range.to}
-                      disabled={[{ before: range.from }, { after: range.to }, isClosedDay]}
+                      disabled={[{ before: range.from }, { after: range.to }, isClosedDay, isFullyBooked]}
                       aria-label="Choose your preferred date"
                       className="[--cell-size:2.6rem] sm:[--cell-size:2.9rem]"
                     />
@@ -412,7 +501,15 @@ export function BookingFlow() {
                     </div>
                   )}
                 </div>
-                <TimeSlotPicker date={selectedDate} value={selectedTime} now={now} error={errors.time?.message} onChange={selectTime} />
+                <TimeSlotPicker
+                  date={selectedDate}
+                  value={selectedTime}
+                  now={now}
+                  error={errors.time?.message}
+                  apiSlots={daySlots?.data?.slots}
+                  loading={slotsLoading}
+                  onChange={selectTime}
+                />
               </div>
               {errors.date || errors.time ? (
                 <div className="grid gap-1">
@@ -502,7 +599,8 @@ export function BookingFlow() {
           {current.id === 'review' ? (
             <div className="grid gap-6">
               <p className="text-[0.95rem] leading-relaxed text-shadow/80">
-                Please check your details. Selecting <strong>Send enquiry</strong> sends this to {siteConfig.email}.
+                Please check your details. Selecting <strong>Send enquiry</strong> sends this to me and holds your slot until I confirm it by
+                email.
               </p>
               <dl className="divide-y divide-coffee/15 rounded-2xl border border-coffee/15 bg-[#fffaf1]/60">
                 {[

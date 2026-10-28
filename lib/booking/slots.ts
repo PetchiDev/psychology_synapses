@@ -30,6 +30,13 @@ const toSlot = (value: string): TimeSlot => ({
 
 export const slotsFor = (date: Date) => (date.getDay() === 0 || date.getDay() === 6 ? [] : WEEKDAY_SLOTS.map(toSlot))
 
+/** Slots as the booking API reports them for a day: every start time, with `available` set by live bookings. */
+export const slotsFromApi = (slots: ReadonlyArray<{ time: string; available: boolean }>) =>
+  slots.map((slot) => ({ ...toSlot(slot.time), available: slot.available }))
+
+export const formatAppointmentDate = (date: Date) =>
+  date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+
 export const isSlotAvailable = (date: Date, value: string, now: Date) => {
   const sameDay =
     date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth() && date.getDate() === now.getDate()
