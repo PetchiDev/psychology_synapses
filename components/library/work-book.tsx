@@ -68,11 +68,11 @@ function Spread({ areas }: BookProps) {
 
   return (
     <div ref={ref} className="relative" style={{ height: `calc(100dvh + ${turns * 62}vh)` }}>
-      <div className="sticky top-0 flex h-dvh flex-col items-center justify-center gap-6 pt-24 pb-6">
+      <div className="sticky top-0 flex h-dvh flex-col items-center justify-center gap-5 pt-[5.75rem] pb-4">
         <div
           aria-hidden="true"
           className="relative w-full [container-type:inline-size]"
-          style={{ maxWidth: 'calc((100dvh - 15rem) * 1.5)' }}
+          style={{ maxWidth: 'calc((100dvh - 12.5rem) * 1.5)' }}
         >
           <span className="absolute -bottom-9 left-[calc(50%+2.2rem)] h-14 w-3.5 bg-burgundy shadow-[0_6px_10px_-4px_rgb(0_0_0/0.4)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_78%,0_100%)]" />
           <div className="leather-surface absolute -inset-3.5 rounded-[0.7rem] shadow-[0_50px_80px_-34px_rgb(36_21_13/0.8)]" />
@@ -187,11 +187,11 @@ function Notebook({ areas }: BookProps) {
           style={{ top: `calc(${point} * ${turns * NOTEBOOK_TURN_SVH}svh + 6rem)` }}
         />
       ))}
-      <div className="sticky top-0 flex h-svh flex-col items-center justify-center gap-4 pt-24 pb-20 sm:pb-8">
+      <div className="sticky top-0 flex h-svh flex-col items-center justify-center gap-4 pt-[5.25rem] pb-16 sm:pb-8">
         <div
           aria-hidden="true"
           className="relative w-[min(100%,25rem)] [container-type:inline-size] [perspective:1600px]"
-          style={{ height: 'min(calc(100svh - 16rem), 38rem)' }}
+          style={{ height: 'min(calc(100svh - 14rem), 38rem)' }}
         >
           <div className="leather-surface absolute -inset-2.5 rounded-[0.6rem] shadow-[0_36px_60px_-30px_rgb(36_21_13/0.8)]" />
           <div className="absolute inset-0 rounded-[0.4rem] bg-[#e8d6ad] shadow-[0_3px_0_-1px_#dcc596,0_6px_0_-2px_#d2b984,0_9px_0_-3px_#c9ad76]" />
@@ -281,40 +281,66 @@ function PlatePage({ area }: { area: WorkArea }) {
   )
 }
 
+/** Shrinks a page's type (via `--fit`) until its content fits, for short or zoomed windows. */
+function useFit<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const fit = () => {
+      let scale = 1
+      el.style.setProperty('--fit', '1')
+      for (let attempt = 0; attempt < 6 && el.scrollHeight > el.clientHeight + 1; attempt++) {
+        scale = Math.max(0.5, scale * (el.clientHeight / el.scrollHeight) * 0.97)
+        el.style.setProperty('--fit', String(scale))
+      }
+    }
+    fit()
+    const observer = new ResizeObserver(fit)
+    observer.observe(el)
+    void document.fonts?.ready.then(fit)
+    return () => observer.disconnect()
+  }, [])
+
+  return ref
+}
+
 function TextPage({ area, index, total }: { area: WorkArea; index: number; total: number }) {
   const Icon = area.icon
+  const ref = useFit<HTMLDivElement>()
   return (
-    <div className="paper-surface relative flex h-full flex-col overflow-hidden rounded-r-[0.4rem] px-[9%] pt-[8%] pb-[6%]">
+    <div ref={ref} className="paper-surface relative flex h-full flex-col overflow-hidden rounded-r-[0.4rem] px-[9%] pt-[7%] pb-[5%]">
       <span className="pointer-events-none absolute inset-y-0 left-0 w-[14%] bg-[linear-gradient(90deg,rgb(110_78_51/0.24),transparent)]" />
-      <div className="flex items-center justify-between font-ui text-[clamp(0.55rem,1.05cqw,0.68rem)] tracking-[0.26em] text-coffee uppercase">
-        <span>Ways to work with me</span>
-        <span>
-          Page {index + 1} of {total}
+      <div className="flex items-center justify-between gap-3 font-ui text-[length:calc(var(--fit,1)*clamp(0.45rem,1cqw,0.68rem))] tracking-[0.22em] whitespace-nowrap text-coffee uppercase">
+        <span>Work with me</span>
+        <span className="tabular-nums">
+          {index + 1} / {total}
         </span>
       </div>
-      <div className="mt-[7%] flex items-center justify-between">
-        <span className="font-serif text-[clamp(2.4rem,6.2cqw,4.4rem)] leading-none text-burgundy/85">{area.number}</span>
-        <span className="leather-surface inline-flex size-[clamp(2.75rem,5.6cqw,3.75rem)] items-center justify-center rounded-full text-gold">
+      <div className="mt-[6%] flex items-center justify-between">
+        <span className="font-serif text-[length:calc(var(--fit,1)*clamp(1.4rem,4.6cqw,3.6rem))] leading-none text-burgundy/85">{area.number}</span>
+        <span className="leather-surface inline-flex size-[calc(var(--fit,1)*clamp(2rem,4.6cqw,3.4rem))] items-center justify-center rounded-full text-gold">
           <Icon className="size-[42%]" />
         </span>
       </div>
-      <p className="mt-[6%] font-serif text-[clamp(1.25rem,2.8cqw,1.95rem)] leading-tight text-shadow">{area.title}</p>
-      <Ornament className="mt-[3%] -ml-2 h-3 w-28" />
-      <p className="drop-cap mt-[5%] text-[clamp(0.85rem,1.75cqw,1.05rem)] leading-relaxed text-shadow/80">{area.summary}</p>
-      <p className="mt-[6%] font-ui text-[clamp(0.55rem,1.05cqw,0.66rem)] tracking-[0.24em] text-coffee uppercase">Written for</p>
-      <p className="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-gilt/40 bg-paper/60 px-3.5 py-1 text-[clamp(0.75rem,1.45cqw,0.875rem)] font-semibold text-coffee-deep">
+      <p className="mt-[5%] font-serif text-[length:calc(var(--fit,1)*clamp(0.95rem,2.9cqw,2rem))] leading-[1.12] text-shadow">{area.title}</p>
+      <Ornament className="mt-[3%] -ml-2 h-3 w-28 shrink-0" />
+      <p className="drop-cap mt-[4%] text-[length:calc(var(--fit,1)*clamp(0.75rem,2.35cqw,1.15rem))] leading-[1.55] text-shadow/80">{area.summary}</p>
+      <p className="mt-[5%] inline-flex w-fit items-center rounded-full border border-gilt/40 bg-paper/60 px-[0.9em] py-[0.3em] text-[length:calc(var(--fit,1)*clamp(0.6rem,1.45cqw,0.9rem))] font-semibold text-coffee-deep">
         {area.forWhom}
       </p>
-      <Icon strokeWidth={0.7} className="pointer-events-none absolute right-[6%] bottom-[9%] size-[34%] text-burgundy/[0.07]" />
-      <p className="mt-auto text-center font-serif text-xs text-coffee">~ {index + 1} ~</p>
+      <Icon strokeWidth={0.7} className="pointer-events-none absolute right-[6%] bottom-[8%] size-[30%] text-burgundy/[0.07]" />
+      <p className="mt-auto pt-[3%] text-center font-serif text-[length:calc(var(--fit,1)*0.75rem)] text-coffee">~ {index + 1} ~</p>
     </div>
   )
 }
 
 function NotebookPage({ area, index, total }: { area: WorkArea; index: number; total: number }) {
   const Icon = area.icon
+  const ref = useFit<HTMLDivElement>()
   return (
-    <div className="paper-surface relative flex h-full flex-col overflow-hidden rounded-[0.4rem] px-[7%] pt-[9%] pb-[5%]">
+    <div ref={ref} className="paper-surface relative flex h-full flex-col overflow-hidden rounded-[0.4rem] px-[7%] pt-[9%] pb-[5%]">
       <span className="pointer-events-none absolute inset-x-0 top-0 h-[9%] bg-[linear-gradient(180deg,rgb(110_78_51/0.2),transparent)]" />
       <div className="flex items-center justify-between font-ui text-[0.6rem] tracking-[0.24em] text-coffee uppercase">
         <span>Area {area.number}</span>
@@ -322,21 +348,23 @@ function NotebookPage({ area, index, total }: { area: WorkArea; index: number; t
           {index + 1} / {total}
         </span>
       </div>
-      <div className="relative mt-3 min-h-[5rem] w-full flex-1">
+      <div className="relative mt-3 min-h-[3.5rem] w-full flex-1">
         <Photo area={area} sizes="(min-width: 640px) 24rem, 88vw" />
       </div>
-      <p className="type-hand mt-2 text-center text-[1.05rem] leading-snug text-burgundy">{area.caption}</p>
+      <p className="type-hand mt-2 text-center text-[length:calc(var(--fit,1)*clamp(0.9rem,4.4cqw,1.05rem))] leading-snug text-burgundy [@media(max-height:640px)]:hidden">
+        {area.caption}
+      </p>
       <div className="mt-3 flex items-center gap-3 border-t border-gilt/30 pt-3">
-        <span className="leather-surface inline-flex size-10 shrink-0 items-center justify-center rounded-full text-gold">
-          <Icon className="size-4" />
+        <span className="leather-surface inline-flex size-[calc(var(--fit,1)*2.5rem)] shrink-0 items-center justify-center rounded-full text-gold">
+          <Icon className="size-[40%]" />
         </span>
-        <p className="font-serif text-[clamp(1.1rem,5.2cqw,1.4rem)] leading-tight text-shadow">
+        <p className="font-serif text-[length:calc(var(--fit,1)*clamp(1.05rem,5.2cqw,1.4rem))] leading-tight text-shadow">
           <span className="mr-2 text-burgundy/80">{area.number}</span>
           {area.title}
         </p>
       </div>
-      <p className="mt-2.5 line-clamp-4 text-[clamp(0.88rem,3.9cqw,0.98rem)] leading-relaxed text-shadow/80">{area.summary}</p>
-      <p className="mt-3 inline-flex w-fit items-center rounded-full border border-gilt/40 bg-paper/60 px-3 py-0.5 text-[0.8rem] font-semibold text-coffee-deep">
+      <p className="mt-2.5 text-[length:calc(var(--fit,1)*clamp(0.82rem,3.9cqw,0.98rem))] leading-relaxed text-shadow/80">{area.summary}</p>
+      <p className="mt-3 inline-flex w-fit items-center rounded-full border border-gilt/40 bg-paper/60 px-3 py-0.5 text-[length:calc(var(--fit,1)*0.8rem)] font-semibold text-coffee-deep">
         {area.forWhom}
       </p>
     </div>
@@ -358,7 +386,7 @@ function AreaLink({ area }: { area: WorkArea }) {
 function BookFooter({ areas, page }: { areas: WorkArea[]; page: number }) {
   const total = areas.length
   return (
-    <div className="grid w-full max-w-md justify-items-center gap-3 px-1">
+    <div className="grid w-full max-w-md justify-items-center gap-2 px-1">
       <div aria-hidden="true" className="flex w-full items-center gap-4">
         <span className="font-ui text-[0.62rem] tracking-[0.24em] whitespace-nowrap text-coffee uppercase tabular-nums">
           Page {page + 1} / {total}

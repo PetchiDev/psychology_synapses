@@ -21,8 +21,8 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <AboutPractice />
       <PracticeBand />
+      <AboutPractice />
       <WaysToWork />
       <Psychologist />
       <SafeSpace />
