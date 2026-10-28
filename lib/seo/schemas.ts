@@ -13,7 +13,7 @@ export const organizationSchema = (): JsonLdNode => ({
   name: siteConfig.name,
   description: siteConfig.description,
   url: siteConfig.url,
-  logo: absoluteUrl('/icon.svg'),
+  logo: absoluteUrl('/images/logo/logo.png'),
   image: absoluteUrl('/opengraph-image'),
   email: siteConfig.email,
   telephone: siteConfig.phoneHref.replace('tel:', ''),
