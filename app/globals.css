@@ -1064,6 +1064,20 @@ svg .ambient-twinkle {
     animation: paper-float 9s ease-in-out infinite alternate;
   }
 
+  .ways-float {
+    animation: ways-float 6.5s ease-in-out infinite alternate;
+  }
+
+  .ways-pulse {
+    animation: ways-pulse 2.8s ease-out infinite;
+  }
+
+  .ways-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: ways-draw 1.8s cubic-bezier(0.33, 1, 0.68, 1) both;
+  }
+
   .pulse-dot {
     animation: pulse-dot 2.4s ease-out infinite;
   }
@@ -1091,6 +1105,36 @@ svg .ambient-twinkle {
   to {
     translate: 0 -10px;
     rotate: calc(var(--tilt, -1.2deg) + 0.8deg);
+  }
+}
+
+@keyframes ways-float {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -12px;
+  }
+}
+
+@keyframes ways-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+@keyframes ways-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

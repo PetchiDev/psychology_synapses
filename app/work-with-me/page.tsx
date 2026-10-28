@@ -10,6 +10,7 @@ import { FinalCta } from '@/components/sections/final-cta'
 import { PageHero } from '@/components/sections/page-hero'
 import { Process } from '@/components/sections/process'
 import { LibraryGateway } from '@/components/sections/ways-to-work'
+import { WorkWaysAside } from '@/components/sections/work-ways-aside'
 import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = pageMetadata({
@@ -31,6 +32,7 @@ export default function WorkWithMePage() {
             Ways to work <em className="text-burgundy italic">with me</em>
           </>
         }
+        aside={<WorkWaysAside />}
       >
         <p>
           Psychology can be useful in many different settings. You might be looking for individual support, planning something for a school or
