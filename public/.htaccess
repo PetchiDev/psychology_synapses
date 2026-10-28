@@ -1,7 +1,7 @@
 # Paper Skin & Synapses: static site on Apache / LiteSpeed (Hostinger shared hosting)
 
 Options -Indexes
-DirectoryIndex index.html
+DirectoryIndex index.html index.php
 ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>

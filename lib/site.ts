@@ -6,7 +6,7 @@ export const siteConfig = {
   disciplines: ['Psychology', 'Clinical Practice', 'Consulting', 'Talks and Education', 'Research and Resources'],
   description:
     'Paper Skin & Synapses brings together individual counselling, clinical practice, organisational consulting, psychoeducation, talks, research collaborations and a library of psychology resources.',
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://paperskinandsynapses.in').replace(/\/$/, ''),
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://paperskinandsynapses.com').replace(/\/$/, ''),
   locale: 'en_IN',
   email: 'megha@paperskinandsynapses.in',
   phone: '98400 52230',
