@@ -68,13 +68,15 @@ export function WaysToWork() {
 export function LibraryGateway() {
   return (
     <article data-reveal className="group relative isolate mt-6 overflow-hidden rounded-[0.85rem] bg-mahogany text-paper">
-      <Image
-        src={libraryCard.image.src}
-        alt={libraryCard.image.alt}
-        fill
-        sizes="(min-width: 1024px) 80rem, 100vw"
-        className="-z-20 object-cover object-[70%_center] transition-transform duration-[2.4s] ease-(--ease-paper) group-hover:scale-[1.04]"
-      />
+      <div data-parallax="0.1" className="absolute inset-[-8%] -z-20">
+        <Image
+          src={libraryCard.image.src}
+          alt={libraryCard.image.alt}
+          fill
+          sizes="(min-width: 1024px) 80rem, 100vw"
+          className="object-cover object-[70%_center] transition-transform duration-[2.4s] ease-(--ease-paper) group-hover:scale-[1.04]"
+        />
+      </div>
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(20_10_5/0.94)_0%,rgb(20_10_5/0.78)_45%,rgb(20_10_5/0.15)_100%)] max-md:bg-[linear-gradient(180deg,rgb(20_10_5/0.55)_0%,rgb(20_10_5/0.92)_70%)]" />
       <div className="grid gap-5 px-7 pt-40 pb-10 sm:px-12 md:max-w-xl md:py-16 lg:py-20">
         <p className="type-eyebrow flex items-center gap-2 text-gold">

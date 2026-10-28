@@ -1,14 +1,35 @@
+'use client'
+
+import { useRef } from 'react'
 import Link from 'next/link'
+import { motion, useScroll, useTransform } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import { workAreas } from '@/data/content'
 import { siteConfig } from '@/lib/site'
+import { useMotionAllowed } from '@/lib/use-motion-allowed'
 
 export function PracticeBand() {
+  const root = useRef<HTMLElement>(null)
+  const motionOk = useMotionAllowed()
+  const { scrollYProgress } = useScroll({ target: root, offset: ['start end', 'end start'] })
+  const orbY = useTransform(scrollYProgress, [0, 1], [30, -70])
+  const orbY2 = useTransform(scrollYProgress, [0, 1], [-20, 50])
   const items = [...siteConfig.disciplines, ...siteConfig.disciplines]
 
   return (
-    <section aria-labelledby="practice-title" className="espresso-surface relative overflow-hidden py-16 lg:py-20">
-      <div className="container-editorial grid gap-10 lg:grid-cols-12 lg:items-end">
+    <section ref={root} aria-labelledby="practice-title" className="espresso-surface relative overflow-hidden py-16 lg:py-20">
+      <motion.div
+        aria-hidden="true"
+        style={motionOk ? { y: orbY } : undefined}
+        className="pointer-events-none absolute -top-16 left-[12%] size-[18rem] rounded-full bg-[radial-gradient(circle,rgb(248_217_143/0.16),transparent_68%)]"
+      />
+      <motion.div
+        aria-hidden="true"
+        style={motionOk ? { y: orbY2 } : undefined}
+        className="pointer-events-none absolute right-[6%] -bottom-20 size-[22rem] rounded-full bg-[radial-gradient(circle,rgb(122_35_38/0.28),transparent_65%)]"
+      />
+
+      <div className="container-editorial relative grid gap-10 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-6">
           <p data-reveal className="type-eyebrow flex items-center gap-3 text-gold">
             <span aria-hidden="true" className="rule-grow h-px w-8 bg-gold/70" />
@@ -39,10 +60,13 @@ export function PracticeBand() {
         </ol>
       </div>
 
-      <div aria-hidden="true" className="marquee mt-14 border-y border-paper/10 py-5">
+      <div aria-hidden="true" className="marquee relative mt-14 border-y border-paper/10 py-5">
         <div className="marquee-track">
           {items.map((item, index) => (
-            <span key={`${item}-${index}`} className="flex items-center gap-8 pr-8 font-serif text-[clamp(1.6rem,1.2rem+1.6vw,2.6rem)] whitespace-nowrap text-paper/80 italic">
+            <span
+              key={`${item}-${index}`}
+              className="flex items-center gap-8 pr-8 font-serif text-[clamp(1.6rem,1.2rem+1.6vw,2.6rem)] whitespace-nowrap text-paper/80 italic"
+            >
               {item}
               <span className="size-1.5 rounded-full bg-gold/70" />
             </span>

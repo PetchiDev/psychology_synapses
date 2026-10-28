@@ -123,8 +123,7 @@
   }
 
   body {
-    @apply bg-background font-sans text-foreground antialiased;
-    background-image: var(--fibres);
+    @apply bg-transparent font-sans text-foreground antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
     font-size-adjust: 0.5;
@@ -1064,6 +1063,11 @@ svg .ambient-twinkle {
     animation: paper-float 9s ease-in-out infinite alternate;
   }
 
+  .paper-shell-breathe {
+    animation: paper-shell-breathe 32s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
   .ways-float {
     animation: ways-float 6.5s ease-in-out infinite alternate;
   }
@@ -1105,6 +1109,15 @@ svg .ambient-twinkle {
   to {
     translate: 0 -10px;
     rotate: calc(var(--tilt, -1.2deg) + 0.8deg);
+  }
+}
+
+@keyframes paper-shell-breathe {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.035) translate3d(0, -0.6%, 0);
   }
 }
 

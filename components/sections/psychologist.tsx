@@ -37,7 +37,9 @@ export function Psychologist() {
       <div className="container-editorial grid gap-16 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-32">
-            <Portrait />
+            <div data-parallax="0.08">
+              <Portrait />
+            </div>
           </div>
         </div>
         <div className="grid content-start gap-10 lg:col-span-7">
