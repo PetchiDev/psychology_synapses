@@ -9,7 +9,7 @@ interface PageMetadataInput {
   images?: { url: string; alt: string; width?: number; height?: number }[]
 }
 
-const defaultImages = [{ url: '/opengraph-image', width: 1200, height: 630, alt: `${siteConfig.name} — psychology and mental health hospital` }]
+const defaultImages = [{ url: '/opengraph-image', width: 1200, height: 630, alt: `${siteConfig.name}: psychology, clinical practice, consulting, talks and research` }]
 
 export function pageMetadata({
   title,
@@ -18,7 +18,7 @@ export function pageMetadata({
   type = 'website',
   images = defaultImages,
 }: PageMetadataInput): Metadata {
-  const ogTitle = title ? `${title} | ${siteConfig.name}` : `${siteConfig.name} — Psychology & Mental Health Hospital in ${siteConfig.address.locality}`
+  const ogTitle = title ? `${title} | ${siteConfig.name}` : `${siteConfig.name} | Psychology, Clinical Practice, Consulting, Talks and Research`
   return {
     ...(title ? { title } : {}),
     description,

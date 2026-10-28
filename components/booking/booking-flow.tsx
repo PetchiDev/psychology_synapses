@@ -4,13 +4,15 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEv
 import { useForm, useWatch, type FieldErrors } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { ArrowLeft, ArrowRight, CalendarHeart, Check, Clock, Info, Loader2, PencilLine, Send } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CalendarHeart, Check, Clock, Compass, Info, Loader2, Monitor, PencilLine, Send } from 'lucide-react'
+import { enquiryLabel, enquiryTypes, type EnquiryType } from '@/data/content'
 import {
   bookingSchema,
   bookingSteps,
   bookingWindow,
-  CONCERN_MAX,
+  ENQUIRY_VALUES,
   isClosedDay,
+  MESSAGE_MAX,
   type BookingFormInput,
   type BookingFormValues,
 } from '@/lib/booking/schema'
@@ -35,12 +37,20 @@ type Status = 'idle' | 'submitting' | 'success' | 'error'
 const defaultValues: Partial<BookingFormInput> = {
   time: '',
   name: '',
-  address: '',
-  concern: '',
+  organisation: '',
+  message: '',
   phone: '',
   email: '',
   consent: false,
   website: '',
+}
+
+const MESSAGE_HINTS: Record<EnquiryType, string> = {
+  individual: 'For example, what you would like to talk through and anything you would like me to know before we speak.',
+  organisation: 'For example, your organisation, the audience, your goals and any timelines you have in mind.',
+  talk: 'For example, the event, intended audience, area of interest and proposed date.',
+  research: 'For example, the research area, the current stage of the project and the kind of collaboration you have in mind.',
+  other: 'A few lines about what you have in mind is enough. We can work out the details together.',
 }
 
 const ISO = 'yyyy-MM-dd'
@@ -50,11 +60,13 @@ const subscribeNoop = () => () => {}
 const getTodayKey = () => format(new Date(), ISO)
 const getServerTodayKey = () => null
 
+const isEnquiry = (value: string | null): value is EnquiryType => ENQUIRY_VALUES.some((type) => type === value)
+
 export function BookingFlow() {
   const [step, setStep] = useState(0)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [confirmed, setConfirmed] = useState<string | null>(null)
+  const [confirmed, setConfirmed] = useState<{ slot: string; type: string } | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const successRef = useRef<HTMLHeadingElement>(null)
@@ -64,13 +76,6 @@ export function BookingFlow() {
   const range = useMemo(() => (todayKey ? bookingWindow() : null), [todayKey])
   const now = useMemo(() => (todayKey ? new Date() : null), [todayKey])
 
-  useEffect(
-    () => () => {
-      if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
-    },
-    [],
-  )
-
   const form = useForm<BookingFormInput, unknown, BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     mode: 'onTouched',
@@ -79,9 +84,22 @@ export function BookingFlow() {
   const { register, control, setValue, trigger, handleSubmit, reset, formState } = form
   const { errors } = formState
   const values = useWatch({ control })
+  const selectedType = values.enquiryType
   const selectedDate = values.date instanceof Date ? values.date : undefined
   const selectedTime = values.time || undefined
-  const concernLength = values.concern?.length ?? 0
+  const messageLength = values.message?.length ?? 0
+
+  useEffect(() => {
+    const preset = new URLSearchParams(window.location.search).get('enquiry')
+    if (isEnquiry(preset)) setValue('enquiryType', preset, { shouldDirty: true })
+  }, [setValue])
+
+  useEffect(
+    () => () => {
+      if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
+    },
+    [],
+  )
 
   useGSAP(
     () => {
@@ -113,6 +131,16 @@ export function BookingFlow() {
     if (ok) goTo(step + 1)
   }
 
+  const scheduleAdvance = (to: number) => {
+    if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
+    advanceTimer.current = window.setTimeout(() => goTo(to), 450)
+  }
+
+  const selectType = (type: EnquiryType) => {
+    setValue('enquiryType', type, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
+    scheduleAdvance(1)
+  }
+
   const selectDate = (date: Date | undefined) => {
     setValue('date', date as Date, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
     const time = values.time
@@ -123,9 +151,7 @@ export function BookingFlow() {
 
   const selectTime = (time: string) => {
     setValue('time', time, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
-    if (!selectedDate) return
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current)
-    advanceTimer.current = window.setTimeout(() => goTo(1), 450)
+    if (selectedDate) scheduleAdvance(2)
   }
 
   const onValid = async (data: BookingFormValues) => {
@@ -137,7 +163,7 @@ export function BookingFlow() {
     setStatus('submitting')
     try {
       await sendBookingEmail(data)
-      setConfirmed(`${formatAppointmentDate(data.date)} at ${formatSlot(data.time)}`)
+      setConfirmed({ slot: `${formatAppointmentDate(data.date)} at ${formatSlot(data.time)}`, type: enquiryLabel(data.enquiryType) })
       setStatus('success')
       reset(defaultValues)
       requestAnimationFrame(() => successRef.current?.focus())
@@ -145,8 +171,8 @@ export function BookingFlow() {
       setStatus('error')
       setErrorMessage(
         error instanceof BookingConfigError
-          ? `Online booking is temporarily unavailable. Please call us on ${siteConfig.phone} and we will gladly help.`
-          : `We couldn’t send your request just now. Please check your connection and try again, or call us on ${siteConfig.phone}.`,
+          ? `Online booking is temporarily unavailable. Please email ${siteConfig.email} or call ${siteConfig.phone}.`
+          : `Your enquiry couldn’t be sent just now. Please check your connection and try again, or email ${siteConfig.email}.`,
       )
     }
   }
@@ -174,31 +200,34 @@ export function BookingFlow() {
 
   if (status === 'success') {
     return (
-      <div className="paper-surface organic-edge relative overflow-hidden p-8 sm:p-12" role="status" aria-live="polite">
-        <span aria-hidden="true" className="absolute -top-16 -right-16 size-56 rounded-full bg-latte/60" />
+      <div className="surface-card relative overflow-hidden rounded-[1rem] border border-coffee/12 p-8 sm:p-12" role="status" aria-live="polite">
+        <span aria-hidden="true" className="absolute -top-16 -right-16 size-56 rounded-full bg-latte/40" />
         <div className="relative grid gap-6">
           <span className="inline-flex size-14 items-center justify-center rounded-full bg-burgundy text-paper">
             <Check className="size-7" aria-hidden="true" />
           </span>
           <h3 ref={successRef} tabIndex={-1} className="type-h2 max-w-xl outline-none">
-            Thank you. Your request is with us.
+            Thank you. Your enquiry has been sent.
           </h3>
           <p className="type-lead max-w-xl text-shadow/85">
             {confirmed ? (
               <>
-                We’ve noted <strong className="font-semibold text-burgundy">{confirmed}</strong> as your preferred slot.{' '}
+                I’ve received your <strong className="font-semibold text-burgundy">{confirmed.type.toLowerCase()}</strong> enquiry for{' '}
+                <strong className="font-semibold text-burgundy">{confirmed.slot}</strong>.{' '}
               </>
             ) : null}
-            A member of our care team will call you within one working day to confirm your appointment.
+            I’ll reply by email to confirm the slot and share the details for our online conversation.
           </p>
-          <p className="type-hand text-2xl text-burgundy">Reaching out takes courage — well done.</p>
           <p className="text-sm text-coffee">
-            If you need to talk to someone sooner, call {siteConfig.phone}. In an emergency, call {siteConfig.crisis.emergency} or
-            Tele-MANAS on {siteConfig.crisis.number}.
+            Need to add something? Write to{' '}
+            <a href={`mailto:${siteConfig.email}`} className="font-semibold text-burgundy underline underline-offset-4">
+              {siteConfig.email}
+            </a>
+            . This form is not monitored for emergencies. If you need urgent support, see the helplines below.
           </p>
           <div>
             <Button type="button" variant="outline" onClick={startOver}>
-              Make another request
+              Send another enquiry
             </Button>
           </div>
         </div>
@@ -216,30 +245,34 @@ export function BookingFlow() {
       className="grid gap-6 xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] xl:gap-8"
     >
       <h3 id="booking-form-title" className="sr-only">
-        Consultation request form
+        Enquiry and booking form
       </h3>
 
-      <aside className="latte-surface organic-edge-alt relative overflow-hidden p-6 sm:p-7 xl:sticky xl:top-28 xl:self-start">
-        <p className="type-eyebrow text-coffee-deep">Your consultation</p>
+      <aside className="relative overflow-hidden rounded-[1rem] bg-mahogany p-6 text-paper sm:p-7 xl:sticky xl:top-28 xl:self-start">
+        <p className="type-eyebrow text-gold">Your enquiry</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-1" aria-live="polite">
-          <p className="flex items-start gap-3 font-serif text-xl leading-tight text-shadow xl:text-2xl">
-            <CalendarHeart className="mt-0.5 size-6 shrink-0 text-burgundy" aria-hidden="true" />
+          <p className="flex items-start gap-3 font-serif text-xl leading-tight">
+            <Compass className="mt-0.5 size-5 shrink-0 text-gold" aria-hidden="true" />
+            {selectedType ? enquiryLabel(selectedType) : 'No enquiry type yet'}
+          </p>
+          <p className="flex items-start gap-3 font-serif text-xl leading-tight">
+            <CalendarHeart className="mt-0.5 size-5 shrink-0 text-gold" aria-hidden="true" />
             {selectedDate ? formatAppointmentDate(selectedDate) : 'No date chosen yet'}
           </p>
-          <p className="flex items-center gap-3 font-serif text-xl leading-tight text-shadow">
-            <Clock className="size-6 shrink-0 text-burgundy" aria-hidden="true" />
-            {selectedTime ? formatSlot(selectedTime) : 'No time chosen yet'}
+          <p className="flex items-center gap-3 font-serif text-xl leading-tight">
+            <Clock className="size-5 shrink-0 text-gold" aria-hidden="true" />
+            {selectedTime ? `${formatSlot(selectedTime)} (IST)` : 'No time chosen yet'}
           </p>
         </div>
 
-        <Separator className="my-6 bg-shadow/15" />
+        <Separator className="my-6 bg-paper/15" />
 
-        <p className="mb-3 text-sm font-semibold text-shadow xl:hidden">
-          Step {step + 1} of {bookingSteps.length}: {current.title}
+        <p className="mb-3 text-sm font-semibold xl:hidden">
+          Step {step + 1} of {bookingSteps.length}: {current.short}
         </p>
-        <div className="h-1 overflow-hidden rounded-full bg-shadow/10 xl:hidden" aria-hidden="true">
+        <div className="h-1 overflow-hidden rounded-full bg-paper/15 xl:hidden" aria-hidden="true">
           <div
-            className="h-full rounded-full bg-burgundy transition-[width] duration-500 ease-(--ease-paper)"
+            className="h-full rounded-full bg-gold transition-[width] duration-500 ease-(--ease-paper)"
             style={{ width: `${((step + 1) / bookingSteps.length) * 100}%` }}
           />
         </div>
@@ -256,23 +289,23 @@ export function BookingFlow() {
                   disabled={index > step}
                   aria-current={active ? 'step' : undefined}
                   className={cn(
-                    'flex w-full items-center gap-3 rounded-full px-2 py-2 text-left text-[0.95rem] transition-colors',
-                    active && 'font-semibold text-shadow',
-                    done && 'cursor-pointer text-shadow/80 hover:bg-shadow/5',
-                    index > step && 'text-shadow/70',
+                    'flex w-full items-center gap-3 rounded-full px-2 py-2 text-left text-[0.92rem] transition-colors',
+                    active && 'font-semibold text-paper',
+                    done && 'cursor-pointer text-paper/80 hover:bg-paper/5',
+                    index > step && 'text-paper/55',
                   )}
                 >
                   <span
                     className={cn(
                       'inline-flex size-7 shrink-0 items-center justify-center rounded-full border text-xs tabular-nums transition-colors',
-                      active && 'border-burgundy bg-burgundy text-paper',
-                      done && 'border-shadow/40 bg-shadow/5',
-                      index > step && 'border-shadow/25',
+                      active && 'border-gold bg-gold text-shadow',
+                      done && 'border-paper/40 bg-paper/10',
+                      index > step && 'border-paper/25',
                     )}
                   >
                     {done ? <Check className="size-3.5" aria-hidden="true" /> : index + 1}
                   </span>
-                  {s.title}
+                  {s.short}
                   {done ? <span className="sr-only">(completed)</span> : null}
                 </button>
               </li>
@@ -280,10 +313,13 @@ export function BookingFlow() {
           })}
         </ol>
 
-        <p className="type-hand mt-6 hidden text-xl text-burgundy xl:block">no pressure — take your time</p>
+        <p className="mt-6 hidden items-center gap-2 text-sm text-paper/70 xl:flex">
+          <Monitor className="size-4 text-gold" aria-hidden="true" />
+          All conversations take place online.
+        </p>
       </aside>
 
-      <div className="paper-surface organic-edge relative min-w-0 p-5 sm:p-8 lg:p-10">
+      <div className="surface-card relative min-w-0 rounded-[1rem] border border-coffee/12 p-5 sm:p-8 lg:p-10">
         <div ref={panelRef} className="grid gap-7">
           <header className="grid gap-2">
             <p className="type-eyebrow text-coffee">
@@ -294,16 +330,63 @@ export function BookingFlow() {
             </h4>
           </header>
 
+          {current.id === 'type' ? (
+            <fieldset className="grid gap-4" aria-describedby={errors.enquiryType ? 'enquiry-type-error' : undefined}>
+              <legend className="mb-1 text-[0.95rem] leading-relaxed text-shadow/80">
+                Choose the option closest to what you have in mind. You can explain the details later.
+              </legend>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {enquiryTypes.map((type) => {
+                  const Icon = type.icon
+                  return (
+                    <label key={type.value} className={cn('relative', type.value === 'other' && 'sm:col-span-2')}>
+                      <input
+                        type="radio"
+                        name="enquiry-type"
+                        value={type.value}
+                        checked={selectedType === type.value}
+                        onChange={() => selectType(type.value)}
+                        className="peer sr-only"
+                      />
+                      <span
+                        className={cn(
+                          'flex h-full cursor-pointer items-start gap-4 rounded-[0.8rem] border border-coffee/20 bg-paper/40 p-4 transition-[background-color,color,border-color,transform,box-shadow] duration-300 ease-(--ease-paper)',
+                          'hover:-translate-y-0.5 hover:border-burgundy/60',
+                          'peer-checked:border-burgundy peer-checked:bg-burgundy peer-checked:text-paper peer-checked:shadow-[0_14px_26px_-16px_rgb(106_31_38/0.9)]',
+                          'peer-focus-visible:ring-[3px] peer-focus-visible:ring-burgundy/35',
+                          '[&_.hint]:text-coffee peer-checked:[&_.hint]:text-paper/75 [&_.icon]:bg-burgundy/10 [&_.icon]:text-burgundy peer-checked:[&_.icon]:bg-paper/15 peer-checked:[&_.icon]:text-paper',
+                        )}
+                      >
+                        <span className="icon inline-flex size-10 shrink-0 items-center justify-center rounded-full transition-colors">
+                          <Icon className="size-4.5" aria-hidden="true" />
+                        </span>
+                        <span className="grid gap-1">
+                          <span className="text-[0.98rem] leading-snug font-semibold">{type.label}</span>
+                          <span className="hint text-sm leading-snug">{type.hint}</span>
+                        </span>
+                      </span>
+                    </label>
+                  )
+                })}
+              </div>
+              {errors.enquiryType ? (
+                <p id="enquiry-type-error" className="text-sm font-medium text-destructive">
+                  {errors.enquiryType.message}
+                </p>
+              ) : null}
+            </fieldset>
+          ) : null}
+
           {current.id === 'date' ? (
             <div className="grid gap-5">
               <p className="text-[0.95rem] leading-relaxed text-shadow/80">
-                Pick a day, then a time that feels manageable. We’re open Monday to Saturday — once you choose a slot, we’ll move you
-                to the next step.
+                Pick a weekday, then a time that works for you. Slots are available Monday to Friday, 9:00 AM to 5:00 PM (IST). Once you choose a
+                slot, you’ll move to the next step.
               </p>
               <div className="grid items-stretch gap-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
                 <div
                   className={cn(
-                    'w-full min-w-0 rounded-[1.5rem] border bg-[#fffaf1]/70 p-3 sm:p-5',
+                    'w-full min-w-0 rounded-[1.25rem] border bg-[#fffaf1]/70 p-3 sm:p-5',
                     errors.date ? 'border-destructive/50' : 'border-coffee/15',
                   )}
                 >
@@ -316,7 +399,7 @@ export function BookingFlow() {
                       startMonth={range.from}
                       endMonth={range.to}
                       disabled={[{ before: range.from }, { after: range.to }, isClosedDay]}
-                      aria-label="Choose your preferred consultation date"
+                      aria-label="Choose your preferred date"
                       className="[--cell-size:2.6rem] sm:[--cell-size:2.9rem]"
                     />
                   ) : (
@@ -348,46 +431,33 @@ export function BookingFlow() {
             </div>
           ) : null}
 
-          {current.id === 'about' ? (
+          {current.id === 'details' ? (
             <div className="grid gap-6">
-              <BookingField id="name" label="Full name" error={errors.name?.message}>
-                {(aria) => <Input {...aria} {...register('name')} type="text" autoComplete="name" placeholder="e.g. Priya Sharma" />}
-              </BookingField>
-              <BookingField
-                id="street-address"
-                label="Address"
-                hint="Your area and city help us suggest the most convenient option."
-                error={errors.address?.message}
-              >
-                {(aria) => (
-                  <Input {...aria} {...register('address')} type="text" autoComplete="street-address" placeholder="House, street, area, city" />
-                )}
-              </BookingField>
-            </div>
-          ) : null}
-
-          {current.id === 'concern' ? (
-            <div className="grid gap-4">
+              <div className="grid gap-6 sm:grid-cols-2">
+                <BookingField id="name" label="Full name" error={errors.name?.message}>
+                  {(aria) => <Input {...aria} {...register('name')} type="text" autoComplete="name" placeholder="e.g. Priya Sharma" />}
+                </BookingField>
+                <BookingField id="organization" label="Organisation or institution" optional error={errors.organisation?.message}>
+                  {(aria) => (
+                    <Input {...aria} {...register('organisation')} type="text" autoComplete="organization" placeholder="School, company, university" />
+                  )}
+                </BookingField>
+              </div>
               <BookingField
                 id="description"
-                label="What would you like support with?"
+                label="What would you like to discuss?"
                 hint={
                   <>
-                    A few words are enough — for example, “I’ve been feeling anxious at work and can’t sleep.”{' '}
+                    {MESSAGE_HINTS[selectedType ?? 'other']}{' '}
                     <span className="tabular-nums">
-                      ({concernLength}/{CONCERN_MAX})
+                      ({messageLength}/{MESSAGE_MAX})
                     </span>
                   </>
                 }
-                error={errors.concern?.message}
+                error={errors.message?.message}
               >
                 {(aria) => (
-                  <Textarea
-                    {...aria}
-                    {...register('concern')}
-                    maxLength={CONCERN_MAX}
-                    placeholder="Share as much or as little as you’re comfortable with."
-                  />
+                  <Textarea {...aria} {...register('message')} maxLength={MESSAGE_MAX} placeholder="Share as much or as little as you’re comfortable with." />
                 )}
               </BookingField>
               <PrivacyDialog />
@@ -396,32 +466,35 @@ export function BookingFlow() {
 
           {current.id === 'contact' ? (
             <div className="grid gap-6">
-              <BookingField id="tel" label="Phone number" hint="We’ll call to confirm your appointment." error={errors.phone?.message}>
-                {(aria) => (
-                  <Input {...aria} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel" placeholder="+91 98765 43210" />
-                )}
-              </BookingField>
               <BookingField
                 id="email"
                 label="Email"
-                optional
+                hint="I’ll reply to this address to confirm your slot and next steps."
                 error={errors.email?.message}
+              >
+                {(aria) => <Input {...aria} {...register('email')} type="email" autoComplete="email" placeholder="you@example.com" />}
+              </BookingField>
+              <BookingField
+                id="tel"
+                label="Phone number"
+                optional
+                error={errors.phone?.message}
                 labelAddon={
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        aria-label="Why we ask for email"
+                        aria-label="Why I ask for a phone number"
                         className="inline-flex size-7 items-center justify-center rounded-full text-coffee hover:bg-shadow/5 hover:text-burgundy"
                       >
                         <Info className="size-4" aria-hidden="true" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>Only used to send your appointment confirmation.</TooltipContent>
+                    <TooltipContent>Only used if I need to reach you quickly about your slot.</TooltipContent>
                   </Tooltip>
                 }
               >
-                {(aria) => <Input {...aria} {...register('email')} type="email" autoComplete="email" placeholder="you@example.com" />}
+                {(aria) => <Input {...aria} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel" placeholder="+91 98765 43210" />}
               </BookingField>
             </div>
           ) : null}
@@ -429,21 +502,22 @@ export function BookingFlow() {
           {current.id === 'review' ? (
             <div className="grid gap-6">
               <p className="text-[0.95rem] leading-relaxed text-shadow/80">
-                Please check your details. Selecting <strong>Contact Us</strong> sends this request to our care team.
+                Please check your details. Selecting <strong>Send enquiry</strong> sends this to {siteConfig.email}.
               </p>
               <dl className="divide-y divide-coffee/15 rounded-2xl border border-coffee/15 bg-[#fffaf1]/60">
                 {[
-                  { label: 'Preferred date', value: selectedDate ? formatAppointmentDate(selectedDate) : '—', step: 0 },
-                  { label: 'Preferred time', value: selectedTime ? formatSlot(selectedTime) : '—', step: 0 },
-                  { label: 'Name', value: values.name, step: 1 },
-                  { label: 'Address', value: values.address, step: 1 },
-                  { label: 'Concern', value: values.concern, step: 2 },
-                  { label: 'Phone', value: values.phone, step: 3 },
-                  { label: 'Email', value: values.email || 'Not provided', step: 3 },
+                  { label: 'Enquiry type', value: enquiryLabel(selectedType), step: 0 },
+                  { label: 'Preferred date', value: selectedDate ? formatAppointmentDate(selectedDate) : '', step: 1 },
+                  { label: 'Preferred time', value: selectedTime ? `${formatSlot(selectedTime)} (IST)` : '', step: 1 },
+                  { label: 'Name', value: values.name, step: 2 },
+                  { label: 'Organisation', value: values.organisation || 'Not provided', step: 2 },
+                  { label: 'Your enquiry', value: values.message, step: 2 },
+                  { label: 'Email', value: values.email, step: 3 },
+                  { label: 'Phone', value: values.phone || 'Not provided', step: 3 },
                 ].map((row) => (
                   <div key={row.label} className="grid gap-1 px-4 py-4 sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-start sm:gap-4 sm:px-5">
                     <dt className="text-sm font-semibold text-coffee">{row.label}</dt>
-                    <dd className="min-w-0 text-[0.95rem] break-words whitespace-pre-line text-shadow">{row.value || '—'}</dd>
+                    <dd className="min-w-0 text-[0.95rem] break-words whitespace-pre-line text-shadow">{row.value || 'Not provided'}</dd>
                     <dd className="sm:text-right">
                       <Button type="button" variant="ghost" size="xs" onClick={() => goTo(row.step)} className="-ml-2.5 sm:ml-0">
                         <PencilLine aria-hidden="true" />
@@ -464,7 +538,7 @@ export function BookingFlow() {
                     aria-describedby={errors.consent ? 'consent-error' : undefined}
                     className="mt-1 size-5 shrink-0 cursor-pointer accent-burgundy"
                   />
-                  I agree that {siteConfig.name.trim()} may contact me by phone or email about this request.
+                  I agree that {siteConfig.name} may contact me by email or phone about this enquiry. I understand this form is not for emergencies.
                 </label>
                 {errors.consent ? (
                   <p id="consent-error" className="pl-8 text-sm font-medium text-destructive">
@@ -481,7 +555,7 @@ export function BookingFlow() {
               {errorMessage ? (
                 <Alert variant="destructive">
                   <Info aria-hidden="true" />
-                  <AlertTitle>Your request wasn’t sent</AlertTitle>
+                  <AlertTitle>Your enquiry wasn’t sent</AlertTitle>
                   <AlertDescription>{errorMessage}</AlertDescription>
                 </Alert>
               ) : null}
@@ -501,11 +575,11 @@ export function BookingFlow() {
             )}
             {step < lastStep ? (
               <Button type="submit" size="lg">
-                Continue to {bookingSteps[step + 1].title.toLowerCase()}
+                Continue
                 <ArrowRight aria-hidden="true" />
               </Button>
             ) : (
-              <Button type="submit" size="lg" disabled={status === 'submitting'} aria-describedby="contact-us-hint">
+              <Button type="submit" size="lg" disabled={status === 'submitting'}>
                 {status === 'submitting' ? (
                   <>
                     <Loader2 className="animate-spin" aria-hidden="true" />
@@ -513,18 +587,13 @@ export function BookingFlow() {
                   </>
                 ) : (
                   <>
-                    Contact Us
+                    Send enquiry
                     <Send aria-hidden="true" />
                   </>
                 )}
               </Button>
             )}
           </div>
-          {step === lastStep ? (
-            <p id="contact-us-hint" className="-mt-4 text-right text-xs text-coffee">
-              Sends your consultation request to our care team.
-            </p>
-          ) : null}
         </div>
       </div>
     </form>

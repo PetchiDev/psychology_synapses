@@ -1,184 +1,300 @@
 import type { LucideIcon } from 'lucide-react'
 import {
-  Backpack,
-  Baby,
-  BriefcaseBusiness,
-  CloudRain,
-  Drama,
+  BookOpen,
+  BookOpenText,
+  Building2,
+  Compass,
   Feather,
-  Gauge,
-  HeartPulse,
-  Link2Off,
-  MoonStar,
-  Repeat,
-  ShieldHalf,
-  Sun,
-  Wind,
-  BrainCircuit,
-  ClipboardList,
-  HandHeart,
-  HeartHandshake,
-  Leaf,
+  FlaskConical,
+  GraduationCap,
+  Lightbulb,
+  Megaphone,
   MessageCircle,
-  ShieldCheck,
-  Sprout,
+  NotebookPen,
+  ScrollText,
+  Sparkles,
   Users,
-  Waves,
-  Stethoscope,
+  Wrench,
 } from 'lucide-react'
 
-export interface TrustPoint {
+export interface Feature {
   title: string
   description: string
   icon: LucideIcon
-  note: string
 }
 
-export const trustPoints: TrustPoint[] = [
+export const features: Feature[] = [
   {
-    title: 'Experienced psychology professionals',
-    description: 'Licensed clinical and counselling psychologists with years of supervised practice across adults, children, couples and families.',
-    icon: Stethoscope,
-    note: '75+ years combined',
+    title: 'People and their experiences',
+    description: 'Psychology applied to the questions, difficulties and experiences people bring from everyday life.',
+    icon: Users,
   },
   {
-    title: 'Confidential, compassionate care',
-    description: 'What you share stays between you and your clinician, within clear professional and legal limits we explain upfront.',
-    icon: ShieldCheck,
-    note: 'always private',
+    title: 'People in their environments',
+    description: 'Work with organisations, workplaces, schools and colleges to address their particular needs.',
+    icon: Building2,
   },
   {
-    title: 'Evidence-based support',
-    description: 'We use approaches with a strong research base, such as CBT, ACT, EMDR and family therapy, adapted to you.',
-    icon: BrainCircuit,
-    note: 'grounded in research',
+    title: 'Psychology made accessible',
+    description: 'Talks, articles, learning resources and programmes that make psychological ideas easier to understand and use.',
+    icon: Lightbulb,
   },
   {
-    title: 'A personalised approach',
-    description: 'No scripts. Your goals, pace, culture and circumstances shape how we work together.',
-    icon: Sprout,
-    note: 'made for you',
-  },
-  {
-    title: 'A safe, welcoming space',
-    description: 'Quiet rooms, unhurried conversations and a team that treats every question with respect.',
-    icon: Leaf,
-    note: 'come as you are',
+    title: 'Research and collaboration',
+    description: 'Opportunities to work together on research papers, publications, conferences and related academic projects.',
+    icon: FlaskConical,
   },
 ]
 
-export interface Concern {
-  slug: string
-  title: string
-  summary: string
-  detail: string
-  icon: LucideIcon
-}
+export type EnquiryType = 'individual' | 'organisation' | 'talk' | 'research' | 'other'
 
-export const concerns: Concern[] = [
-  { slug: 'anxiety', icon: Wind, title: 'Anxiety', summary: 'Constant worry, restlessness or a sense that something is wrong.', detail: 'Support may include understanding anxious patterns, calming the body and gradually facing what feels difficult.' },
-  { slug: 'depression', icon: CloudRain, title: 'Depression', summary: 'Low mood, loss of interest or feeling flat for weeks at a time.', detail: 'Therapy can help you reconnect with meaning, routine and the people and activities that matter to you.' },
-  { slug: 'stress', icon: Gauge, title: 'Stress', summary: 'Feeling stretched thin by responsibilities, change or pressure.', detail: 'We look at sources of stress and build practical coping skills that fit your daily life.' },
-  { slug: 'panic-attacks', icon: HeartPulse, title: 'Panic Attacks', summary: 'Sudden waves of fear with racing heart, breathlessness or dizziness.', detail: 'Learning what happens during panic can make it less frightening and help you regain confidence.' },
-  { slug: 'relationship-problems', icon: HeartHandshake, title: 'Relationship Problems', summary: 'Recurring conflict, distance or difficulty communicating.', detail: 'Individual or couples sessions can help you understand patterns and communicate more clearly.' },
-  { slug: 'sleep-problems', icon: MoonStar, title: 'Sleep Problems', summary: 'Trouble falling asleep, staying asleep or waking rested.', detail: 'Psychological approaches to sleep focus on routines, thoughts and habits that affect rest.' },
-  { slug: 'workplace-stress', icon: BriefcaseBusiness, title: 'Workplace Stress', summary: 'Burnout, performance pressure or difficult work relationships.', detail: 'Support can help you set boundaries, manage workload stress and recover energy.' },
-  { slug: 'trauma', icon: ShieldHalf, title: 'Trauma', summary: 'Distress that lingers after frightening or overwhelming experiences.', detail: 'Trauma-informed therapy begins with safety and moves at a pace that feels manageable.' },
-  { slug: 'child-adolescent', icon: Backpack, title: 'Child & Adolescent Concerns', summary: 'Worries about a child or teenager’s mood, behaviour or development.', detail: 'Our child specialists work with young people and their families together.' },
-  { slug: 'emotional-difficulties', icon: Drama, title: 'Emotional Difficulties', summary: 'Feeling overwhelmed, numb, irritable or unsure why you feel the way you do.', detail: 'A safe space to name feelings can be the first step towards understanding them.' },
-  { slug: 'behavioural-concerns', icon: Repeat, title: 'Behavioural Concerns', summary: 'Habits or behaviours that feel hard to change or control.', detail: 'Behavioural therapy focuses on small, structured steps towards change.' },
-  { slug: 'self-esteem', icon: Sun, title: 'Self-Esteem Issues', summary: 'Harsh self-criticism or a persistent sense of not being good enough.', detail: 'Therapy can help you notice the inner critic and build a kinder relationship with yourself.' },
-  { slug: 'grief-loss', icon: Feather, title: 'Grief & Loss', summary: 'Coping with the death of someone close, or other significant losses.', detail: 'Grief has no timetable. Support offers room to remember, feel and adjust.' },
-  { slug: 'addiction-support', icon: Link2Off, title: 'Addiction-related Support', summary: 'Psychological support alongside recovery from alcohol, substances or compulsive behaviours.', detail: 'We work with motivation, triggers and relapse prevention, and coordinate with medical care where needed.' },
+export const enquiryTypes: { value: EnquiryType; label: string; hint: string; icon: LucideIcon }[] = [
+  { value: 'individual', label: 'Individual counselling', hint: 'Personal support at your own pace', icon: MessageCircle },
+  { value: 'organisation', label: 'Organisation or institution programme', hint: 'Workplaces, schools and colleges', icon: Building2 },
+  { value: 'talk', label: 'Psychoeducation, talk or workshop', hint: 'Events, lectures and sessions', icon: Megaphone },
+  { value: 'research', label: 'Research, publication or conference collaboration', hint: 'Papers, projects and academic work', icon: FlaskConical },
+  { value: 'other', label: 'Other enquiry', hint: 'Not sure where it fits? Start here', icon: Compass },
 ]
 
-export interface Service {
+export const enquiryLabel = (value?: string) => enquiryTypes.find((type) => type.value === value)?.label ?? ''
+
+export interface WorkArea {
   slug: string
+  number: string
   title: string
   summary: string
+  cta: string
+  enquiry: EnquiryType
   forWhom: string
-  icon: LucideIcon
-  /** A short storybook caption shown beneath the illustration. */
   caption: string
+  icon: LucideIcon
   image: { src: string; alt: string }
+  detail: {
+    intro: string
+    involves: string[]
+    suits: string
+    enquire: string
+  }
 }
 
-const serviceImage = (slug: string, alt: string) => ({ src: `/images/services/${slug}.jpg`, alt })
-
-export const services: Service[] = [
+export const workAreas: WorkArea[] = [
   {
     slug: 'individual-counselling',
+    number: '01',
     title: 'Individual Counselling',
-    summary: 'One-to-one sessions to talk through what you are facing and work towards change at your own pace.',
-    forWhom: 'Adults and young adults',
+    summary:
+      'A space to talk through personal experiences, concerns and questions at your own pace. Learn how counselling works, who it may suit and how to enquire.',
+    cta: 'Explore Individual Counselling',
+    enquiry: 'individual',
+    forWhom: 'Adults, online',
+    caption: 'an open page, and time to think it through',
     icon: MessageCircle,
-    caption: 'two chairs, a warm cup, and all the time you need',
-    image: serviceImage('individual-counselling', 'Engraved illustration of two armchairs facing each other beside a candle and a cup of tea in a quiet library'),
+    image: { src: '/images/work/individual-counselling.jpg', alt: 'An open leather journal and fountain pen beside two cups of tea in soft morning light' },
+    detail: {
+      intro:
+        'Counselling offers time and space to talk through what is on your mind, with someone who listens carefully and works with you at a pace that feels manageable.',
+      involves: [
+        'An initial online briefing call to understand what you are looking for',
+        'A conversation about whether my current areas of expertise are a suitable fit',
+        'Regular online sessions, planned around your availability',
+        'Guidance towards a more suitable professional if your concerns fall outside my scope',
+      ],
+      suits:
+        'Adults who would like to talk through personal experiences, everyday difficulties, questions about themselves or a situation they are finding hard to make sense of.',
+      enquire:
+        'Choose “Individual counselling” in the booking calendar, select a slot and share a few lines about what you have in mind. Individual counselling is currently offered at no cost, and I take on a limited number of clients at a time.',
+    },
   },
   {
-    slug: 'psychological-assessment',
-    title: 'Psychological Assessment',
-    summary: 'Structured assessments that clarify emotional, cognitive and behavioural patterns and guide next steps.',
-    forWhom: 'Children, teens and adults',
-    icon: ClipboardList,
-    caption: 'careful notes, gentle questions, a clearer picture',
-    image: serviceImage('psychological-assessment', 'Engraved illustration of an open notebook, fountain pen, magnifying glass and hourglass on a candlelit desk'),
+    slug: 'organisations',
+    number: '02',
+    title: 'Organisations, Schools & Colleges',
+    summary:
+      'Psychology-based consulting, workshops, group sessions, training and custom mental-health modules designed around the needs of a workplace or educational institution.',
+    cta: 'Discuss a Programme',
+    enquiry: 'organisation',
+    forWhom: 'Workplaces, schools & colleges',
+    caption: 'programmes shaped around your people',
+    icon: Building2,
+    image: { src: '/images/work/organisations.jpg', alt: 'A workshop table set with notebooks and coffee in front of a whiteboard of planning notes' },
+    detail: {
+      intro:
+        'Every organisation has its own people, pressures and goals. Programmes are shaped around those needs rather than taken off a shelf.',
+      involves: [
+        'Psychology-based consulting for workplaces and institutions',
+        'Workshops, group sessions and training',
+        'Custom mental-health modules and programme development',
+        'Wellbeing and learning initiatives for staff or students',
+      ],
+      suits: 'HR and people teams, school and college leadership, student wellbeing teams and organisations planning wellbeing or learning initiatives.',
+      enquire:
+        'Share your organisation’s goals, audience and requirements. We can then discuss the format, topics, scope, timelines and fees of a suitable programme.',
+    },
   },
   {
-    slug: 'child-psychology',
-    title: 'Child Psychology',
-    summary: 'Play-based and conversational support for children, with practical guidance for parents.',
-    forWhom: 'Ages 4 – 17 and families',
-    icon: Baby,
-    caption: 'blocks, stories and a bear to hold on to',
-    image: serviceImage('child-psychology', 'Engraved illustration of a young child hugging a teddy bear beside building blocks, a toy boat and a picture book'),
+    slug: 'talks',
+    number: '03',
+    title: 'Psychoeducation, Talks & Workshops',
+    summary:
+      'Talks and learning sessions for universities, schools, organisations, conferences and other audiences. Topics and formats can be discussed according to the event and its audience.',
+    cta: 'Invite Me to Speak',
+    enquiry: 'talk',
+    forWhom: 'Universities, events & conferences',
+    caption: 'psychological ideas, made easier to use',
+    icon: Megaphone,
+    image: { src: '/images/work/talks.jpg', alt: 'A wooden lectern with a microphone and open notes facing an audience in a lit auditorium' },
+    detail: {
+      intro: 'Psychological ideas are most useful when people can understand them and see where they fit in their own lives.',
+      involves: [
+        'Talks and guest lectures',
+        'Seminars and interactive workshops',
+        'Psychoeducation sessions on mental health topics',
+        'Formats adapted to the audience, event and time available',
+      ],
+      suits: 'Universities, schools, colleges, organisations, conferences and community groups.',
+      enquire: 'Include the event details, intended audience, area of interest and proposed date in your enquiry.',
+    },
   },
   {
-    slug: 'couples-counselling',
-    title: 'Couples & Relationship Counselling',
-    summary: 'Balanced, non-judgemental sessions to improve communication and work through conflict.',
-    forWhom: 'Couples and individuals',
-    icon: HeartHandshake,
-    caption: 'two cups, one table, and room to listen',
-    image: serviceImage('couples-counselling', 'Engraved illustration of two teacups with intertwining steam and a single rose on a small table'),
-  },
-  {
-    slug: 'stress-management',
-    title: 'Stress Management',
-    summary: 'Practical, skills-based sessions to understand stress and build sustainable coping routines.',
-    forWhom: 'Students and professionals',
-    icon: Waves,
-    caption: 'still water, slow breath, a quieter morning',
-    image: serviceImage('stress-management', 'Engraved illustration of a calm lake at dawn with a rowing boat by a jetty under a willow tree'),
-  },
-  {
-    slug: 'behavioural-therapy',
-    title: 'Behavioural Therapy',
-    summary: 'Evidence-based therapies such as CBT and ERP that focus on thoughts, habits and actions.',
-    forWhom: 'Adolescents and adults',
-    icon: BrainCircuit,
-    caption: 'one stepping stone, then the next',
-    image: serviceImage('behavioural-therapy', 'Engraved illustration of a stepping-stone garden path leading through seedlings to an open rose-covered gate'),
-  },
-  {
-    slug: 'trauma-support',
-    title: 'Trauma Support',
-    summary: 'Trauma-informed therapy that prioritises safety, stability and gentle processing.',
-    forWhom: 'Adults and adolescents',
-    icon: HandHeart,
-    caption: 'a steady light on a calm shore',
-    image: serviceImage('trauma-support', 'Engraved illustration of a stone lighthouse casting a warm beam over a calm twilight sea'),
-  },
-  {
-    slug: 'wellness-programmes',
-    title: 'Mental Wellness Programmes',
-    summary: 'Workshops and group programmes on stress, sleep and resilience for schools and workplaces.',
-    forWhom: 'Groups and organisations',
-    icon: Users,
-    caption: 'many voices, gathered beneath one tree',
-    image: serviceImage('wellness-programmes', 'Engraved illustration of people of different ages sitting in a circle beneath an oak tree hung with lanterns'),
+    slug: 'research',
+    number: '04',
+    title: 'Research, Publications & Collaborations',
+    summary:
+      'For researchers, students and professionals interested in discussing research projects, paper collaborations, publications, conference contributions or other academic work.',
+    cta: 'Discuss a Collaboration',
+    enquiry: 'research',
+    forWhom: 'Researchers, students & professionals',
+    caption: 'bringing research and practice closer together',
+    icon: FlaskConical,
+    image: { src: '/images/work/research.jpg', alt: 'An open book, handwritten notes and fountain pens on a wooden desk beside a stack of bound volumes' },
+    detail: {
+      intro: 'Research has been an important part of my academic journey, and I remain interested in work that brings research and practice closer together.',
+      involves: [
+        'Research projects and paper collaborations',
+        'Publications and academic writing',
+        'Conference contributions',
+        'Other academic projects in psychology',
+      ],
+      suits: 'Researchers, students and professionals working on psychological questions.',
+      enquire: 'Share the research area, the current stage of the project and the kind of collaboration you have in mind.',
+    },
   },
 ]
+
+export const libraryCard = {
+  title: 'The Library',
+  summary:
+    'A growing collection of articles, stories, psychology explainers, reflections, awareness content and practical tools readers can explore at their own pace.',
+  cta: 'Enter the Library',
+  image: { src: '/images/work/library.jpg', alt: 'A candle burning beside an open book on a desk in front of shelves of old leather-bound books' },
+}
+
+export interface LibraryChapter {
+  slug: string
+  title: string
+  summary: string
+  contents: string[]
+  icon: LucideIcon
+}
+
+export const libraryChapters: LibraryChapter[] = [
+  {
+    slug: 'articles',
+    title: 'Articles',
+    summary: 'Longer reads on psychological ideas, everyday questions and what research has to say about them.',
+    contents: ['Psychology in everyday life', 'Work, learning and wellbeing', 'Notes from research'],
+    icon: BookOpenText,
+  },
+  {
+    slug: 'stories',
+    title: 'Stories',
+    summary: 'Short stories about people, minds and the small moments that shape how we think, feel and behave.',
+    contents: ['Short fiction', 'Character studies', 'Stories with a question at their heart'],
+    icon: Feather,
+  },
+  {
+    slug: 'explainers',
+    title: 'Psychology Explainers',
+    summary: 'Clear explanations of concepts, terms and theories, written for curious readers rather than textbooks.',
+    contents: ['Key ideas, simply put', 'Common terms explained', 'Myths and what we actually know'],
+    icon: GraduationCap,
+  },
+  {
+    slug: 'reflections',
+    title: 'Reflections',
+    summary: 'Personal reflections on learning psychology, working with people and staying curious about the mind.',
+    contents: ['Lessons from study and practice', 'Questions worth sitting with', 'Thoughts on curiosity'],
+    icon: NotebookPen,
+  },
+  {
+    slug: 'awareness',
+    title: 'Awareness',
+    summary: 'Awareness content on mental health topics, so that understanding comes a little earlier and a little easier.',
+    contents: ['Mental health topics explained', 'Recognising common experiences', 'Where to find support'],
+    icon: Sparkles,
+  },
+  {
+    slug: 'tools',
+    title: 'Practical Tools',
+    summary: 'Simple exercises and resources you can try in your own time, such as the breathing exercise on this site.',
+    contents: ['Breathing and grounding exercises', 'Reflective prompts', 'Printable worksheets'],
+    icon: Wrench,
+  },
+]
+
+export const psychologist = {
+  intro: [
+    'Paper Skin & Synapses is built around different areas of psychology, from clinical settings and individual counselling to organisational consulting, psychoeducation and research. My expertise has taken me through organisational psychology and business, and clinical psychology, giving me opportunities to explore how psychological knowledge can be understood and applied in different contexts.',
+    'Paper Skin & Synapses grew from that interest. It brings these directions together through individual work, organisational programmes, psychoeducation, talks, research collaborations and a library of resources for curious readers.',
+  ],
+  portrait: { src: '/images/portrait/psychologist.png', alt: 'Portrait of the psychologist behind Paper Skin & Synapses, smiling and seated at a table' },
+  sections: [
+    {
+      id: 'foundation',
+      title: 'The foundation',
+      icon: GraduationCap,
+      body: [
+        'My credibility has been built through different areas of psychology, from understanding human behaviour to exploring its application in clinical and organisational settings. I hold a BSc in Psychology from India, an MSc in Organisational Psychology and Business from the University of Leeds, UK, and postgraduate study in Clinical Psychology in India.',
+        'Together, these experiences have shaped my interest in how people think, feel and behave, and how psychological knowledge can be applied across different parts of life.',
+      ],
+    },
+    {
+      id: 'work',
+      title: 'The work behind the interest',
+      icon: BookOpen,
+      body: [
+        'My experience spans HR and organisational settings, clinical environments, mental health programme development, workshops, individual counselling and research. I have worked with psychological ideas in different contexts, from workplace wellbeing and learning initiatives to individual concerns and clinical practice.',
+        'These experiences continue to inform my approach to developing relevant mental health programmes, communicating psychological concepts and contributing to work that brings research and practice closer together.',
+      ],
+    },
+    {
+      id: 'research',
+      title: 'Research & recognition',
+      icon: ScrollText,
+      body: [
+        'Research has been an important part of my academic journey. I have contributed to research papers and presented at national and international conferences, including work recognised with Best Paper Awards. I remain interested in research, academic writing and collaborations that create opportunities to explore psychological questions more deeply.',
+      ],
+    },
+  ],
+  degrees: [
+    { award: 'BSc Psychology', place: 'India' },
+    { award: 'MSc Organisational Psychology and Business', place: 'University of Leeds, UK' },
+    { award: 'Postgraduate study, Clinical Psychology', place: 'India' },
+  ],
+  training: ['Cognitive Behavioural Therapy (CBT)', 'Gestalt therapy', 'Dialectical Behaviour Therapy (DBT)'],
+  registrations: [
+    { region: 'India', credential: 'NCAHP registered' },
+    { region: 'Dubai, UAE', credential: 'DHA licensed' },
+  ],
+  story: [
+    'Psychology wasn’t something I had planned my life around. When I first encountered it in high school, it was simply one subject among several, unfamiliar and something I was still figuring out. I had no idea then that it would eventually become such a significant part of my life.',
+    'Somewhere along the way, an unexpected source of inspiration came along: Patrick Jane from The Mentalist. The way he observed people, picked up on little details and tried to understand what lay beneath their behaviour sparked a curiosity in me. I began to look at people a little differently, wondering what shaped their thoughts, actions and the ways they experienced the world.',
+    'That curiosity took me into an undergraduate degree in Psychology, followed by a postgraduate degree in Organisational Psychology and Business, and then another postgraduate journey in Clinical Psychology. With every step, I discovered another side of a subject I had once barely known. I explored people in workplaces and organisations, individual experiences and psychological disorders, research, and the many ways knowledge about the mind could be shared and applied.',
+    'The more I learnt, the less I wanted to confine myself to just one area. Psychology kept opening new doors, and I wanted to keep walking through them.',
+    'Paper Skin & Synapses grew out of that journey. It brings together my interests in individual counselling, clinical work within my scope of practice, organisational consulting, workshops, talks, research collaborations and a library of stories, reflections and practical resources. Each represents a different way of engaging with psychology, and each has a place here.',
+    'What began as an unfamiliar school subject gradually became my field of study, my work and a purpose I continue to discover. I am still learning, still asking questions and still finding new reasons to be curious about people. Paper Skin & Synapses is where I bring those parts of my journey together.',
+  ],
+}
 
 export interface ProcessStep {
   title: string
@@ -186,67 +302,130 @@ export interface ProcessStep {
 }
 
 export const processSteps: ProcessStep[] = [
-  { title: 'Reach Out', description: 'Book online, call or write to us. A short message is enough — you do not need the right words.' },
-  { title: 'Choose a Convenient Date', description: 'Pick a day that suits you. We confirm the time by phone or email within one working day.' },
-  { title: 'Meet With a Specialist', description: 'Meet a psychologist matched to your concern, in person or by video.' },
-  { title: 'Discuss Your Concerns', description: 'Talk openly at your own pace. Your clinician listens, asks gentle questions and explains options.' },
-  { title: 'Receive Personalised Guidance', description: 'Leave with a clear, shared plan — whether that is ongoing therapy, an assessment or a few practical steps.' },
+  {
+    title: 'Tell me what you have in mind',
+    description: 'Choose the type of work you’re enquiring about and share a brief description of what you need.',
+  },
+  { title: 'Choose a convenient slot', description: 'Select an available date and time from the calendar.' },
+  {
+    title: 'Meet online to discuss the details',
+    description:
+      'We’ll use an initial online conversation to understand your requirements, answer questions and discuss whether the proposed work is a suitable fit.',
+  },
+  {
+    title: 'Agree on the way forward',
+    description: 'Depending on the enquiry, we can discuss next steps, the proposed scope of work, timelines and any applicable fees.',
+  },
 ]
 
 export interface Faq {
   question: string
-  answer: string
+  answer: string[]
 }
 
 export const faqs: Faq[] = [
   {
-    question: 'When should I consult a psychologist?',
-    answer:
-      'Consider speaking with a psychologist when worry, low mood, stress or relationship difficulties last for more than a couple of weeks, or begin to affect your sleep, work, studies or relationships. You do not need to wait for things to feel severe — early support is often the most helpful.',
+    question: 'What can I contact Paper Skin & Synapses about?',
+    answer: [
+      'You can enquire about individual counselling, organisational consulting, mental-health programmes for schools and workplaces, talks, workshops, psychoeducation, research collaborations and related projects. The best starting point is to choose the category closest to what you need.',
+    ],
   },
   {
-    question: 'What happens during the first consultation?',
-    answer:
-      'The first consultation is a relaxed conversation of about 50 minutes. Your psychologist will ask what brings you in, a little about your background and what you hope will change. Together you agree on next steps, which might be regular sessions, an assessment or a referral if another service would suit you better.',
+    question: 'Can an organisation book a customised programme?',
+    answer: [
+      'Yes. You can share your organisation’s goals, audience and requirements. We can then discuss the format, topics, scope and feasibility of a suitable programme.',
+    ],
   },
   {
-    question: 'Do I need a referral?',
-    answer:
-      'No. You can book directly with us without a referral from a doctor. If you already have a referral letter or previous reports, you are welcome to bring them.',
+    question: 'Can I invite you to speak at a university, conference or event?',
+    answer: [
+      'Yes. You can enquire about talks, guest lectures, seminars and psychoeducation sessions. Include the event details, intended audience, area of interest and proposed date in your enquiry.',
+    ],
   },
   {
-    question: 'Are consultations confidential?',
-    answer:
-      'Yes. Everything you share is kept confidential. The only exceptions are rare situations where there is a serious risk to your safety or someone else’s, or where the law requires disclosure — your psychologist will explain these limits at the start.',
+    question: 'Can we collaborate on a research paper or publication?',
+    answer: [
+      'You can enquire about research projects, papers, publications, conference contributions and other academic collaborations. Share the research area, current stage of the project and the kind of collaboration you have in mind.',
+    ],
   },
   {
-    question: 'How can I book an appointment?',
-    answer: `Use the “Book a Consultation” form on this page: choose a preferred date, share your details and a brief description of your concern, then select “Contact Us”. Our team will call or email within one working day to confirm a time. You can also call us directly.`,
+    question: 'How do I book or enquire about your work?',
+    answer: [
+      'Use the booking calendar, select the relevant enquiry type, choose a suitable slot and share your contact details. You will receive follow-up about the enquiry and the next steps. Alternatively, you can contact me with the details by email or give me a quick call.',
+    ],
   },
   {
-    question: 'What psychological concerns can you help with?',
-    answer:
-      'Our psychologists offer support for anxiety, depression, stress, panic attacks, relationship problems, sleep problems, workplace stress, trauma, grief and loss, self-esteem, behavioural concerns, emotional difficulties, child and adolescent concerns, and the psychological side of addiction recovery.',
+    question: 'Is the practice online or do you have a physical location?',
+    answer: ['The practice is currently online. Information about in-person options will be added when a physical setup becomes available.'],
   },
   {
-    question: 'Can children and teenagers receive psychological support?',
-    answer:
-      'Yes. Our child and adolescent psychologists work with young people from around four years of age, alongside their parents or caregivers. Sessions use play, creative activities and conversation suited to the child’s age.',
+    question: 'How much do your services cost?',
+    answer: [
+      'Fees depend on the type and scope of work. Individual counselling is currently offered at no cost. Other work, including organisational programmes, talks and research-related projects, is paid and can be discussed during the enquiry process.',
+    ],
   },
   {
-    question: 'Can I choose a specific doctor?',
-    answer:
-      'Yes. You can browse our specialists and mention a preferred psychologist when booking. If you are unsure, our team will suggest a specialist whose experience matches your concern.',
+    question: 'What can I find in the Library?',
+    answer: [
+      'The Library brings together psychology articles, stories, reflections, awareness content and practical tools. Some resources are intended for everyday use, and the collection will continue to grow over time.',
+    ],
   },
   {
-    question: 'Is this service for emergencies?',
-    answer:
-      'No. If you or someone else is in immediate danger, call 112. For urgent emotional support at any hour, you can call the national Tele-MANAS helpline on 14416. Our booking form is for planned consultations only.',
+    question: 'What happens after I book an enquiry?',
+    answer: [
+      'Your first session will be a briefing call where we discuss what you are looking for, your concerns or ideas, and how we might proceed.',
+      'For individual counselling, we’ll use this conversation to understand your needs, discuss whether my current areas of expertise are a suitable fit, and explore availability and the possibility of future sessions. I currently take on a limited number of counselling clients so that I can be mindful of the time and attention each person requires.',
+      'If your concerns fall outside my current scope of expertise, I’ll let you know and, where possible, guide you towards a more suitable professional. This helps ensure that you receive support that is appropriate for your needs.',
+      'For organisational consulting, workshops, talks, psychoeducation, or research and publication collaborations, the briefing call will focus on understanding your requirements, discussing the scope of the work, and agreeing on the next steps.',
+      'The aim is to make the process clear from the beginning, so we can decide together how best to move forward.',
+    ],
   },
 ]
 
-export const heroHighlights = [
-  { label: 'Specialists', value: '6' },
-  { label: 'Years of care', value: '14+' },
-  { label: 'Languages', value: '5' },
+export interface CrisisLine {
+  label: string
+  number: string
+  href?: string
+  note?: string
+}
+
+export interface CrisisRegion {
+  id: string
+  name: string
+  lines: CrisisLine[]
+  note?: string
+}
+
+export const crisisRegions: CrisisRegion[] = [
+  {
+    id: 'in',
+    name: 'India',
+    lines: [
+      { label: 'Emergency', number: '112', href: 'tel:112', note: 'General emergency response' },
+      { label: 'Tele-MANAS', number: '14416', href: 'tel:14416', note: 'Mental-health support, free and available 24/7' },
+    ],
+  },
+  {
+    id: 'uk',
+    name: 'United Kingdom',
+    lines: [
+      { label: 'NHS 111', number: '111', href: 'tel:111', note: 'Urgent mental-health help in England: select the mental-health option' },
+      { label: 'Emergency', number: '999', href: 'tel:999', note: 'Or go to A&E' },
+      { label: 'Samaritans', number: '116 123', href: 'tel:116123', note: 'Emotional support' },
+    ],
+  },
+  {
+    id: 'us',
+    name: 'United States',
+    lines: [
+      { label: '988 Suicide & Crisis Lifeline', number: '988', href: 'tel:988', note: 'Call or text' },
+      { label: 'Emergency', number: '911', href: 'tel:911', note: 'For immediate physical danger' },
+    ],
+  },
+  {
+    id: 'other',
+    name: 'Other countries',
+    lines: [],
+    note: 'Use your country’s local emergency number or a verified local crisis-support service.',
+  },
 ]

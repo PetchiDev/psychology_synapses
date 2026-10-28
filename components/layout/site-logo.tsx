@@ -27,16 +27,16 @@ export function SiteLogo({ className, tone = 'dark' }: { className?: string; ton
     <Link
       href="/"
       aria-label={`${siteConfig.name}, home`}
-      className={cn('group inline-flex items-center gap-3 rounded-full outline-offset-4', className)}
+      className={cn('group inline-flex min-w-0 items-center gap-2 rounded-full outline-offset-4 sm:gap-2.5', className)}
     >
-      <LogoMark className="transition-transform duration-700 ease-(--ease-paper) group-hover:rotate-[-8deg]" />
-      <span className="flex flex-col leading-none">
-        <span className={cn('font-serif text-[1.4rem] tracking-tight', tone === 'dark' ? 'text-shadow' : 'text-paper')}>
-          Paper, Skin
-        </span>
-        <span className={cn('type-eyebrow mt-1 text-[0.6rem]', tone === 'dark' ? 'text-coffee' : 'text-latte')}>
-          &amp; Synapses
-        </span>
+      <LogoMark className="size-8 shrink-0 transition-transform duration-700 ease-(--ease-paper) group-hover:rotate-[-8deg] sm:size-10" />
+      <span
+        className={cn(
+          'truncate font-serif text-[clamp(1rem,0.55rem+2.2vw,1.35rem)] leading-none font-semibold tracking-[0.01em] whitespace-nowrap',
+          tone === 'dark' ? 'text-shadow' : 'text-paper',
+        )}
+      >
+        Paper Skin <span className={tone === 'dark' ? 'text-burgundy' : 'text-gold'}>&amp;</span> Synapses
       </span>
     </Link>
   )

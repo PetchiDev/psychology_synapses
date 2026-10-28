@@ -19,21 +19,21 @@ export function PrivacyDialog() {
       <DialogTrigger asChild>
         <Button type="button" variant="link" className="h-auto px-0 text-sm">
           <ShieldCheck aria-hidden="true" />
-          How we protect what you share
+          How your information is handled
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Your information, handled with care</DialogTitle>
           <DialogDescription>
-            What you write here may be personal. This is how we treat it.
+            What you write here may be personal. This is how it is treated.
           </DialogDescription>
         </DialogHeader>
         <ul className="grid gap-3 text-[0.95rem] leading-relaxed text-shadow/85">
-          <li>• Your request goes only to our care coordination team, who use it to arrange your consultation.</li>
+          <li>• Your enquiry is sent only to me, and is used to respond to you and arrange our conversation.</li>
           <li>• Nothing you type is saved in your browser, and the form is cleared once it is sent.</li>
-          <li>• A short description is enough. You can share more, at your own pace, with your psychologist.</li>
-          <li>• We never sell or share your details for marketing.</li>
+          <li>• A short description is enough. You can share more, at your own pace, when we speak.</li>
+          <li>• Your details are never sold or shared for marketing.</li>
         </ul>
         <DialogFooter>
           <DialogClose asChild>

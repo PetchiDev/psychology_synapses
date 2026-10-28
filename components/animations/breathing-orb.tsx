@@ -50,7 +50,7 @@ export function BreathingOrb({ className }: { className?: string }) {
         </div>
       </div>
       <p className="mt-6 max-w-xs text-center text-sm leading-relaxed text-paper/75">
-        Follow the circle for a moment: breathe in for four as it grows, and out for four as it softens.
+        Follow the circle as it expands and contracts. Breathe in gently, then breathe out slowly. Repeat for as long as it feels comfortable.
       </p>
     </div>
   )

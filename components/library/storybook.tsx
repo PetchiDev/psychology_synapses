@@ -5,13 +5,29 @@ import { siteConfig } from '@/lib/site'
 import { cn } from '@/lib/utils'
 import { Ornament } from './ornament'
 
+export interface StorybookContent {
+  coverSubtitle: string
+  pageLabel: string
+  pageTitle: string
+  pageBody: string
+}
+
+const LIBRARY_BOOK: StorybookContent = {
+  coverSubtitle: 'The Library',
+  pageLabel: 'Chapter I',
+  pageTitle: 'A gentle beginning',
+  pageBody:
+    'Once upon a time, someone grew curious about why people think, feel and behave the way they do. Every page in this library begins with that same question.',
+}
+
 interface StorybookProps {
   progress: MotionValue<number>
+  content?: StorybookContent
   /** `spread` opens the cover sideways (wide screens); `flip` lifts it upward like a notebook (phones). */
   layout?: 'spread' | 'flip'
 }
 
-export function Storybook({ progress, layout = 'spread' }: StorybookProps) {
+export function Storybook({ progress, layout = 'spread', content = LIBRARY_BOOK }: StorybookProps) {
   const flip = layout === 'flip'
   const opacity = useTransform(progress, [0.16, 0.3], [0, 1])
   const y = useTransform(progress, flip ? [0.16, 0.42, 0.72] : [0.16, 0.42], flip ? ['38vh', '0vh', '16vh'] : ['38vh', '0vh'])
@@ -34,13 +50,10 @@ export function Storybook({ progress, layout = 'spread' }: StorybookProps) {
               flip ? 'rounded-b-[0.35rem]' : 'rounded-r-[0.35rem]',
             )}
           >
-            <p className="font-ui text-[0.6rem] tracking-[0.3em] text-coffee uppercase">Chapter I</p>
+            <p className="font-ui text-[0.6rem] tracking-[0.3em] text-coffee uppercase">{content.pageLabel}</p>
             <Ornament className="mx-auto mt-3 h-3 w-28" />
-            <p className="mt-4 font-serif text-[1.35rem] leading-tight text-shadow">A gentle beginning</p>
-            <p className="drop-cap mt-4 text-left text-[0.72rem] leading-relaxed text-shadow/80">
-              Once upon a time, someone felt a little lost, and decided to ask for help. That small, brave step is where every story
-              in this house begins.
-            </p>
+            <p className="mt-4 font-serif text-[1.35rem] leading-tight text-shadow">{content.pageTitle}</p>
+            <p className="drop-cap mt-4 text-left text-[0.72rem] leading-relaxed text-shadow/80">{content.pageBody}</p>
           </div>
 
           <motion.div
@@ -55,7 +68,7 @@ export function Storybook({ progress, layout = 'spread' }: StorybookProps) {
             >
               <Ornament className="h-3 w-28 text-gold" />
               <p className="gilt-text font-serif text-[1.7rem] leading-tight">{siteConfig.name}</p>
-              <p className="font-ui text-[0.55rem] tracking-[0.3em] text-gold/80 uppercase">A book of gentle care</p>
+              <p className="font-ui text-[0.55rem] tracking-[0.3em] text-gold/80 uppercase">{content.coverSubtitle}</p>
               <Ornament className="h-3 w-28 rotate-180 text-gold" />
             </div>
             <div

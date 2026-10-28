@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button'
 export default function NotFound() {
   return (
     <section aria-labelledby="not-found-title" className="container-editorial grid min-h-[70vh] content-center gap-6 pt-32 pb-16">
-      <p className="type-hand text-3xl text-burgundy">this page wandered off</p>
+      <p className="type-hand text-3xl text-burgundy">page not found</p>
       <h1 id="not-found-title" className="type-display max-w-[14ch]">
-        We couldn’t find that page.
+        This page isn’t here.
       </h1>
-      <p className="type-lead max-w-xl text-shadow/80">The link may be outdated. Let’s get you back somewhere familiar.</p>
+      <p className="type-lead max-w-xl text-shadow/80">The link may be outdated. Here are a few good places to continue.</p>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button asChild size="lg">
           <Link href="/">
@@ -18,7 +18,7 @@ export default function NotFound() {
           </Link>
         </Button>
         <Button asChild size="lg" variant="outline">
-          <Link href="/specialists">Meet our specialists</Link>
+          <Link href="/work-with-me">Ways to work with me</Link>
         </Button>
       </div>
     </section>

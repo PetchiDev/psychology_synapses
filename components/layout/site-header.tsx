@@ -3,13 +3,14 @@
 import { useRef, useState, type MouseEvent } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowUpRight, Menu, Phone } from 'lucide-react'
+import { ArrowUpRight, Mail, Menu, Phone } from 'lucide-react'
 import { samePageHash, scrollToHash } from '@/lib/hash-scroll'
-import { mainNav, siteConfig } from '@/lib/site'
+import { bookHref, mainNav, siteConfig } from '@/lib/site'
 import { gsap, ScrollTrigger, useGSAP } from '@/components/animations/gsap'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { SiteLogo } from './site-logo'
 
 export function SiteHeader() {
@@ -68,24 +69,24 @@ export function SiteHeader() {
     window.setTimeout(() => scrollToHash(hash), 320)
   }
 
-  const isActive = (href: string) => (href === '/specialists' ? pathname.startsWith('/specialists') : false)
+  const isActive = (href: string) => (href.includes('#') || href === '/' ? false : pathname.startsWith(href))
 
   return (
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-2 pt-2 sm:px-4 sm:pt-3">
       <div
         ref={barRef}
-        className="mx-auto flex max-w-[84rem] items-center justify-between gap-4 rounded-full border border-gilt/35 bg-paper/85 px-4 py-[18px] shadow-[0_10px_30px_-22px_rgb(36_21_13/0.6)] backdrop-blur-md sm:px-6"
+        className="mx-auto flex max-w-[84rem] items-center justify-between gap-2 rounded-full border border-gilt/35 bg-paper/85 px-3 py-[18px] sm:gap-4 shadow-[0_10px_30px_-22px_rgb(36_21_13/0.6)] backdrop-blur-md sm:px-6"
       >
         <SiteLogo />
 
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label="Main" className="hidden xl:block">
           <ul className="flex items-center gap-0.5 xl:gap-1">
             {mainNav.slice(1).map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? 'page' : undefined}
-                  className="group relative rounded-full px-2.5 py-2 text-[0.88rem] font-medium whitespace-nowrap text-shadow/85 transition-colors hover:text-burgundy aria-[current=page]:text-burgundy xl:px-3 xl:text-[0.92rem]"
+                  className="group relative rounded-full px-2.5 py-2 text-[0.9rem] font-medium whitespace-nowrap text-shadow/85 transition-colors hover:text-burgundy aria-[current=page]:text-burgundy xl:px-3 xl:text-[0.92rem]"
                 >
                   {item.shortLabel ? (
                     <>
@@ -105,24 +106,31 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <Button asChild size="sm" className="hidden sm:inline-flex">
-            <Link href="/#book">
-              Book an Appointment
-              <ArrowUpRight aria-hidden="true" />
-            </Link>
-          </Button>
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button asChild size="sm" className="hidden sm:inline-flex">
+                <Link href={bookHref}>
+                  Book Me
+                  <ArrowUpRight aria-hidden="true" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="max-w-56 text-center">
+              Choose what you’d like to discuss, then select a time that works for you.
+            </TooltipContent>
+          </Tooltip>
 
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu">
+              <Button variant="outline" size="icon" className="xl:hidden" aria-label="Open menu">
                 <Menu className="size-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="overflow-y-auto">
               <SheetHeader className="px-6 pt-6">
                 <SheetTitle className="font-serif text-2xl font-normal">Menu</SheetTitle>
-                <SheetDescription className="text-coffee">Find your way around, or reach out when you’re ready.</SheetDescription>
+                <SheetDescription className="text-coffee">Find your way around, or get in touch when you’re ready.</SheetDescription>
               </SheetHeader>
               <nav aria-label="Mobile" className="px-6">
                 <ul className="grid">
@@ -142,10 +150,19 @@ export function SiteHeader() {
                 </ul>
               </nav>
               <div className="mt-auto grid gap-4 px-6 pb-8">
-                <Button asChild size="lg">
-                  <Link href="/#book" onClick={(event) => onMenuLink(event, '/#book')}>
-                    Book an Appointment
-                  </Link>
+                <div className="grid gap-2">
+                  <Button asChild size="lg">
+                    <Link href={bookHref} onClick={(event) => onMenuLink(event, bookHref)}>
+                      Book Me
+                    </Link>
+                  </Button>
+                  <p className="text-center text-sm text-coffee">Choose what you’d like to discuss, then select a time that works for you.</p>
+                </div>
+                <Button asChild variant="outline" size="lg">
+                  <a href={`mailto:${siteConfig.email}`}>
+                    <Mail aria-hidden="true" />
+                    Email me
+                  </a>
                 </Button>
                 <Button asChild variant="outline" size="lg">
                   <a href={siteConfig.phoneHref}>
@@ -154,7 +171,9 @@ export function SiteHeader() {
                   </a>
                 </Button>
                 <Separator className="bg-coffee/15" />
-                <p className="text-sm text-coffee">{siteConfig.hoursLabel}</p>
+                <p className="text-sm text-coffee">
+                  {siteConfig.hoursLabel} · {siteConfig.mode}
+                </p>
               </div>
             </SheetContent>
           </Sheet>

@@ -1,38 +1,41 @@
 import Link from 'next/link'
-import { ArrowRight, Phone } from 'lucide-react'
+import { ArrowRight, Compass } from 'lucide-react'
 import { siteConfig } from '@/lib/site'
-import { NightSky } from '@/components/animations/night-sky'
-import { Ornament } from '@/components/library/ornament'
+import { SynapseField } from '@/components/animations/synapse-field'
 import { Button } from '@/components/ui/button'
 
 export function FinalCta() {
   return (
-    <section aria-labelledby="final-cta-title" className="relative py-10 lg:py-14">
+    <section aria-labelledby="final-cta-title" className="relative py-12 lg:py-16">
       <div className="container-editorial">
-        <div className="relative isolate overflow-hidden rounded-[0.6rem] px-6 pt-24 pb-28 text-center text-paper shadow-[inset_0_0_0_1px_rgb(226_194_122/0.4),inset_0_0_0_9px_rgb(26_18_30),inset_0_0_0_10px_rgb(226_194_122/0.22)] sm:px-12 lg:pt-32 lg:pb-40">
-          <NightSky />
+        <div className="espresso-surface relative isolate overflow-hidden rounded-[1rem] px-6 py-20 text-center sm:px-12 lg:py-28">
+          <SynapseField tone="light" density={0.7} className="absolute inset-0 -z-10 opacity-60" />
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_50%,rgb(31_19_12/0.85)_20%,transparent_75%)]" />
           <div className="relative mx-auto grid max-w-3xl justify-items-center gap-6">
-            <p data-reveal className="type-hand text-2xl text-gold">and so, a new chapter begins, whenever you’re ready</p>
-            <Ornament className="text-gold" />
+            <p data-reveal className="type-eyebrow flex items-center gap-3 text-gold">
+              <span aria-hidden="true" className="rule-grow h-px w-8 bg-gold/70" />
+              Next step
+              <span aria-hidden="true" className="rule-grow h-px w-8 bg-gold/70" />
+            </p>
             <h2 id="final-cta-title" data-reveal className="type-h2 text-paper">
-              You Don’t Have to Navigate It <span data-highlight data-tone="light" className="magic-highlight">Alone</span>
+              Where would you like to <span data-highlight data-tone="light" className="magic-highlight italic">begin?</span>
             </h2>
             <p data-reveal className="type-lead max-w-2xl text-paper/85">
-              Whether you’re facing something new or something you’ve carried for a long time, there is a warm light on and a kind
-              voice waiting. Our team is here to listen — gently, confidentially and without judgement.
+              Psychology can take many forms, from individual work to organisational programmes, talks and research. Whatever brings you to{' '}
+              {siteConfig.name}, you can find out more about my work and choose the direction that fits your interests.
             </p>
             <div data-reveal className="mt-3 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
               <Button asChild size="lg" variant="paper">
-                <Link href="/#book">
-                  Book an Appointment
-                  <ArrowRight aria-hidden="true" />
+                <Link href="/#work">
+                  <Compass aria-hidden="true" />
+                  Find Your Way
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-paper/40 text-paper hover:bg-paper hover:text-burgundy">
-                <a href={siteConfig.phoneHref} aria-label={`Contact Us by phone on ${siteConfig.phone}`}>
-                  <Phone aria-hidden="true" />
-                  Contact Us
-                </a>
+                <Link href="/contact">
+                  Let’s Talk
+                  <ArrowRight aria-hidden="true" />
+                </Link>
               </Button>
             </div>
           </div>

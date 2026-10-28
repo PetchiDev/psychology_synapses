@@ -1,24 +1,33 @@
 import Link from 'next/link'
-import { Clock, Mail, MapPin, Phone } from 'lucide-react'
-import { doctors } from '@/data/doctors'
-import { fullAddress, mainNav, siteConfig } from '@/lib/site'
+import { Clock, Mail, Monitor, Phone } from 'lucide-react'
+import { legalNav, mainNav, siteConfig } from '@/lib/site'
 import { WaveDivider } from '@/components/animations/wave-divider'
+import { TakeBreathButton } from './take-breath-button'
 import { SiteLogo } from './site-logo'
+
+const exploreNav = [
+  { label: 'Home', href: '/' },
+  { label: 'About Me', href: '/about' },
+  { label: 'Ways to Work With Me', href: '/work-with-me' },
+  ...mainNav.filter((item) => ['/library', '/#faq', '/contact'].includes(item.href)),
+]
 
 export function SiteFooter() {
   return (
     <footer className="relative mt-24 bg-shadow text-paper/85">
       <WaveDivider variant="cloud" className="absolute inset-x-0 bottom-[calc(100%-1px)] text-shadow" />
-      <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] lg:py-20">
+      <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1fr] lg:py-20">
         <div className="grid content-start gap-5">
           <SiteLogo tone="light" />
-          <p className="max-w-xs text-[0.95rem] leading-relaxed text-paper/75">{siteConfig.tagline}. Confidential psychological support for adults, children, couples and families.</p>
+          <p className="max-w-sm text-[0.92rem] leading-relaxed text-paper/70">{siteConfig.disciplines.join(' · ')}</p>
+          <p className="type-eyebrow text-gold">Psychology since {siteConfig.foundingYear}</p>
+          <TakeBreathButton />
         </div>
 
         <nav aria-label="Footer">
-          <h2 className="type-eyebrow mb-5 font-sans text-latte">Explore</h2>
+          <h2 className="type-eyebrow mb-5 text-latte">Explore</h2>
           <ul className="grid gap-3">
-            {mainNav.map((item) => (
+            {exploreNav.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="text-[0.95rem] text-paper/85 transition-colors hover:text-paper hover:underline hover:underline-offset-4">
                   {item.label}
@@ -29,59 +38,61 @@ export function SiteFooter() {
         </nav>
 
         <div>
-          <h2 className="type-eyebrow mb-5 font-sans text-latte">Specialists</h2>
-          <ul className="grid gap-3">
-            {doctors.map((doctor) => (
-              <li key={doctor.slug}>
-                <Link
-                  href={`/specialists/${doctor.slug}`}
-                  className="text-[0.95rem] text-paper/85 transition-colors hover:text-paper hover:underline hover:underline-offset-4"
-                >
-                  {doctor.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="type-eyebrow mb-5 font-sans text-latte">Visit or call</h2>
+          <h2 className="type-eyebrow mb-5 text-latte">Contact</h2>
           <address className="grid gap-4 text-[0.95rem] not-italic">
-            <p className="flex gap-3">
-              <MapPin className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
-              {fullAddress()}
-            </p>
-            <a href={siteConfig.phoneHref} className="flex gap-3 hover:text-paper hover:underline hover:underline-offset-4">
-              <Phone className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
-              {siteConfig.phone}
-            </a>
             <a href={`mailto:${siteConfig.email}`} className="flex gap-3 break-all hover:text-paper hover:underline hover:underline-offset-4">
               <Mail className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
               {siteConfig.email}
             </a>
-            <p className="flex gap-3">
+            <a href={siteConfig.phoneHref} className="flex gap-3 hover:text-paper hover:underline hover:underline-offset-4">
+              <Phone className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
+              {siteConfig.phone}
+            </a>
+          </address>
+        </div>
+
+        <div>
+          <h2 className="type-eyebrow mb-5 text-latte">Availability</h2>
+          <ul className="grid gap-4 text-[0.95rem]">
+            <li className="flex gap-3">
               <Clock className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
               {siteConfig.hoursLabel}
-            </p>
-          </address>
+            </li>
+            <li className="flex gap-3">
+              <Monitor className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
+              {siteConfig.modeNote}
+            </li>
+          </ul>
         </div>
       </div>
 
       <div className="border-t border-paper/10">
-        <div className="container-editorial grid gap-4 py-8 text-sm text-paper/65 md:grid-cols-[1fr_auto] md:items-center">
+        <div className="container-editorial grid gap-5 py-8 text-sm text-paper/65 lg:grid-cols-[1fr_auto] lg:items-center">
           <p>
-            <strong className="font-semibold text-paper">Not for emergencies.</strong> If you or someone else is in immediate danger, call{' '}
-            <a href={`tel:${siteConfig.crisis.emergency}`} className="font-semibold text-paper underline underline-offset-4">
-              {siteConfig.crisis.emergency}
-            </a>
-            . For 24×7 emotional support, call Tele-MANAS on{' '}
-            <a href={siteConfig.crisis.href} className="font-semibold text-paper underline underline-offset-4">
-              {siteConfig.crisis.number}
+            <strong className="font-semibold text-paper">Not for emergencies.</strong> If you or someone else is in immediate danger, contact your local
+            emergency service. In India, call{' '}
+            <a href="tel:112" className="font-semibold text-paper underline underline-offset-4">
+              112
+            </a>{' '}
+            or Tele-MANAS on{' '}
+            <a href="tel:14416" className="font-semibold text-paper underline underline-offset-4">
+              14416
             </a>
             .
           </p>
-          <p>
-            © {siteConfig.legalName} · Caring since {siteConfig.foundingYear}
+          <nav aria-label="Legal">
+            <ul className="flex flex-wrap gap-x-5 gap-y-2">
+              {legalNav.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="hover:text-paper hover:underline hover:underline-offset-4">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <p className="lg:col-span-2">
+            © {siteConfig.legalName} · Psychology since {siteConfig.foundingYear}
           </p>
         </div>
       </div>

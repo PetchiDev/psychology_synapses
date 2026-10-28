@@ -1,47 +1,26 @@
 export const siteConfig = {
-  name: 'Paper, Skin & Synapses',
-  shortName: 'Paper, Skin',
-  legalName: 'Paper, Skin & Synapses Hospital',
-  tagline: 'A calm, human place for psychological care',
+  name: 'Paper Skin & Synapses',
+  shortName: 'Paper Skin',
+  legalName: 'Paper Skin & Synapses',
+  tagline: 'Every mind has more than one story',
+  disciplines: ['Psychology', 'Clinical Practice', 'Consulting', 'Talks and Education', 'Research and Resources'],
   description:
-    'Paper, Skin & Synapses is a psychology and mental health hospital offering confidential counselling, psychological assessment, child and adolescent psychology, couples counselling, trauma support and wellness programmes with experienced specialists.',
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://paperskinpsychology.com').replace(/\/$/, ''),
+    'Paper Skin & Synapses brings together individual counselling, clinical practice, organisational consulting, psychoeducation, talks, research collaborations and a library of psychology resources.',
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://paperskinandsynapses.in').replace(/\/$/, ''),
   locale: 'en_IN',
-  email: 'care@paperskinpsychology.com',
-  phone: '+91 44 4000 1234',
-  phoneHref: 'tel:+914440001234',
-  address: {
-    street: '14 Banyan Grove Road, Alwarpet',
-    locality: 'Chennai',
-    region: 'Tamil Nadu',
-    postalCode: '600018',
-    country: 'IN',
-    countryName: 'India',
-  },
-  geo: { latitude: 13.0339, longitude: 80.2537 },
-  hours: [
-    { days: 'Monday – Friday', opens: '09:00', closes: '19:00', schema: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] },
-    { days: 'Saturday', opens: '09:00', closes: '14:00', schema: ['Saturday'] },
-  ],
-  hoursLabel: 'Mon–Fri 9:00–19:00 · Sat 9:00–14:00',
-  foundingYear: 2012,
-  languages: ['English', 'Tamil', 'Hindi', 'Telugu', 'Malayalam'],
-  crisis: {
-    label: 'Tele-MANAS (24×7 national mental health helpline)',
-    number: '14416',
-    href: 'tel:14416',
-    emergency: '112',
-  },
+  email: 'megha@paperskinandsynapses.in',
+  phone: '98400 52230',
+  phoneHref: 'tel:+919840052230',
+  mode: 'Online',
+  modeNote: 'The practice is currently online.',
+  hours: [{ days: 'Monday to Friday', opens: '09:00', closes: '17:00', schema: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] }],
+  hoursLabel: 'Monday to Friday, 9:00 AM to 5:00 PM',
+  foundingYear: 2018,
 } as const
 
 export type SiteConfig = typeof siteConfig
 
 export const absoluteUrl = (path = '/') => `${siteConfig.url}${path.startsWith('/') ? path : `/${path}`}`
-
-export const fullAddress = () => {
-  const { street, locality, region, postalCode, countryName } = siteConfig.address
-  return `${street}, ${locality}, ${region} ${postalCode}, ${countryName}`
-}
 
 export interface NavItem {
   label: string
@@ -51,9 +30,18 @@ export interface NavItem {
 
 export const mainNav: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'About', href: '/#about' },
-  { label: 'Services', href: '/#services' },
-  { label: 'Our Specialists', shortLabel: 'Specialists', href: '/specialists' },
+  { label: 'About Me', href: '/about' },
+  { label: 'Work With Me', href: '/work-with-me' },
+  { label: 'Library', href: '/library' },
   { label: 'FAQs', href: '/#faq' },
-  { label: 'Contact', href: '/#book' },
+  { label: 'Contact Me', shortLabel: 'Contact', href: '/contact' },
 ]
+
+export const legalNav: NavItem[] = [
+  { label: 'Privacy policy', href: '/legal/privacy' },
+  { label: 'Terms of use', href: '/legal/terms' },
+  { label: 'Website disclaimer', href: '/legal/disclaimer' },
+  { label: 'Professional disclosures', href: '/legal/disclosures' },
+]
+
+export const bookHref = '/contact#book'

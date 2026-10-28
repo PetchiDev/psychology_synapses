@@ -31,7 +31,7 @@ export function TimeSlotPicker({ date, value, now, error, onChange }: TimeSlotPi
 
       {!date ? (
         <p className="grid flex-1 place-items-center rounded-2xl border border-dashed border-coffee/30 px-4 py-10 text-center text-[0.95rem] leading-relaxed text-coffee">
-          Choose a date on the calendar to see available time slots.
+          Choose a weekday on the calendar to see available time slots.
         </p>
       ) : (
         SLOT_PERIODS.map((period) => {

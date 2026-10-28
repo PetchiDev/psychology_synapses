@@ -14,9 +14,9 @@ interface Spark {
   color: string
 }
 
-const COLORS = ['#f3dfa0', '#f3c9a8', '#cdc3e3', '#fff6dc', '#e8bec0']
-const MAX_SPARKS = 60
-const EMIT_EVERY_PX = 14
+const COLORS = ['#d9b56a', '#c99a6b', '#e2c27a', '#b98a74']
+const MAX_SPARKS = 22
+const EMIT_EVERY_PX = 34
 
 const random = (min: number, max: number) => min + Math.random() * (max - min)
 
@@ -55,7 +55,7 @@ export function CursorSparkles() {
       ctx.rotate(spark.rotation)
       ctx.fillStyle = spark.color
       ctx.shadowColor = spark.color
-      ctx.shadowBlur = 6
+      ctx.shadowBlur = 3
       ctx.beginPath()
       ctx.moveTo(0, -s)
       ctx.quadraticCurveTo(s * 0.18, -s * 0.18, s, 0)
@@ -83,7 +83,7 @@ export function CursorSparkles() {
         spark.vy += 14 * dt
         spark.rotation += dt * 0.8
         const progress = spark.life / spark.maxLife
-        drawStar(spark, Math.sin(progress * Math.PI) * 0.9)
+        drawStar(spark, Math.sin(progress * Math.PI) * 0.55)
       }
 
       if (sparks.length) frame = requestAnimationFrame(tick)
@@ -95,11 +95,11 @@ export function CursorSparkles() {
       sparks.push({
         x: x + random(-6, 6),
         y: y + random(-6, 6),
-        vx: random(-12, 12),
-        vy: random(-18, 4),
+        vx: random(-8, 8),
+        vy: random(-10, 2),
         life: 0,
-        maxLife: random(0.9, 1.5),
-        size: random(2.5, 5),
+        maxLife: random(0.6, 1),
+        size: random(1.6, 3.2),
         rotation: random(0, Math.PI),
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
       })

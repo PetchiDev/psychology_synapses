@@ -1,4 +1,4 @@
-export type SlotPeriod = 'Morning' | 'Afternoon' | 'Evening'
+export type SlotPeriod = 'Morning' | 'Afternoon'
 
 export interface TimeSlot {
   value: string
@@ -6,10 +6,9 @@ export interface TimeSlot {
   period: SlotPeriod
 }
 
-const WEEKDAY_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00']
-const SATURDAY_SLOTS = ['09:00', '10:00', '11:00', '12:00', '13:00']
+const WEEKDAY_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00']
 
-export const SLOT_PERIODS: SlotPeriod[] = ['Morning', 'Afternoon', 'Evening']
+export const SLOT_PERIODS: SlotPeriod[] = ['Morning', 'Afternoon']
 
 const toMinutes = (value: string) => {
   const [hours, minutes] = value.split(':').map(Number)
@@ -23,16 +22,13 @@ export const formatSlot = (value: string) => {
   return `${hour12}:${String(minutes).padStart(2, '0')} ${suffix}`
 }
 
-const toSlot = (value: string): TimeSlot => {
-  const hours = Number(value.slice(0, 2))
-  return {
-    value,
-    label: formatSlot(value),
-    period: hours < 12 ? 'Morning' : hours < 17 ? 'Afternoon' : 'Evening',
-  }
-}
+const toSlot = (value: string): TimeSlot => ({
+  value,
+  label: formatSlot(value),
+  period: Number(value.slice(0, 2)) < 12 ? 'Morning' : 'Afternoon',
+})
 
-export const slotsFor = (date: Date) => (date.getDay() === 6 ? SATURDAY_SLOTS : WEEKDAY_SLOTS).map(toSlot)
+export const slotsFor = (date: Date) => (date.getDay() === 0 || date.getDay() === 6 ? [] : WEEKDAY_SLOTS.map(toSlot))
 
 export const isSlotAvailable = (date: Date, value: string, now: Date) => {
   const sameDay =

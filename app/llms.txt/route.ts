@@ -1,6 +1,5 @@
-import { concerns, faqs, services } from '@/data/content'
-import { doctors } from '@/data/doctors'
-import { absoluteUrl, fullAddress, siteConfig } from '@/lib/site'
+import { faqs, libraryChapters, workAreas } from '@/data/content'
+import { absoluteUrl, siteConfig } from '@/lib/site'
 
 export function GET() {
   const body = [
@@ -8,32 +7,26 @@ export function GET() {
     '',
     `> ${siteConfig.description}`,
     '',
-    '## Organisation',
-    `- Type: Psychology and mental health hospital (outpatient psychological care)`,
-    `- Address: ${fullAddress()}`,
-    `- Phone: ${siteConfig.phone}`,
+    '## Practice',
+    `- Areas: ${siteConfig.disciplines.join(', ')}`,
+    `- Psychology since ${siteConfig.foundingYear}`,
+    `- ${siteConfig.modeNote}`,
+    `- Availability: ${siteConfig.hoursLabel}`,
     `- Email: ${siteConfig.email}`,
-    `- Hours: ${siteConfig.hoursLabel}`,
-    `- Languages: ${siteConfig.languages.join(', ')}`,
-    `- Not an emergency service. Emergencies: ${siteConfig.crisis.emergency}. 24x7 helpline: Tele-MANAS ${siteConfig.crisis.number}.`,
+    `- Phone: ${siteConfig.phone}`,
+    '- Not an emergency service. In India call 112 for emergencies or Tele-MANAS on 14416 for 24/7 mental-health support.',
     '',
     '## Booking',
-    `- Book online: ${absoluteUrl('/#book')} — choose a preferred date (Mon–Sat, up to 90 days ahead), then enter name, address, concern, phone and optional email, review, and select "Contact Us". The team confirms a time within one working day.`,
+    `- Book online: ${absoluteUrl('/contact#book')}. Choose an enquiry type, select a date and time (Monday to Friday), share a short description and contact details, then review and send.`,
     '',
-    '## Services',
-    ...services.map((service) => `- ${service.title}: ${service.summary} (For: ${service.forWhom})`),
+    '## Ways to work with me',
+    ...workAreas.map((area) => `- [${area.title}](${absoluteUrl(`/work-with-me#${area.slug}`)}): ${area.summary}`),
     '',
-    '## Areas of psychological support',
-    ...concerns.map((concern) => `- ${concern.title}: ${concern.summary}`),
-    '',
-    '## Specialists',
-    ...doctors.map(
-      (doctor) =>
-        `- [${doctor.name}](${absoluteUrl(`/specialists/${doctor.slug}`)}): ${doctor.title}. ${doctor.yearsOfExperience} years' experience. Languages: ${doctor.languages.join(', ')}.`,
-    ),
+    '## Library',
+    ...libraryChapters.map((chapter) => `- ${chapter.title}: ${chapter.summary}`),
     '',
     '## FAQ',
-    ...faqs.flatMap((faq) => [`### ${faq.question}`, faq.answer, '']),
+    ...faqs.flatMap((faq) => [`### ${faq.question}`, ...faq.answer, '']),
   ].join('\n')
 
   return new Response(body, {

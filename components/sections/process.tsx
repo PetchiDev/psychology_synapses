@@ -4,15 +4,13 @@ import { SectionHeading } from './section-heading'
 
 export function Process() {
   return (
-    <section id="process" aria-labelledby="process-title" className="relative py-14 lg:py-20">
+    <section id="process" aria-labelledby="process-title" className="relative py-20 lg:py-28">
       <div className="container-editorial">
         <SectionHeading
           id="process-title"
-          index="05"
-          eyebrow="Your first steps"
-          title="What to *Expect*"
-          description="Reaching out is often the hardest part. Here is exactly what happens next, so there are no surprises."
-          note="one gentle step at a time"
+          eyebrow="From your first enquiry to the next step"
+          title="Getting *started*"
+          description={<p>Here is how the process works.</p>}
           align="center"
           className="mx-auto"
         />

@@ -1,14 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Cinzel, EB_Garamond, IM_Fell_English } from 'next/font/google'
-import { doctors } from '@/data/doctors'
-import { services } from '@/data/content'
+import { Cinzel, Cormorant_Garamond, DM_Sans, IM_Fell_English } from 'next/font/google'
 import { siteConfig } from '@/lib/site'
 import { JsonLd } from '@/lib/seo/json-ld'
 import { graph, organizationSchema, websiteSchema } from '@/lib/seo/schemas'
 import { ButtonSparkles } from '@/components/animations/button-sparkles'
 import { CursorSparkles } from '@/components/animations/cursor-sparkles'
 import { CalmCorner } from '@/components/layout/calm-corner'
-import { FairyParticles } from '@/components/animations/fairy-particles'
 import { ReadingProgress } from '@/components/animations/reading-progress'
 import { SmoothScroll } from '@/components/animations/smooth-scroll'
 import { HashLinkHandler } from '@/components/layout/hash-link-handler'
@@ -18,28 +15,35 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import 'lenis/dist/lenis.css'
 import './globals.css'
 
-const display = IM_Fell_English({
+const display = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: '400',
+  weight: ['500', '600', '700'],
   style: ['normal', 'italic'],
   variable: '--font-display',
   display: 'swap',
 })
 
-const body = EB_Garamond({
+const body = DM_Sans({
   subsets: ['latin'],
-  style: ['normal', 'italic'],
   variable: '--font-body',
   display: 'swap',
 })
 
-const caps = Cinzel({
+const fell = IM_Fell_English({
   subsets: ['latin'],
-  variable: '--font-caps',
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-fell',
   display: 'swap',
 })
 
-const defaultTitle = `${siteConfig.name} — Psychology & Mental Health Hospital in ${siteConfig.address.locality}`
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  variable: '--font-cinzel',
+  display: 'swap',
+})
+
+const defaultTitle = `${siteConfig.name} | Psychology, Clinical Practice, Consulting, Talks and Research`
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -51,16 +55,15 @@ export const metadata: Metadata = {
   publisher: siteConfig.legalName,
   category: 'health',
   keywords: [
-    'psychologist in Chennai',
-    'psychology hospital',
-    'mental health hospital',
-    'counselling',
-    'clinical psychologist',
-    'child psychologist',
-    'couples counselling',
-    'anxiety therapy',
-    'depression counselling',
-    'trauma therapy',
+    'psychologist',
+    'individual counselling online',
+    'organisational psychology',
+    'workplace wellbeing programmes',
+    'school mental health programmes',
+    'psychoeducation talks',
+    'psychology workshops',
+    'psychology research collaboration',
+    'psychology library',
   ],
   openGraph: {
     type: 'website',
@@ -79,11 +82,11 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  formatDetection: { telephone: true, email: true, address: true },
+  formatDetection: { telephone: true, email: true, address: false },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#f7eedc',
+  themeColor: '#f3e6c8',
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
@@ -91,7 +94,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en-IN" data-scroll-behavior="smooth" className={`${display.variable} ${body.variable} ${caps.variable}`}>
+    <html
+      lang="en-IN"
+      data-scroll-behavior="smooth"
+      className={`${display.variable} ${body.variable} ${fell.variable} ${cinzel.variable}`}
+    >
       <body className="flex min-h-dvh flex-col">
         <a
           href="#main"
@@ -99,10 +106,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         >
           Skip to main content
         </a>
-        <div aria-hidden="true" className="scroll-tint pointer-events-none fixed inset-0 -z-10" />
         <SmoothScroll />
         <ReadingProgress />
-        <FairyParticles />
         <TooltipProvider delayDuration={200}>
           <SiteHeader />
           <main id="main" tabIndex={-1} className="relative flex-1 outline-none">
@@ -114,15 +119,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <ButtonSparkles />
         <CursorSparkles />
         <CalmCorner />
-        <JsonLd
-          data={graph(
-            organizationSchema(
-              services,
-              doctors.map((doctor) => doctor.slug),
-            ),
-            websiteSchema(),
-          )}
-        />
+        <JsonLd data={graph(organizationSchema(), websiteSchema())} />
       </body>
     </html>
   )

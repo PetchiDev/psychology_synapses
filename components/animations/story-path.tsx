@@ -1,16 +1,27 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import type { ProcessStep } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { gsap, useGSAP } from './gsap'
 
 const VIEW_W = 1000
 const VIEW_H = 170
-const PATH = 'M100 40 C200 40 200 130 300 130 S400 40 500 40 S600 130 700 130 S800 40 900 40'
+const TOP = 40
+const BOTTOM = 130
+
+const buildPath = (count: number) => {
+  const step = VIEW_W / count
+  const x = (index: number) => step * (index + 0.5)
+  const y = (index: number) => (index % 2 === 0 ? TOP : BOTTOM)
+  let path = `M${x(0)} ${y(0)} C${x(0) + step / 2} ${y(0)} ${x(1) - step / 2} ${y(1)} ${x(1)} ${y(1)}`
+  for (let index = 2; index < count; index++) path += ` S${x(index) - step / 2} ${y(index)} ${x(index)} ${y(index)}`
+  return path
+}
 
 export function StoryPath({ steps }: { steps: ProcessStep[] }) {
   const root = useRef<HTMLDivElement>(null)
+  const PATH = buildPath(steps.length)
 
   useGSAP(
     () => {
@@ -117,7 +128,11 @@ export function StoryPath({ steps }: { steps: ProcessStep[] }) {
         <div data-story-line className="h-full w-full origin-top bg-[#c99a6b]" />
       </div>
 
-      <ol data-reveal-group className="relative grid gap-10 lg:grid-cols-5 lg:gap-x-0">
+      <ol
+        data-reveal-group
+        style={{ '--cols': steps.length } as CSSProperties}
+        className="relative grid gap-10 lg:grid-cols-[repeat(var(--cols),minmax(0,1fr))] lg:gap-x-0"
+      >
         {steps.map((step, index) => (
           <li
             key={step.title}
@@ -136,7 +151,7 @@ export function StoryPath({ steps }: { steps: ProcessStep[] }) {
             </span>
             <div className="grid gap-2 lg:mt-3">
               <h3 className="type-h3">{step.title}</h3>
-              <p className="text-[0.96rem] leading-relaxed text-shadow/80 lg:mx-auto lg:max-w-[15rem]">{step.description}</p>
+              <p className="text-[0.96rem] leading-relaxed text-shadow/80 lg:mx-auto lg:max-w-[17rem]">{step.description}</p>
             </div>
           </li>
         ))}
