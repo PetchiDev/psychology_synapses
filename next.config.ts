@@ -34,6 +34,7 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   experimental: {
+    agentUpgrade: 'security',
     optimizePackageImports: ['lucide-react', 'date-fns'],
   },
   turbopack: {
