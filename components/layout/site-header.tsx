@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { OpeningHours } from './opening-hours'
 import { SiteLogo } from './site-logo'
 
 export function SiteHeader() {
@@ -172,7 +173,7 @@ export function SiteHeader() {
                 </Button>
                 <Separator className="bg-coffee/15" />
                 <p className="text-sm text-coffee">
-                  {siteConfig.hoursLabel} · {siteConfig.mode}
+                  <OpeningHours fallback={`${siteConfig.hoursLabel} · ${siteConfig.mode}`} />
                 </p>
               </div>
             </SheetContent>

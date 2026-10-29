@@ -158,3 +158,13 @@ export async function cancelBooking(reference: string, token: string, reason: st
     })
   ).data
 }
+
+let openingHoursRequest: Promise<string | null> | null = null
+
+/** The opening-hours text Megha sets in the CMS (Settings), fetched once per page load. */
+export function fetchOpeningHours(): Promise<string | null> {
+  openingHoursRequest ??= request<{ openingHours?: string }>('/clinic')
+    .then((clinic) => clinic.openingHours?.trim() || null)
+    .catch(() => null)
+  return openingHoursRequest
+}

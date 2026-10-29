@@ -11,7 +11,7 @@ import {
   bookingSteps,
   bookingWindow,
   ENQUIRY_VALUES,
-  isClosedDay,
+  isUnavailableDay,
   MESSAGE_MAX,
   type BookingFormInput,
   type BookingFormValues,
@@ -149,10 +149,7 @@ export function BookingFlow() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedKey, service, reloadSlots, setValue])
 
-  const isFullyBooked = (date: Date) => {
-    const summary = calendar?.get(toIsoDate(date))
-    return summary ? !summary.open : false
-  }
+  const isUnavailable = isUnavailableDay(calendar, toIsoDate)
   const daySlots = day && day.key === selectedKey ? day : null
   const slotsLoading = Boolean(selectedKey) && !daySlots
 
@@ -469,8 +466,8 @@ export function BookingFlow() {
           {current.id === 'date' ? (
             <div className="grid gap-5">
               <p className="text-[0.95rem] leading-relaxed text-shadow/80">
-                Pick a weekday, then a time that works for you. Slots are available Monday to Friday, 9:00 AM to 5:00 PM (IST). Once you choose a
-                slot, you’ll move to the next step.
+                Pick a day, then a time that works for you. Days without free slots are greyed out, and all times are in IST. Once you
+                choose a slot, you’ll move to the next step.
               </p>
               <div className="grid items-stretch gap-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
                 <div
@@ -487,7 +484,7 @@ export function BookingFlow() {
                       defaultMonth={selectedDate ?? range.from}
                       startMonth={range.from}
                       endMonth={range.to}
-                      disabled={[{ before: range.from }, { after: range.to }, isClosedDay, isFullyBooked]}
+                      disabled={[{ before: range.from }, { after: range.to }, isUnavailable]}
                       aria-label="Choose your preferred date"
                       className="[--cell-size:2.6rem] sm:[--cell-size:2.9rem]"
                     />

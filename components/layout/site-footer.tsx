@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Clock, Mail, Monitor, Phone } from 'lucide-react'
 import { legalNav, mainNav, siteConfig } from '@/lib/site'
 import { WaveDivider } from '@/components/animations/wave-divider'
+import { OpeningHours } from './opening-hours'
 import { TakeBreathButton } from './take-breath-button'
 import { SiteLogo } from './site-logo'
 
@@ -59,7 +60,7 @@ export function SiteFooter() {
           <ul className="grid gap-4 text-[0.95rem]">
             <li className="flex gap-3">
               <Clock className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
-              {siteConfig.hoursLabel}
+              <OpeningHours />
             </li>
             <li className="flex gap-3">
               <Monitor className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />

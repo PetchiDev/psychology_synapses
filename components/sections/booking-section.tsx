@@ -2,6 +2,7 @@ import { Clock, Mail, Monitor, Phone } from 'lucide-react'
 import { siteConfig } from '@/lib/site'
 import { BookingFlow } from '@/components/booking/booking-flow'
 import { CrisisSupport } from '@/components/booking/crisis-support'
+import { OpeningHours } from '@/components/layout/opening-hours'
 import { SectionHeading } from './section-heading'
 
 export function BookingSection({ eyebrow = 'Enquiries & booking' }: { eyebrow?: string }) {
@@ -31,7 +32,7 @@ export function BookingSection({ eyebrow = 'Enquiries & booking' }: { eyebrow?: 
             </li>
             <li className="inline-flex items-center gap-2 text-shadow/75">
               <Clock className="size-4" aria-hidden="true" />
-              {siteConfig.hoursLabel}
+              <OpeningHours />
             </li>
             <li className="inline-flex items-center gap-2 text-shadow/75">
               <Monitor className="size-4" aria-hidden="true" />

@@ -3,20 +3,21 @@ import { Clock, Mail, Monitor, Phone } from 'lucide-react'
 import { siteConfig } from '@/lib/site'
 import { pageMetadata } from '@/lib/seo/metadata'
 import { MotionController } from '@/components/animations/motion-controller'
+import { OpeningHours } from '@/components/layout/opening-hours'
 import { BookingSection } from '@/components/sections/booking-section'
 import { PageHero } from '@/components/sections/page-hero'
 import { SafeSpace } from '@/components/sections/safe-space'
 
 export const metadata: Metadata = pageMetadata({
   title: 'Contact Me',
-  description: 'Book an online conversation, or contact Paper Skin & Synapses by email or phone. Available Monday to Friday, 9:00 AM to 5:00 PM.',
+  description: 'Book an online conversation, or contact Paper Skin & Synapses by email or phone.',
   path: '/contact',
 })
 
 const details = [
   { icon: Mail, label: 'Email', value: siteConfig.email, href: `mailto:${siteConfig.email}` },
   { icon: Phone, label: 'Phone', value: siteConfig.phone, href: siteConfig.phoneHref },
-  { icon: Clock, label: 'Availability', value: siteConfig.hoursLabel },
+  { icon: Clock, label: 'Availability', value: <OpeningHours /> },
   { icon: Monitor, label: 'Practice', value: siteConfig.modeNote },
 ]
 

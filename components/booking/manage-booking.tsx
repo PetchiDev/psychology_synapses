@@ -15,7 +15,7 @@ import {
   type ApiDaySummary,
   type BookingStatus,
 } from '@/lib/booking/api'
-import { bookingWindow, isClosedDay } from '@/lib/booking/schema'
+import { bookingWindow, isUnavailableDay } from '@/lib/booking/schema'
 import { formatAppointmentDate, formatSlot } from '@/lib/booking/slots'
 import { siteConfig } from '@/lib/site'
 import { cn } from '@/lib/utils'
@@ -275,10 +275,7 @@ function Reschedule({ booking, onBack, onSave }: { booking: ApiBooking; onBack: 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, service])
 
-  const fullyBooked = (d: Date) => {
-    const summary = calendar?.get(toIsoDate(d))
-    return summary ? !summary.open : false
-  }
+  const unavailable = isUnavailableDay(calendar, toIsoDate)
 
   const save = async () => {
     if (!date || !time) {
@@ -310,8 +307,8 @@ function Reschedule({ booking, onBack, onSave }: { booking: ApiBooking; onBack: 
         <p className="type-eyebrow text-coffee">Change your time</p>
         <h2 className="type-h3">Choose a new date & time</h2>
         <p className="text-[0.95rem] leading-relaxed text-shadow/80">
-          Slots are available Monday to Friday, 9:00 AM to 5:00 PM (IST). Your current time stays booked until you save a new one, and the new
-          time will need my confirmation again.
+          Days without free slots are greyed out, and all times are in IST. Your current time stays booked until you save a new one, and the
+          new time will need my confirmation again.
         </p>
       </header>
       <div className="grid items-stretch gap-5 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
@@ -326,7 +323,7 @@ function Reschedule({ booking, onBack, onSave }: { booking: ApiBooking; onBack: 
             defaultMonth={range.from}
             startMonth={range.from}
             endMonth={range.to}
-            disabled={[{ before: range.from }, { after: range.to }, isClosedDay, fullyBooked]}
+            disabled={[{ before: range.from }, { after: range.to }, unavailable]}
             aria-label="Choose a new date"
             className="[--cell-size:2.6rem] sm:[--cell-size:2.9rem]"
           />

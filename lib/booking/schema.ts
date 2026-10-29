@@ -25,7 +25,15 @@ export const MESSAGE_MAX = 1000
 
 export const ENQUIRY_VALUES = ['individual', 'organisation', 'talk', 'research', 'other'] as const
 
+/**
+ * Fallback only, used while the live calendar from the booking API hasn't loaded (or can't be
+ * reached). Which days are open is set by Megha's working hours in the CMS, not here.
+ */
 export const isClosedDay = (date: Date) => date.getDay() === 0 || date.getDay() === 6
+
+/** Disable a calendar day: live availability when loaded, the weekday fallback otherwise. */
+export const isUnavailableDay = (calendar: ReadonlyMap<string, { open: boolean }> | null, key: (date: Date) => string) => (date: Date) =>
+  calendar ? !(calendar.get(key(date))?.open ?? false) : isClosedDay(date)
 
 const PHONE_MESSAGE = 'Please enter a valid phone number, e.g. +91 98765 43210, or leave this blank.'
 
@@ -33,8 +41,8 @@ export const bookingSchema = z.object({
   enquiryType: z.enum(ENQUIRY_VALUES, { error: 'Please choose what you would like to discuss.' }),
   date: z
     .date({ error: 'Please choose a preferred date.' })
-    .refine((date) => date >= startOfToday(), 'Please choose today or a future date.')
-    .refine((date) => !isClosedDay(date), 'Slots are available Monday to Friday. Please choose a weekday.'),
+    // Open days come from the booking API (the calendar disables closed ones, and the API re-checks).
+    .refine((date) => date >= startOfToday(), 'Please choose today or a future date.'),
   time: z.string().regex(/^\d{2}:\d{2}$/, 'Please choose a time slot.'),
   name: z
     .string()

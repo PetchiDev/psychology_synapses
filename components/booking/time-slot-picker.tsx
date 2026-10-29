@@ -10,7 +10,7 @@ interface TimeSlotPickerProps {
   value?: string
   now: Date | null
   error?: string
-  /** Live slots from the booking API for `date`. While undefined, the standard weekday times are shown. */
+  /** Live slots from the booking API for `date`. While undefined, the standard times are shown as a fallback. */
   apiSlots?: ApiSlot[]
   loading?: boolean
   onChange: (value: string) => void
@@ -42,11 +42,11 @@ export function TimeSlotPicker({ date, value, now, error, apiSlots, loading, onC
 
       {!date ? (
         <p className="grid flex-1 place-items-center rounded-2xl border border-dashed border-coffee/30 px-4 py-10 text-center text-[0.95rem] leading-relaxed text-coffee">
-          Choose a weekday on the calendar to see available time slots.
+          Choose a day on the calendar to see available time slots.
         </p>
       ) : noneLeft ? (
         <p className="grid flex-1 place-items-center rounded-2xl border border-dashed border-coffee/30 px-4 py-10 text-center text-[0.95rem] leading-relaxed text-coffee">
-          This day is fully booked. Please choose another weekday.
+          This day is fully booked. Please choose another day.
         </p>
       ) : (
         SLOT_PERIODS.map((period) => {
