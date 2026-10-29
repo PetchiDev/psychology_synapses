@@ -7,10 +7,12 @@ import { pageMetadata } from '@/lib/seo/metadata'
 import { AfterHero } from '@/components/animations/after-hero'
 import { FairyParticles } from '@/components/animations/fairy-particles'
 import { MotionController } from '@/components/animations/motion-controller'
+import { CardCatalogue } from '@/components/library/card-catalogue'
 import { ChapterBook } from '@/components/library/chapter-book'
-import { ChapterShelf } from '@/components/library/chapter-shelf'
 import { StorybookHero } from '@/components/library/storybook-hero'
 import { Ornament } from '@/components/library/ornament'
+import { QuoteBand } from '@/components/library/quote-band'
+import { ReadingRoom } from '@/components/library/reading-room'
 import { TakeBreathButton } from '@/components/layout/take-breath-button'
 import { Button } from '@/components/ui/button'
 
@@ -32,7 +34,7 @@ export default function LibraryPage() {
         actions={
           <>
             <Button asChild size="lg" variant="paper">
-              <Link href="#shelf">
+              <Link href="#chapters">
                 Browse the chapters
                 <ArrowDown aria-hidden="true" />
               </Link>
@@ -53,34 +55,11 @@ export default function LibraryPage() {
         caption="every story begins with a single page"
       />
 
-      <section aria-labelledby="once-title" className="relative z-[35] overflow-x-clip pb-16 motion-safe:-mt-[100vh] lg:pb-20">
-        <span id="shelf" aria-hidden="true" className="absolute top-24 left-0" />
+      <div className="relative z-[35] pt-8 motion-safe:-mt-[100vh]">
         <AfterHero>
-          <div className="container-editorial grid justify-items-center gap-6 pt-28 text-center lg:pt-32">
-            <p data-reveal className="font-ui text-[0.7rem] tracking-[0.3em] text-coffee uppercase">
-              Chapter I
-            </p>
-            <h2 id="once-title" data-reveal className="type-h2 max-w-3xl">
-              A gentle <em className="text-burgundy italic">beginning</em>
-            </h2>
-            <Ornament className="text-gilt" />
-            <div data-reveal className="paper-surface relative max-w-2xl rounded-[0.5rem] border border-gilt/30 px-7 py-9 text-left sm:px-12">
-              <p className="drop-cap type-lead text-shadow/85">
-                Once upon a time, someone grew curious about why people think, feel and behave the way they do. They found that every answer
-                opened another question, and that the questions were worth sharing.
-              </p>
-              <p className="type-lead mt-4 text-shadow/85">
-                This library is where those questions are kept: articles, stories, explainers, reflections, awareness pieces and practical tools.
-                Take a book from the shelf, turn the pages and read at your own pace.
-              </p>
-            </div>
-            <p data-reveal className="type-hand text-2xl text-burgundy">choose a chapter</p>
-            <div data-reveal className="mt-2 w-full">
-              <ChapterShelf />
-            </div>
-          </div>
+          <ReadingRoom />
         </AfterHero>
-      </section>
+      </div>
 
       <section id="chapters" aria-labelledby="chapters-title" className="relative py-10">
         <h2 id="chapters-title" className="sr-only">
@@ -101,6 +80,10 @@ export default function LibraryPage() {
         </ol>
         <ChapterBook />
       </section>
+
+      <CardCatalogue />
+
+      <QuoteBand />
 
       <section aria-labelledby="library-end-title" className="relative py-16 lg:py-20">
         <div className="container-editorial">

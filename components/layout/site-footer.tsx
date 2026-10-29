@@ -16,7 +16,7 @@ export function SiteFooter() {
   return (
     <footer className="relative mt-24 bg-shadow text-paper/85">
       <WaveDivider variant="cloud" className="absolute inset-x-0 bottom-[calc(100%-1px)] text-shadow" />
-      <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1fr] lg:py-20">
+      <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:py-20 xl:grid-cols-[1.3fr_0.9fr_1.3fr_1fr]">
         <div className="grid content-start gap-5">
           <SiteLogo tone="light" />
           <p className="-mt-2 text-[0.95rem] text-paper/85">
@@ -43,7 +43,7 @@ export function SiteFooter() {
         <div>
           <h2 className="type-eyebrow mb-5 text-latte">Contact</h2>
           <address className="grid gap-4 text-[0.95rem] not-italic">
-            <a href={`mailto:${siteConfig.email}`} className="flex gap-3 break-all hover:text-paper hover:underline hover:underline-offset-4">
+            <a href={`mailto:${siteConfig.email}`} className="flex gap-3 whitespace-nowrap hover:text-paper hover:underline hover:underline-offset-4">
               <Mail className="mt-0.5 size-4 shrink-0 text-latte" aria-hidden="true" />
               {siteConfig.email}
             </a>

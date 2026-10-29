@@ -41,11 +41,11 @@ export function StorybookHero({ titleId, eyebrow, titleLines, kicker, lead, acti
   const windowScale = useTransform(progress, [0, 0.8], [1, 1.45])
   const nearBooks = useTransform(progress, [0, 0.7], [0, wide ? -260 : -160])
   const farBooks = useTransform(progress, [0, 0.7], [0, wide ? -120 : -70])
-  const textOpacity = useTransform(progress, [0, 0.2], [1, 0])
-  const textY = useTransform(progress, [0, 0.2], [0, wide ? -70 : -40])
-  const textVisibility = useTransform(progress, (value) => (value > 0.21 ? 'hidden' : 'visible'))
-  const roseOpacity = useTransform(progress, [0.04, 0.22], [1, 0])
-  const roseScale = useTransform(progress, [0, 0.22], [1, 0.85])
+  const textOpacity = useTransform(progress, [0.1, 0.22], [1, 0])
+  const textY = useTransform(progress, [0.1, 0.22], [0, wide ? -70 : -40])
+  const textVisibility = useTransform(progress, (value) => (value > 0.23 ? 'hidden' : 'visible'))
+  const roseOpacity = useTransform(progress, [0.1, 0.24], [1, 0])
+  const roseScale = useTransform(progress, [0.1, 0.24], [1, 0.85])
   const hintOpacity = useTransform(progress, [0, 0.06], [1, 0])
   const pageOpacity = useTransform(progress, [0.76, 0.88], [0, 1])
 
@@ -86,7 +86,7 @@ export function StorybookHero({ titleId, eyebrow, titleLines, kicker, lead, acti
           </motion.div>
           <motion.div style={animate ? { y: nearBooks } : undefined} className="absolute inset-0">
             <FloatingBook className="absolute top-[30%] right-[6%] w-28 sm:w-36 lg:top-[16%] lg:right-[26%]" delay={1} />
-            <FloatingBook className="absolute bottom-[30%] left-[4%] hidden w-32 sm:block lg:bottom-[22%] lg:left-[24%]" cover="#5a3b1f" delay={3} />
+            <FloatingBook className="absolute right-[34%] bottom-[20%] hidden w-28 xl:block" cover="#5a3b1f" delay={3} />
           </motion.div>
 
           <Candle className="absolute bottom-[9%] left-[6%] w-7 sm:w-9" />
@@ -97,7 +97,7 @@ export function StorybookHero({ titleId, eyebrow, titleLines, kicker, lead, acti
           <FairyParticles contained density={0.8} />
 
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_35%,rgb(10_5_2/0.75)_100%)]" />
-          <div className="absolute inset-y-0 left-0 w-full bg-[linear-gradient(90deg,rgb(20_10_5/0.82)_0%,rgb(20_10_5/0.55)_45%,transparent_75%)] lg:w-[70%]" />
+          <div className="absolute inset-y-0 left-0 w-full bg-[linear-gradient(90deg,rgb(20_10_5/0.9)_0%,rgb(20_10_5/0.7)_45%,transparent_78%)] lg:w-[70%]" />
         </motion.div>
 
         <motion.div
@@ -116,7 +116,7 @@ export function StorybookHero({ titleId, eyebrow, titleLines, kicker, lead, acti
               </div>
             ) : null}
 
-            <h1 id={titleId} className="type-display mt-4 max-w-[15ch] text-[clamp(2.5rem,1.3rem+4.4vw,5.8rem)] text-paper sm:mt-5 lg:[@media(max-height:760px)]:text-[clamp(2.8rem,9vh,4.6rem)]">
+            <h1 id={titleId} className="type-display mt-4 max-w-[15ch] [text-shadow:0_2px_24px_rgb(10_5_2/0.6)] text-[clamp(2.5rem,1.3rem+4.4vw,5.8rem)] text-paper sm:mt-5 lg:[@media(max-height:760px)]:text-[clamp(2.8rem,9vh,4.6rem)]">
               {titleLines.map((titleLine, index) => (
                 <span key={index} data-line style={line(index)}>
                   {titleLine}
@@ -126,7 +126,7 @@ export function StorybookHero({ titleId, eyebrow, titleLines, kicker, lead, acti
 
             <Ornament className="mt-4 text-gold sm:mt-5 [@media(max-height:760px)]:hidden" />
 
-            <div data-hero-item style={stagger(5)} className="type-lead mt-4 max-w-xl text-paper/85 sm:mt-5 [@media(max-height:760px)]:text-[0.98rem] [@media(max-height:760px)]:leading-relaxed">
+            <div data-hero-item style={stagger(5)} className="type-lead mt-4 max-w-xl text-paper/90 [text-shadow:0_1px_12px_rgb(10_5_2/0.7)] sm:mt-5 [@media(max-height:760px)]:text-[0.98rem] [@media(max-height:760px)]:leading-relaxed">
               {lead}
             </div>
 
