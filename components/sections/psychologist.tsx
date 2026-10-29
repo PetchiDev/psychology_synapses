@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, BadgeCheck } from 'lucide-react'
 import { psychologist } from '@/data/content'
+import { siteConfig } from '@/lib/site'
 import { Button } from '@/components/ui/button'
 import { PsychologistTabs } from './psychologist-tabs'
 import { SectionHeading } from './section-heading'
@@ -49,8 +50,8 @@ export function Psychologist() {
         <div className="grid content-start gap-10 lg:col-span-7">
           <SectionHeading
             id="psychologist-title"
-            eyebrow="About me"
-            title="About the *psychologist*"
+            eyebrow="About the psychologist"
+            title={`Meet ${siteConfig.psychologist.name.split(' ').map((word) => `*${word}*`).join(' ')}`}
             description={psychologist.intro.map((paragraph) => (
               <p key={paragraph.slice(0, 24)} className="text-[1.04rem]">
                 {paragraph}

@@ -13,35 +13,65 @@ export const legalPages: LegalPage[] = [
   {
     slug: 'privacy',
     title: 'Privacy policy',
-    summary: 'How information shared through this website is collected, used and protected.',
+    summary: 'What happens to the information you share when you book or get in touch, and the choices you have.',
     sections: [
+      {
+        heading: 'Who looks after your information',
+        body: [
+          `${siteConfig.name} is run by ${siteConfig.psychologist.name}, who decides how the information on this website is used and is responsible for it. You can reach her at ${siteConfig.email}.`,
+        ],
+      },
       {
         heading: 'What is collected',
         body: [
-          'When you send an enquiry, the form collects the details you choose to share: your name, email address, optional phone number and organisation, the type of enquiry, your preferred date and time, and your message.',
+          'When you book, the form collects the details you choose to share: your name, email address, optional phone number and organisation, the type of enquiry, the date and time you pick, and your message. If you later move or cancel a booking, the new time or the reason you give is recorded too.',
+          'Your message may include personal or sensitive details. Share only what you are comfortable with; a sentence or two is enough, and you can say more when we speak.',
           'The website does not ask for health records, identity documents or payment details.',
         ],
       },
       {
         heading: 'How it is used',
         body: [
-          'Your details are used only to respond to your enquiry, arrange an online conversation and follow up on the next steps you agree to.',
+          'Your details are used only to arrange and manage your booking and to respond to you: to hold the slot you choose, to let me confirm or decline it, to send you a private link where you can view, move or cancel it, and to follow up on the next steps you agree to.',
           'Your information is never sold, rented or shared for marketing.',
         ],
       },
       {
-        heading: 'How it is sent and stored',
+        heading: 'Where it is stored and who can see it',
         body: [
-          'Enquiries are delivered by email through a third-party email service (EmailJS). Nothing you type into the form is saved in your browser, and the form is cleared once it is sent.',
-          'Emails are kept only for as long as they are needed to respond to you and to keep reasonable records of professional work.',
+          'Bookings are saved in the practice’s own booking system, which runs on a secure server provided by Hostinger. Information travels to it over an encrypted (HTTPS) connection.',
+          'The booking system sends the emails about your booking: one to me so I can confirm or decline it, and one to you with your private link. Your booking details are used by me alone. The people who maintain the website’s systems can access them only when needed to keep the booking system working. They are not shared with anyone else unless the law requires it.',
+          'Your private booking link works like a key, so please do not share it.',
         ],
       },
       {
-        heading: 'Your choices',
+        heading: 'How long it is kept',
         body: [
-          'You can ask to see, correct or delete the information you have shared at any time by writing to the email address below.',
-          contact,
+          'Booking details are kept only for as long as they are needed to arrange and manage your booking, and to keep the records that professional practice and the law require. After that they are deleted.',
         ],
+      },
+      {
+        heading: 'Cookies and tracking',
+        body: [
+          'This website does not use cookies, analytics or advertising trackers. Nothing you type into the booking form is saved in your browser.',
+        ],
+      },
+      {
+        heading: 'Your rights',
+        body: [
+          'Depending on where you live, laws such as India’s Digital Personal Data Protection Act, 2023 and the UAE’s Personal Data Protection Law (Federal Decree-Law No. 45 of 2021) give you rights over your personal information. You can ask to see the information held about you, to correct it, or to have it deleted, and you can withdraw your consent at any time.',
+          `To use any of these rights, or to raise a concern, email ${siteConfig.email}. Withdrawing consent does not affect anything done before you withdrew it, and some records may need to be kept where the law requires.`,
+        ],
+      },
+      {
+        heading: 'Young people',
+        body: [
+          'The booking form is meant for adults. If you are enquiring on behalf of someone under 18, a parent or guardian should get in touch.',
+        ],
+      },
+      {
+        heading: 'Changes to this policy',
+        body: ['If this policy changes, the new version will be posted on this page. Last updated: 28 October 2026.', contact],
       },
     ],
   },

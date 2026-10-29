@@ -163,8 +163,8 @@ export function BookingFlow() {
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.fromTo(
           panelRef.current,
-          { autoAlpha: 0, x: 28 },
-          { autoAlpha: 1, x: 0, duration: 0.6, ease: 'power3.out', clearProps: 'transform' },
+          { opacity: 0, x: 28 },
+          { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out', clearProps: 'transform' },
         )
       })
       headingRef.current?.focus({ preventScroll: true })
@@ -636,7 +636,19 @@ export function BookingFlow() {
                     aria-describedby={errors.consent ? 'consent-error' : undefined}
                     className="mt-1 size-5 shrink-0 cursor-pointer accent-burgundy"
                   />
-                  I agree that {siteConfig.name} may contact me by email or phone about this enquiry. I understand this form is not for emergencies.
+                  <span>
+                    I agree that my details and message will be stored and used to arrange and manage this booking, and that{' '}
+                    {siteConfig.psychologist.name} may contact me by email or phone about it, as described in the{' '}
+                    <a
+                      href="/legal/privacy/"
+                      target="_blank"
+                      rel="noopener"
+                      className="font-semibold text-burgundy underline underline-offset-4 hover:decoration-2"
+                    >
+                      privacy policy
+                    </a>
+                    . I understand this form is not for emergencies.
+                  </span>
                 </label>
                 {errors.consent ? (
                   <p id="consent-error" className="pl-8 text-sm font-medium text-destructive">

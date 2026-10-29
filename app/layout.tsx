@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Cinzel, Cormorant_Garamond, DM_Sans, IM_Fell_English } from 'next/font/google'
 import { siteConfig } from '@/lib/site'
 import { JsonLd } from '@/lib/seo/json-ld'
-import { graph, organizationSchema, websiteSchema } from '@/lib/seo/schemas'
+import { graph, organizationSchema, personSchema, websiteSchema } from '@/lib/seo/schemas'
 import { ButtonSparkles } from '@/components/animations/button-sparkles'
 import { CursorSparkles } from '@/components/animations/cursor-sparkles'
 import { CalmCorner } from '@/components/layout/calm-corner'
@@ -121,7 +121,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <ButtonSparkles />
         <CursorSparkles />
         <CalmCorner />
-        <JsonLd data={graph(organizationSchema(), websiteSchema())} />
+        <JsonLd data={graph(organizationSchema(), personSchema(), websiteSchema())} />
       </body>
     </html>
   )

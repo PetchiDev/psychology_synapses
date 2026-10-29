@@ -4,6 +4,7 @@ import { Tabs } from 'radix-ui'
 import { Award, BadgeCheck } from 'lucide-react'
 import { psychologist } from '@/data/content'
 import { cn } from '@/lib/utils'
+import { siteConfig } from '@/lib/site'
 
 const tabs = [
   ...psychologist.sections.map((section) => ({ id: section.id, title: section.title, icon: section.icon })),
@@ -13,7 +14,7 @@ const tabs = [
 export function PsychologistTabs({ className }: { className?: string }) {
   return (
     <Tabs.Root defaultValue={tabs[0].id} className={cn('grid gap-6', className)}>
-      <Tabs.List aria-label="About the psychologist" className="flex flex-wrap gap-2">
+      <Tabs.List aria-label={`About ${siteConfig.psychologist.name}`} className="flex flex-wrap gap-2">
         {tabs.map((tab) => {
           const Icon = tab.icon
           return (

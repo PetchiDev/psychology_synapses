@@ -59,21 +59,21 @@ export function ScrollPaper({
 
       const mm = gsap.matchMedia()
       mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.set(el, { clearProps: 'all', autoAlpha: 1 })
+        gsap.set(el, { clearProps: 'all', opacity: 1 })
         if (curl.current) gsap.set(curl.current, { autoAlpha: 0 })
       })
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         const from =
           motion === 'roll'
-            ? { autoAlpha: 0.2, scaleY: 0.08, rotateX: 68, y: -24, filter: 'blur(3px)', transformOrigin: '50% 0%' }
+            ? { opacity: 0.2, scaleY: 0.08, rotateX: 68, y: -24, filter: 'blur(3px)', transformOrigin: '50% 0%' }
             : motion === 'lift'
-              ? { autoAlpha: 0, y: 56, rotate: tilt - 4, scale: 0.96, filter: 'blur(4px)', transformOrigin: '50% 80%' }
+              ? { opacity: 0, y: 56, rotate: tilt - 4, scale: 0.96, filter: 'blur(4px)', transformOrigin: '50% 80%' }
               : motion === 'sway'
-                ? { autoAlpha: 0, y: 36, rotate: tilt + (tilt >= 0 ? 8 : -8), transformOrigin: '20% 100%' }
+                ? { opacity: 0, y: 36, rotate: tilt + (tilt >= 0 ? 8 : -8), transformOrigin: '20% 100%' }
                 : motion === 'drift'
-                  ? { autoAlpha: 0, y: 42, x: tilt > 0 ? 18 : -18, rotate: tilt, filter: 'blur(2px)' }
-                  : { autoAlpha: 0, y: 28, scale: 0.985, rotate: tilt * 0.4 }
+                  ? { opacity: 0, y: 42, x: tilt > 0 ? 18 : -18, rotate: tilt, filter: 'blur(2px)' }
+                  : { opacity: 0, y: 28, scale: 0.985, rotate: tilt * 0.4 }
 
         gsap.set(el, { ...from, force3D: true })
         if (curl.current && motion === 'roll') gsap.set(curl.current, { autoAlpha: 1, scaleY: 1 })
@@ -83,7 +83,7 @@ export function ScrollPaper({
         })
 
         tl.to(el, {
-          autoAlpha: 1,
+          opacity: 1,
           scaleY: 1,
           scale: 1,
           rotateX: 0,

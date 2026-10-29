@@ -33,10 +33,10 @@ export function StoryChapters() {
       const scope = root.current
       if (!scope || !motionOk) return
       const cards = gsap.utils.toArray<HTMLElement>('[data-story-card]', scope)
-      gsap.set(cards, { autoAlpha: 0, y: 48 })
+      gsap.set(cards, { opacity: 0, y: 48 })
       cards.forEach((card) => {
         gsap.to(card, {
-          autoAlpha: 1,
+          opacity: 1,
           y: 0,
           duration: 0.9,
           ease: 'power3.out',

@@ -1,11 +1,33 @@
 import type { Faq } from '@/data/content'
-import { workAreas } from '@/data/content'
+import { psychologist, workAreas } from '@/data/content'
 import { absoluteUrl, siteConfig } from '@/lib/site'
 
 type JsonLdNode = Record<string, unknown>
 
 export const organizationId = absoluteUrl('/#organization')
 export const websiteId = absoluteUrl('/#website')
+export const personId = absoluteUrl('/about/#person')
+
+export const personSchema = (): JsonLdNode => ({
+  '@type': 'Person',
+  '@id': personId,
+  name: siteConfig.psychologist.name,
+  jobTitle: siteConfig.psychologist.role,
+  url: absoluteUrl('/about/'),
+  image: absoluteUrl(psychologist.portrait.src),
+  email: siteConfig.email,
+  worksFor: { '@id': organizationId },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Leeds' },
+  hasCredential: [
+    ...psychologist.degrees.map((degree) => ({ '@type': 'EducationalOccupationalCredential', credentialCategory: 'degree', name: degree.award })),
+    ...psychologist.registrations.map((item) => ({
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'license',
+      name: `${item.credential} (${item.region})`,
+    })),
+  ],
+  knowsAbout: ['Counselling psychology', 'Clinical psychology', 'Organisational psychology', 'Psychoeducation', ...psychologist.training],
+})
 
 export const organizationSchema = (): JsonLdNode => ({
   '@type': ['Organization', 'ProfessionalService'],
@@ -18,6 +40,11 @@ export const organizationSchema = (): JsonLdNode => ({
   email: siteConfig.email,
   telephone: siteConfig.phoneHref.replace('tel:', ''),
   foundingDate: String(siteConfig.foundingYear),
+  founder: { '@id': personId },
+  areaServed: [
+    { '@type': 'Country', name: 'India' },
+    { '@type': 'Country', name: 'United Arab Emirates' },
+  ],
   openingHoursSpecification: siteConfig.hours.map((slot) => ({
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: slot.schema,

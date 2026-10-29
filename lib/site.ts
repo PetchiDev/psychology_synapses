@@ -2,6 +2,8 @@ export const siteConfig = {
   name: 'Paper Skin & Synapses',
   shortName: 'Paper Skin',
   legalName: 'Paper Skin & Synapses',
+  /** The practitioner behind the practice. Add the surname here and it updates across the site. */
+  psychologist: { name: 'Megha', role: 'Psychologist' },
   tagline: 'Every mind has more than one story',
   disciplines: ['Psychology', 'Clinical Practice', 'Consulting', 'Talks and Education', 'Research and Resources'],
   description:

@@ -1,4 +1,4 @@
-import { faqs, libraryChapters, workAreas } from '@/data/content'
+import { faqs, libraryChapters, psychologist, workAreas } from '@/data/content'
 import { absoluteUrl, siteConfig } from '@/lib/site'
 
 export const dynamic = 'force-static'
@@ -10,6 +10,9 @@ export function GET() {
     `> ${siteConfig.description}`,
     '',
     '## Practice',
+    `- Psychologist: ${siteConfig.psychologist.name}`,
+    `- Qualifications: ${psychologist.degrees.map((degree) => `${degree.award} (${degree.place})`).join('; ')}`,
+    `- Registration: ${psychologist.registrations.map((item) => `${item.credential}, ${item.region}`).join('; ')}`,
     `- Areas: ${siteConfig.disciplines.join(', ')}`,
     `- Psychology since ${siteConfig.foundingYear}`,
     `- ${siteConfig.modeNote}`,

@@ -6,14 +6,14 @@ const toArray = (selector: string) => gsap.utils.toArray<HTMLElement>(selector)
 
 const REVEAL = {
   desktop: {
-    from: { autoAlpha: 0, y: 40, filter: 'blur(8px)' },
-    to: { autoAlpha: 1, y: 0, filter: 'blur(0px)', clearProps: 'filter', duration: 1.4 },
+    from: { opacity: 0, y: 40, filter: 'blur(8px)' },
+    to: { opacity: 1, y: 0, filter: 'blur(0px)', clearProps: 'filter', duration: 1.4 },
     start: 'top 80%',
     stagger: 0.13,
   },
   mobile: {
-    from: { autoAlpha: 0, y: 26, rotate: -0.8, transformOrigin: '0% 100%' },
-    to: { autoAlpha: 1, y: 0, rotate: 0, clearProps: 'rotate', duration: 0.95 },
+    from: { opacity: 0, y: 26, rotate: -0.8, transformOrigin: '0% 100%' },
+    to: { opacity: 1, y: 0, rotate: 0, clearProps: 'rotate', duration: 0.95 },
     start: 'top 90%',
     stagger: 0.09,
   },

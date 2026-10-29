@@ -19,6 +19,9 @@ export function SiteFooter() {
       <div className="container-editorial grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1fr] lg:py-20">
         <div className="grid content-start gap-5">
           <SiteLogo tone="light" />
+          <p className="-mt-2 text-[0.95rem] text-paper/85">
+            {siteConfig.psychologist.name}, {siteConfig.psychologist.role}
+          </p>
           <p className="max-w-sm text-[0.92rem] leading-relaxed text-paper/70">{siteConfig.disciplines.join(' · ')}</p>
           <p className="type-eyebrow text-gold">Psychology since {siteConfig.foundingYear}</p>
           <TakeBreathButton />

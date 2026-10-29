@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { psychologist } from '@/data/content'
-import { bookHref } from '@/lib/site'
+import { bookHref, siteConfig } from '@/lib/site'
 import { pageMetadata } from '@/lib/seo/metadata'
 import { MotionController } from '@/components/animations/motion-controller'
 import { AboutParallaxPortrait } from '@/components/sections/about-parallax-portrait'
@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = pageMetadata({
   title: 'About Me',
-  description: 'The story, qualifications, research and credentials of the psychologist behind Paper Skin & Synapses.',
+  description: `The story, qualifications, research and credentials of ${siteConfig.psychologist.name}, the ${siteConfig.psychologist.role.toLowerCase()} behind ${siteConfig.name}.`,
   path: '/about',
 })
 
@@ -24,11 +24,11 @@ export default function AboutPage() {
     <>
       <PageHero
         id="about-page-title"
-        eyebrow="About me"
+        eyebrow="About the psychologist"
         crumb="About Me"
         title={
           <>
-            About the <em className="text-burgundy italic">psychologist</em>
+            Hi, I’m <em className="text-burgundy italic">{siteConfig.psychologist.name}</em>
           </>
         }
         aside={<AboutParallaxPortrait />}
