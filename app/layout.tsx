@@ -9,6 +9,7 @@ import { CalmCorner } from '@/components/layout/calm-corner'
 import { ReadingProgress } from '@/components/animations/reading-progress'
 import { SmoothScroll } from '@/components/animations/smooth-scroll'
 import { HashLinkHandler } from '@/components/layout/hash-link-handler'
+import { HideOnAdmin } from '@/components/layout/hide-on-admin'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { PaperShell } from '@/components/paper/paper-shell'
@@ -109,18 +110,26 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to main content
         </a>
         <SmoothScroll />
-        <ReadingProgress />
+        <HideOnAdmin>
+          <ReadingProgress />
+        </HideOnAdmin>
         <TooltipProvider delayDuration={200}>
-          <SiteHeader />
+          <HideOnAdmin>
+            <SiteHeader />
+          </HideOnAdmin>
           <main id="main" tabIndex={-1} className="relative z-0 flex-1 outline-none">
             {children}
           </main>
-          <SiteFooter />
+          <HideOnAdmin>
+            <SiteFooter />
+          </HideOnAdmin>
         </TooltipProvider>
         <HashLinkHandler />
         <ButtonSparkles />
         <CursorSparkles />
-        <CalmCorner />
+        <HideOnAdmin>
+          <CalmCorner />
+        </HideOnAdmin>
         <JsonLd data={graph(organizationSchema(), personSchema(), websiteSchema())} />
       </body>
     </html>

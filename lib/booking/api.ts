@@ -3,7 +3,7 @@ import type { EnquiryType } from '@/data/content'
 import type { BookingFormValues } from '@/lib/booking/schema'
 
 // Booking API (PHP on the Hostinger api subdomain). Reference: docs/API.md in the booking-api repo.
-const API = (process.env.NEXT_PUBLIC_BOOKING_API ?? 'https://api.paperskinandsynapses.com/api/v1').replace(/\/$/, '')
+export const BOOKING_API = (process.env.NEXT_PUBLIC_BOOKING_API ?? 'https://api.paperskinandsynapses.com/api/v1').replace(/\/$/, '')
 
 /** Each enquiry type on the form is a service in the booking API (managed in its CMS). */
 export const SERVICE_FOR_ENQUIRY: Record<EnquiryType, string> = {
@@ -64,7 +64,7 @@ export class BookingApiError extends Error {
 async function request<T>(path: string, init: { method?: string; body?: unknown; bookingToken?: string } = {}): Promise<T> {
   let response: Response
   try {
-    response = await fetch(`${API}${path}`, {
+    response = await fetch(`${BOOKING_API}${path}`, {
       method: init.method ?? 'GET',
       headers: {
         Accept: 'application/json',
