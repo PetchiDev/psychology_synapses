@@ -71,6 +71,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <Link
             key={item.href}
             href={item.href}
+            onClick={() => setOpen(false)}
             className={cn(
               'flex items-center gap-3 rounded-[0.65rem] px-3 py-2.5 text-[0.92rem] transition-colors duration-300',
               active ? 'bg-burgundy text-paper' : 'text-paper/80 hover:bg-paper/10 hover:text-paper',
@@ -133,8 +134,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <div className="espresso-surface absolute inset-y-0 left-0 flex w-[min(18rem,88vw)] flex-col shadow-lifted">
             <div className="flex items-center justify-between border-b border-paper/10 px-4 py-4">
               <p className="font-serif text-lg text-paper">Menu</p>
-              <Button type="button" variant="ghost" size="icon-sm" className="text-paper hover:bg-paper/10" onClick={() => setOpen(false)}>
-                <X />
+              <Button type="button" variant="ghost" size="icon-sm" aria-label="Close menu" className="text-paper hover:bg-paper/10" onClick={() => setOpen(false)}>
+                <X aria-hidden="true" />
               </Button>
             </div>
             {nav}

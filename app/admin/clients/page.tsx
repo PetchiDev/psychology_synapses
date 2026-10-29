@@ -13,13 +13,21 @@ export default function ClientsPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let alive = true
     const handle = window.setTimeout(() => {
       cms
         .clients(q.trim())
-        .then(setItems)
-        .catch((e) => setError(e instanceof Error ? e.message : 'Could not load clients.'))
+        .then((list) => {
+          if (!alive) return
+          setError(null)
+          setItems(list)
+        })
+        .catch((e) => alive && setError(e instanceof Error ? e.message : 'Could not load clients.'))
     }, 250)
-    return () => window.clearTimeout(handle)
+    return () => {
+      alive = false
+      window.clearTimeout(handle)
+    }
   }, [q])
 
   return (
@@ -32,7 +40,7 @@ export default function ClientsPage() {
 
       <div className="relative max-w-md">
         <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-coffee" aria-hidden="true" />
-        <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="h-11 pl-10" />
+        <Input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search clients" placeholder="Search…" className="h-11 pl-10" />
       </div>
 
       {error ? (

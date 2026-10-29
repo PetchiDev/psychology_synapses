@@ -47,6 +47,7 @@ export default function AppointmentsPage() {
       .appointments(query)
       .then((res) => {
         if (!alive) return
+        setError(null)
         setItems(res.data)
         setTotal(res.meta.total)
       })
@@ -90,7 +91,7 @@ export default function AppointmentsPage() {
         </div>
         <div className="relative w-full sm:max-w-xs">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-coffee" aria-hidden="true" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search name, phone, ref…" className="h-11 pl-10" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search appointments" placeholder="Search name, phone, ref…" className="h-11 pl-10" />
         </div>
       </div>
 

@@ -134,7 +134,7 @@ function AppointmentDetail() {
             <div className="flex flex-wrap gap-2">
               {pending ? (
                 <>
-                  <Button disabled={!!busy} onClick={() => act('confirm', { mode: 'video', message: message || undefined })}>
+                  <Button disabled={!!busy} onClick={() => act('confirm', { mode: item.mode ?? 'video', message: message || undefined })}>
                     {busy === 'confirm' ? '…' : 'Confirm'}
                   </Button>
                   <Button variant="outline" disabled={!!busy} onClick={() => act('decline', { message: message || undefined })}>
@@ -163,8 +163,8 @@ function AppointmentDetail() {
               <div className="mt-2 grid gap-2 rounded-[0.75rem] border border-coffee/10 bg-paper-deep/30 p-4">
                 <p className="font-ui text-[0.65rem] tracking-[0.16em] text-coffee uppercase">Reschedule</p>
                 <div className="grid gap-2 sm:grid-cols-2">
-                  <Input type="date" value={reschedule.date} onChange={(e) => setReschedule((r) => ({ ...r, date: e.target.value }))} />
-                  <Input type="time" value={reschedule.time} onChange={(e) => setReschedule((r) => ({ ...r, time: e.target.value }))} />
+                  <Input type="date" aria-label="New date" value={reschedule.date} onChange={(e) => setReschedule((r) => ({ ...r, date: e.target.value }))} />
+                  <Input type="time" aria-label="New time" value={reschedule.time} onChange={(e) => setReschedule((r) => ({ ...r, time: e.target.value }))} />
                 </div>
                 <Button
                   size="sm"

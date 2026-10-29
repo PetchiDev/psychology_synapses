@@ -63,7 +63,11 @@ export function BreaksEditor({ value, onChange, disabled }: { value: Breaks; onC
                   >
                     <X className="size-4" aria-hidden="true" />
                   </Button>
-                  {start && end && start >= end ? <span className="text-sm text-burgundy">End must be after start.</span> : null}
+                  {!start || !end ? (
+                    <span className="text-sm text-burgundy">Enter both times.</span>
+                  ) : start >= end ? (
+                    <span className="text-sm text-burgundy">End must be after start.</span>
+                  ) : null}
                 </div>
               ))}
               <div className="flex flex-wrap items-center gap-3">
@@ -87,6 +91,8 @@ export function BreaksEditor({ value, onChange, disabled }: { value: Breaks; onC
   )
 }
 
+const TIME = /^\d{2}:\d{2}(:\d{2})?$/
+
 /** True when every break has both times and starts before it ends. */
 export const breaksAreValid = (breaks: Breaks) =>
-  Object.values(breaks).every((ranges) => ranges.every(([start, end]) => /^\d{2}:\d{2}$/.test(start) && /^\d{2}:\d{2}$/.test(end) && start < end))
+  Object.values(breaks).every((ranges) => ranges.every(([start, end]) => TIME.test(start) && TIME.test(end) && start < end))

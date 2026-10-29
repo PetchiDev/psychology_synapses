@@ -67,10 +67,21 @@ export default function NewPhoneBookingPage() {
         if (value) body[key] = value
       }
       const { booking } = await cms.createAppointment(body)
-      // The create call returns the patient-facing booking; look it up by reference for the staff id.
-      const match = (await cms.appointments({ q: booking.reference, perPage: 5 })).data.find((a) => a.reference === booking.reference)
-      if (match && confirmNow) await cms.act(match.id, 'confirm', {})
-      router.push(match ? `/admin/appointments/view/?id=${match.id}` : `/admin/appointments/?tab=${confirmNow ? 'upcoming' : 'waiting'}`)
+      // The booking now exists, so a failure below must not look like a failed booking.
+      let matchId: number | undefined
+      let confirmed = false
+      try {
+        // The create call returns the patient-facing booking; look it up by reference for the staff id.
+        const match = (await cms.appointments({ q: booking.reference, perPage: 5 })).data.find((a) => a.reference === booking.reference)
+        matchId = match?.id
+        if (match && confirmNow) {
+          await cms.act(match.id, 'confirm', { mode })
+          confirmed = true
+        }
+      } catch {
+        // Go to the booking (or the waiting list) anyway, where it can be confirmed by hand.
+      }
+      router.push(matchId ? `/admin/appointments/view/?id=${matchId}` : `/admin/appointments/?tab=${confirmed ? 'upcoming' : 'waiting'}`)
     } catch (e) {
       if (e instanceof BookingApiError && e.status === 422) setFieldErrors(e.fields)
       if (e instanceof BookingApiError && e.code === 'SLOT_UNAVAILABLE') {

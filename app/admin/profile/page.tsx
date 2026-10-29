@@ -73,7 +73,7 @@ export default function ProfilePage() {
         languages,
         sessionMinutes: Number(form.get('sessionMinutes')),
         email: String(form.get('email')) || null,
-        modes: ['video'],
+        modes: practitioner.modes,
       })
       setPractitioner(next)
       setNotice('Profile saved.')
@@ -106,6 +106,10 @@ export default function ProfilePage() {
 
   async function addOff() {
     if (!practitioner || !offForm.startsAt || !offForm.endsAt) return
+    if (offForm.endsAt <= offForm.startsAt) {
+      setError('The end day must be after the start day. It is the first day back, so one day off ends on the next day.')
+      return
+    }
     setBusy(true)
     setError(null)
     setNotice(null)
@@ -214,12 +218,14 @@ export default function ProfilePage() {
                     <div className="flex flex-wrap gap-2">
                       <Input
                         type="time"
+                        aria-label={`${d.label} start`}
                         value={row.start}
                         disabled={!row.on}
                         onChange={(e) => setHours((h) => ({ ...h, [d.weekday]: { ...row, start: e.target.value } }))}
                       />
                       <Input
                         type="time"
+                        aria-label={`${d.label} end`}
                         value={row.end}
                         disabled={!row.on}
                         onChange={(e) => setHours((h) => ({ ...h, [d.weekday]: { ...row, end: e.target.value } }))}
@@ -238,16 +244,16 @@ export default function ProfilePage() {
             <h2 className="font-serif text-2xl text-shadow">Time off</h2>
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="grid gap-2">
-                <Label>Starts (day)</Label>
-                <Input type="date" value={offForm.startsAt} onChange={(e) => setOffForm((f) => ({ ...f, startsAt: e.target.value }))} />
+                <Label htmlFor="off-start">Starts (day)</Label>
+                <Input id="off-start" type="date" value={offForm.startsAt} onChange={(e) => setOffForm((f) => ({ ...f, startsAt: e.target.value }))} />
               </div>
               <div className="grid gap-2">
-                <Label>Ends (exclusive day)</Label>
-                <Input type="date" value={offForm.endsAt} onChange={(e) => setOffForm((f) => ({ ...f, endsAt: e.target.value }))} />
+                <Label htmlFor="off-end">Ends (first day back)</Label>
+                <Input id="off-end" type="date" value={offForm.endsAt} onChange={(e) => setOffForm((f) => ({ ...f, endsAt: e.target.value }))} />
               </div>
               <div className="grid gap-2">
-                <Label>Reason</Label>
-                <Input value={offForm.reason} onChange={(e) => setOffForm((f) => ({ ...f, reason: e.target.value }))} />
+                <Label htmlFor="off-reason">Reason</Label>
+                <Input id="off-reason" value={offForm.reason} onChange={(e) => setOffForm((f) => ({ ...f, reason: e.target.value }))} />
               </div>
             </div>
             <Button type="button" variant="outline" disabled={busy} onClick={() => void addOff()}>
@@ -264,9 +270,18 @@ export default function ProfilePage() {
                     type="button"
                     size="xs"
                     variant="ghost"
+                    disabled={busy}
                     onClick={async () => {
-                      await cms.deleteTimeOff(row.id)
-                      setTimeOff(await cms.timeOff())
+                      setBusy(true)
+                      setError(null)
+                      try {
+                        await cms.deleteTimeOff(row.id)
+                        setTimeOff(await cms.timeOff())
+                      } catch (e) {
+                        setError(e instanceof Error ? e.message : 'Could not remove the time off.')
+                      } finally {
+                        setBusy(false)
+                      }
                     }}
                   >
                     Remove

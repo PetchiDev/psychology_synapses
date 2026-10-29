@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 
 export default function AdminDashboardPage() {
   const [summary, setSummary] = useState<Summary | null>(null)
-  const [pending, setPending] = useState<StaffAppointment[]>([])
+  const [pending, setPending] = useState<StaffAppointment[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -78,7 +78,9 @@ export default function AdminDashboardPage() {
             </Link>
           </Button>
         </div>
-        {pending.length === 0 ? (
+        {pending === null ? (
+          <p className="py-8 text-center text-shadow/60">{error ? 'Waiting requests could not be loaded.' : 'Loading waiting requests…'}</p>
+        ) : pending.length === 0 ? (
           <p className="py-8 text-center text-shadow/60">Nothing waiting — a quiet desk.</p>
         ) : (
           <ul className="grid gap-3">

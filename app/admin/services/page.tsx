@@ -210,8 +210,8 @@ export default function ServicesPage() {
               </div>
             ) : (
               <div className="grid gap-2">
-                <Label>Slug (read-only)</Label>
-                <Input value={draft.slug} readOnly className="bg-paper-deep/40" />
+                <Label htmlFor="slug-readonly">Slug (read-only)</Label>
+                <Input id="slug-readonly" value={draft.slug} readOnly className="bg-paper-deep/40" />
               </div>
             )}
             <div className="grid gap-2">
@@ -240,7 +240,18 @@ export default function ServicesPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="price">Price (INR)</Label>
-                <Input id="price" name="price" type="number" min={0} defaultValue={draft.price?.amount ?? ''} placeholder="Optional" />
+                <Input
+                  id="price"
+                  name="price"
+                  type="number"
+                  min={0}
+                  defaultValue={draft.price?.amount ?? ''}
+                  placeholder="Optional"
+                  onInput={(e) => {
+                    const hide = e.currentTarget.form?.elements.namedItem('hidePrice')
+                    if (hide instanceof HTMLInputElement && e.currentTarget.value) hide.checked = false
+                  }}
+                />
               </div>
             </div>
             <label className="flex items-center gap-2 text-sm">

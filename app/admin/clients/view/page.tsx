@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { BookingApiError } from '@/lib/booking/api'
 import { cms } from '@/lib/cms/api'
@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 
 function ClientDetailView() {
   const params = useSearchParams()
+  const router = useRouter()
   const id = Number(params.get('id'))
   const validId = Number.isFinite(id) && id > 0
   const [client, setClient] = useState<ClientDetail | null>(null)
@@ -41,9 +42,9 @@ function ClientDetailView() {
     try {
       const next = await cms.updateClient(client.id, {
         name: String(form.get('name')),
-        email: String(form.get('email')),
+        email: String(form.get('email')).trim() || null,
         phone: String(form.get('phone')) || undefined,
-        address: String(form.get('address')),
+        address: String(form.get('address')).trim() || null,
       })
       setClient(next)
       setNotice('Client updated.')
@@ -61,8 +62,7 @@ function ClientDetailView() {
     setError(null)
     try {
       await cms.eraseClient(client.id)
-      setNotice('Client erased.')
-      load()
+      router.push('/admin/clients/')
     } catch (e) {
       if (e instanceof BookingApiError && e.code === 'CLIENT_HAS_BOOKINGS') {
         setError(`${e.message} Cancel upcoming bookings first.`)
