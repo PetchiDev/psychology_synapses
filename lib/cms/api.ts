@@ -1,4 +1,4 @@
-import { BOOKING_API, BookingApiError } from '@/lib/booking/api'
+import { BOOKING_API, BookingApiError, type ApiBooking } from '@/lib/booking/api'
 import { session } from '@/lib/cms/session'
 import type * as T from '@/lib/cms/types'
 
@@ -55,7 +55,8 @@ export const cms = {
   appointment: (id: number) => data(request<{ data: T.StaffAppointment }>(`/admin/appointments/${id}`)),
   act: (id: number, action: T.AppointmentAction, body: Record<string, unknown> = {}) =>
     data(request<{ data: T.StaffAppointment }>(`/admin/appointments/${id}/${action}`, { method: 'POST', body })),
-  createAppointment: (body: Record<string, unknown>) => request<{ data: unknown }>('/admin/appointments', { method: 'POST', body }),
+  createAppointment: (body: T.PhoneBookingInput) =>
+    data(request<{ data: { booking: ApiBooking; manageToken: string } }>('/admin/appointments', { method: 'POST', body })),
 
   services: () => data(request<{ data: T.AdminService[] }>('/admin/services')),
   createService: (body: T.ServiceInput) =>

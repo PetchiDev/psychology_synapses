@@ -36,6 +36,19 @@ export interface StaffAppointment extends ApiBooking {
 
 export type AppointmentAction = 'confirm' | 'decline' | 'reschedule' | 'cancel' | 'complete' | 'no-show' | 'notes'
 
+/** A booking taken over the phone. Phone or email is required; consent is recorded by staff. */
+export interface PhoneBookingInput {
+  service: string
+  date: string
+  time: string
+  name: string
+  phone?: string
+  email?: string
+  organisation?: string
+  message?: string
+  mode: Mode
+}
+
 export interface AdminService {
   id: number
   slug: string

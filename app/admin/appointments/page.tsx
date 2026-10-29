@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { format, subDays } from 'date-fns'
-import { Search } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { cms } from '@/lib/cms/api'
 import type { StaffAppointment } from '@/lib/cms/types'
 import { StatusBadge } from '@/components/admin/status-badge'
@@ -59,9 +59,17 @@ export default function AppointmentsPage() {
 
   return (
     <div className="grid gap-7">
-      <header className="grid gap-2">
-        <p className="type-eyebrow text-burgundy">Bookings</p>
-        <h1 className="font-serif text-[clamp(1.8rem,1.4rem+1.5vw,2.4rem)] font-semibold text-shadow">Appointments</h1>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="grid gap-2">
+          <p className="type-eyebrow text-burgundy">Bookings</p>
+          <h1 className="font-serif text-[clamp(1.8rem,1.4rem+1.5vw,2.4rem)] font-semibold text-shadow">Appointments</h1>
+        </div>
+        <Button asChild size="sm">
+          <Link href="/admin/appointments/new/">
+            <Plus aria-hidden="true" />
+            New phone booking
+          </Link>
+        </Button>
       </header>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

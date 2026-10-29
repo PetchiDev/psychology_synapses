@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { BookingApiError } from '@/lib/booking/api'
 import { cms } from '@/lib/cms/api'
 import type { Settings } from '@/lib/cms/types'
+import { BreaksEditor, breaksAreValid } from '@/components/admin/breaks-editor'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,11 +16,17 @@ export default function SettingsPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [notice, setNotice] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [breaks, setBreaks] = useState<Settings['breaks']>({})
+
+  function apply(next: Settings) {
+    setSettings(next)
+    setBreaks(next.breaks)
+  }
 
   useEffect(() => {
     cms
       .settings()
-      .then(setSettings)
+      .then(apply)
       .catch((e) => setError(e instanceof Error ? e.message : 'Could not load settings.'))
   }, [])
 
@@ -48,9 +55,9 @@ export default function SettingsPage() {
         siteUrl: String(form.get('siteUrl')),
         copyOwnerOnPractitionerBookings: form.get('copyOwnerOnPractitionerBookings') === 'on',
         slotGrid: settings.slotGrid,
-        breaks: settings.breaks,
+        breaks,
       })
-      setSettings(next)
+      apply(next)
       setNotice('Clinic settings saved.')
     } catch (e) {
       if (e instanceof BookingApiError && e.status === 422) setFieldErrors(e.fields)
@@ -135,8 +142,15 @@ export default function SettingsPage() {
             <input type="checkbox" name="copyOwnerOnPractitionerBookings" defaultChecked={settings.copyOwnerOnPractitionerBookings} />
             Copy clinic email on owner booking emails
           </label>
-          <p className="text-sm text-coffee">Slot grid and breaks stay as currently saved — edit hours on the Profile screen for Megha’s day-to-day availability.</p>
-          <Button type="submit" disabled={busy}>
+          <div className="grid gap-2 pt-2">
+            <h2 className="font-serif text-xl text-shadow">Breaks</h2>
+            <p className="text-sm text-coffee">
+              Times inside a break (lunch, for example) aren’t offered for booking. Working days and hours are set on the Profile &amp; hours screen.
+            </p>
+            <BreaksEditor value={breaks} onChange={setBreaks} disabled={busy} />
+            {fieldErrors.breaks ? <p className="text-sm text-burgundy">{fieldErrors.breaks}</p> : null}
+          </div>
+          <Button type="submit" disabled={busy || !breaksAreValid(breaks)}>
             {busy ? 'Saving…' : 'Save settings'}
           </Button>
         </form>
