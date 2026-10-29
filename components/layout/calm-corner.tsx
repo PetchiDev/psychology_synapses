@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Flower2 } from 'lucide-react'
 import { Affirmations } from '@/components/animations/affirmations'
 import { BreathingOrb } from '@/components/animations/breathing-orb'
@@ -8,6 +9,9 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export function CalmCorner() {
+  const pathname = usePathname()
+  if (pathname.startsWith('/admin')) return null
+
   return (
     <Dialog>
       <DialogTrigger asChild>

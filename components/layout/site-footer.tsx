@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { doctors } from '@/data/doctors'
 import { fullAddress, mainNav, siteConfig } from '@/lib/site'
@@ -6,6 +9,9 @@ import { WaveDivider } from '@/components/animations/wave-divider'
 import { SiteLogo } from './site-logo'
 
 export function SiteFooter() {
+  const pathname = usePathname()
+  if (pathname.startsWith('/admin')) return null
+
   return (
     <footer className="relative mt-24 bg-shadow text-paper/85">
       <WaveDivider variant="cloud" className="absolute inset-x-0 bottom-[calc(100%-1px)] text-shadow" />

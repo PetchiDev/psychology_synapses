@@ -17,11 +17,12 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
+  const isAdmin = pathname.startsWith('/admin')
 
   useGSAP(
     () => {
       const bar = barRef.current
-      if (!bar) return
+      if (!bar || isAdmin) return
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       const duration = reduce ? 0 : 0.5
       const solid = () =>
@@ -69,6 +70,8 @@ export function SiteHeader() {
   }
 
   const isActive = (href: string) => (href === '/specialists' ? pathname.startsWith('/specialists') : false)
+
+  if (isAdmin) return null
 
   return (
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-2 pt-2 sm:px-4 sm:pt-3">
