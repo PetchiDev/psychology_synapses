@@ -1,6 +1,6 @@
 import { features } from '@/data/content'
 import { siteConfig } from '@/lib/site'
-import { ScrollPaper } from '@/components/paper/scroll-paper'
+import { GoldenScroll } from '@/components/paper/golden-scroll'
 import { SectionHeading } from './section-heading'
 
 export function AboutPractice() {
@@ -12,7 +12,7 @@ export function AboutPractice() {
         </div>
         <div data-reveal className="lg:col-span-7">
           <div data-parallax="0.05">
-            <ScrollPaper motion="sway" tilt={-0.8} seed={12} contentClassName="grid gap-5 px-[11%] py-12 text-[1.06rem] leading-[1.8] text-shadow/90 sm:py-14">
+            <GoldenScroll tilt={-0.6} contentClassName="grid gap-5 px-[11%] py-10 text-[1.06rem] leading-[1.8] text-shadow/90 sm:py-12">
               <p className="drop-cap">
                 {siteConfig.name} brings together my work across different areas of psychology. This includes clinical work and individual
                 counselling, consulting with organisations, developing mental health programmes, conducting workshops and talks, and
@@ -23,7 +23,7 @@ export function AboutPractice() {
                 and using what they learn in everyday life. The aim is to make room for both professional work and the simple curiosity to learn
                 more about people and how we think, feel and behave.
               </p>
-            </ScrollPaper>
+            </GoldenScroll>
           </div>
         </div>
       </div>

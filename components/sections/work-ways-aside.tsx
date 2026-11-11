@@ -1,128 +1,152 @@
 'use client'
 
-import { useRef, type CSSProperties } from 'react'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import { motion, type PanInfo } from 'motion/react'
+import { ArrowDown } from 'lucide-react'
 import { workAreas } from '@/data/content'
 import { cn } from '@/lib/utils'
+import { useMotionAllowed } from '@/lib/use-motion-allowed'
 
-const DESKTOP_SLOTS = [
-  { className: 'left-[4%] top-[6%] rotate-[-3deg]', delay: 0 },
-  { className: 'right-[2%] top-[14%] rotate-[2.5deg]', delay: 0.12 },
-  { className: 'left-[8%] bottom-[8%] rotate-[2deg]', delay: 0.22 },
-  { className: 'right-[4%] bottom-[4%] rotate-[-2deg]', delay: 0.32 },
-] as const
+const INTERVAL = 5200
+const COUNT = workAreas.length
 
-/**
- * Hero aside for Work With Me: four living “pathway” cards that float and
- * connect to a centre hub — content-relevant motion, no empty right column.
- */
+/** Where a card sits in the deck: 0 is the front card, then two behind it to the right, and the last one tucked to the left. */
+const POSE = [
+  { x: '0%', y: 0, rotate: 0, scale: 1, opacity: 1 },
+  { x: '7%', y: -14, rotate: 4, scale: 0.94, opacity: 0.85 },
+  { x: '13%', y: -26, rotate: 8, scale: 0.88, opacity: 0.6 },
+  { x: '-8%', y: -12, rotate: -6, scale: 0.9, opacity: 0.45 },
+]
+
+/** Hero aside for Work With Me: a 3D deck of the four areas that turns on its own, by tab, or by swipe. */
 export function WorkWaysAside() {
-  const root = useRef<HTMLDivElement>(null)
-  const reduce = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: root, offset: ['start end', 'end start'] })
-  const drift = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [18, -28])
+  const animate = useMotionAllowed()
+  const [active, setActive] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const playing = animate && !paused
+
+  useEffect(() => {
+    if (!playing) return
+    const timer = window.setTimeout(() => setActive((current) => (current + 1) % COUNT), INTERVAL)
+    return () => window.clearTimeout(timer)
+  }, [playing, active])
+
+  const onDragEnd = (_: unknown, info: PanInfo) => {
+    if (Math.abs(info.offset.x) < 60) return
+    setActive((current) => (current + (info.offset.x < 0 ? 1 : COUNT - 1)) % COUNT)
+  }
 
   return (
-    <motion.div ref={root} style={{ y: drift }} className="relative w-full">
-      <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:hidden" aria-label="Ways to work with me">
-        {workAreas.map((area) => {
-          const Icon = area.icon
-          return (
-            <li key={area.slug}>
-              <Link
-                href={`#${area.slug}`}
-                className={cn(
-                  'group flex h-full min-h-[9.5rem] flex-col gap-3 rounded-[1rem] border border-coffee/12 bg-paper/90 p-4 shadow-[0_14px_28px_-22px_rgb(42_26_16/0.5)] transition-[transform,border-color,box-shadow] duration-500',
-                  'hover:-translate-y-1 hover:border-burgundy/30 hover:shadow-lifted active:scale-[0.98]',
-                )}
-              >
-                <span className="flex items-center justify-between gap-2">
-                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-burgundy/10 text-burgundy transition-colors duration-500 group-hover:bg-burgundy group-hover:text-paper">
-                    <Icon className="size-4" aria-hidden="true" />
-                  </span>
-                  <span className="font-serif text-lg text-burgundy/40">{area.number}</span>
-                </span>
-                <span className="font-serif text-[1.02rem] leading-snug font-semibold text-shadow sm:text-[1.08rem]">{area.title}</span>
-                <span className="mt-auto font-ui text-[0.6rem] tracking-[0.16em] text-coffee uppercase">{area.forWhom}</span>
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
+    <div
+      className="relative mx-auto w-full max-w-[27rem] overflow-x-clip pt-8 lg:max-w-[28rem]"
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      aria-roledescription="carousel"
+      aria-label="Ways to work with me"
+    >
+      <div
+        aria-hidden="true"
+        className="ambient-breathe absolute inset-x-[8%] top-[18%] bottom-[22%] -z-10 rounded-full bg-[radial-gradient(ellipse,rgb(217_165_63/0.32),rgb(122_35_38/0.08)_55%,transparent_72%)] blur-2xl"
+      />
 
-      <div className="relative hidden min-h-[28rem] lg:block xl:min-h-[30rem]" aria-label="Ways to work with me">
-        <svg aria-hidden="true" viewBox="0 0 420 460" className="absolute inset-0 size-full overflow-visible">
-          <defs>
-            <linearGradient id="way-line" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgb(122 35 38)" stopOpacity="0.05" />
-              <stop offset="50%" stopColor="rgb(122 35 38)" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="rgb(196 149 74)" stopOpacity="0.15" />
-            </linearGradient>
-          </defs>
-          <path d="M210 230 L95 95" stroke="url(#way-line)" strokeWidth="1.2" pathLength="1" fill="none" className={cn(!reduce && 'ways-draw')} />
-          <path
-            d="M210 230 L330 110"
-            stroke="url(#way-line)"
-            strokeWidth="1.2"
-            pathLength="1"
-            fill="none"
-            className={cn(!reduce && 'ways-draw')}
-            style={{ animationDelay: '0.2s' }}
-          />
-          <path
-            d="M210 230 L110 360"
-            stroke="url(#way-line)"
-            strokeWidth="1.2"
-            pathLength="1"
-            fill="none"
-            className={cn(!reduce && 'ways-draw')}
-            style={{ animationDelay: '0.35s' }}
-          />
-          <path
-            d="M210 230 L325 365"
-            stroke="url(#way-line)"
-            strokeWidth="1.2"
-            pathLength="1"
-            fill="none"
-            className={cn(!reduce && 'ways-draw')}
-            style={{ animationDelay: '0.5s' }}
-          />
-        </svg>
-
-        <div className="absolute top-1/2 left-1/2 z-10 flex size-[7.5rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full bg-burgundy text-center text-paper shadow-[0_20px_40px_-12px_rgb(122_35_38/0.55)] ring-8 ring-paper/80">
-          {!reduce ? <span aria-hidden="true" className="ways-pulse absolute inset-0 rounded-full bg-burgundy/30" /> : null}
-          <span className="relative font-serif text-3xl leading-none font-semibold">04</span>
-          <span className="relative mt-1 font-ui text-[0.58rem] tracking-[0.22em] uppercase opacity-80">pathways</span>
-        </div>
-
+      <div className="grid pr-[17%] pl-[10%] [perspective:1400px] *:[grid-area:1/1]">
         {workAreas.map((area, index) => {
+          const slot = (index - active + COUNT) % COUNT
+          const front = slot === 0
           const Icon = area.icon
-          const slot = DESKTOP_SLOTS[index]!
           return (
-            <Link
+            <motion.article
               key={area.slug}
-              href={`#${area.slug}`}
+              aria-hidden={!front}
+              inert={!front}
+              initial={false}
+              animate={POSE[slot]}
+              transition={animate ? { type: 'spring', stiffness: 170, damping: 22, mass: 0.9 } : { duration: 0 }}
+              drag={front && animate ? 'x' : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.35}
+              onDragEnd={onDragEnd}
+              style={{ zIndex: COUNT - slot, transformOrigin: '50% 100%' }}
               className={cn(
-                'group absolute z-20 w-[11.5rem] rounded-[1rem] border border-coffee/12 bg-paper/95 p-4 shadow-[0_18px_36px_-20px_rgb(42_26_16/0.55)] backdrop-blur-sm transition-[transform,box-shadow,border-color] duration-500',
-                'hover:z-30 hover:-translate-y-1.5 hover:border-burgundy/35 hover:shadow-[0_28px_48px_-18px_rgb(122_35_38/0.35)]',
-                slot.className,
-                !reduce && 'ways-float',
+                'overflow-hidden rounded-[1.25rem] border border-[#b8893b]/35 bg-paper shadow-[0_30px_60px_-30px_rgb(42_26_16/0.65)]',
+                front && 'cursor-grab active:cursor-grabbing',
               )}
-              style={!reduce ? ({ animationDelay: `${slot.delay}s` } as CSSProperties) : undefined}
             >
-              <span className="mb-3 flex items-center justify-between gap-2">
-                <span className="inline-flex size-9 items-center justify-center rounded-full bg-burgundy/10 text-burgundy transition-colors duration-500 group-hover:bg-burgundy group-hover:text-paper">
-                  <Icon className="size-4" aria-hidden="true" />
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <motion.div
+                  className="absolute inset-0"
+                  initial={false}
+                  animate={{ scale: front && animate ? 1 : 1.12 }}
+                  transition={{ duration: front ? 6 : 0.6, ease: 'easeOut' }}
+                >
+                  <Image src={area.image.src} alt="" fill sizes="(min-width: 1024px) 28rem, 92vw" className="pointer-events-none object-cover" draggable={false} />
+                </motion.div>
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(36_21_13/0.05)_35%,rgb(36_21_13/0.72))]" />
+                <span className="absolute top-4 left-4 inline-flex size-10 items-center justify-center rounded-full bg-paper/90 text-burgundy shadow-md backdrop-blur-sm">
+                  <Icon className="size-[1.1rem]" aria-hidden="true" />
                 </span>
-                <span className="font-serif text-xl text-burgundy/35 transition-colors duration-500 group-hover:text-burgundy/70">{area.number}</span>
-              </span>
-              <span className="block font-serif text-[1.05rem] leading-snug font-semibold text-shadow">{area.title}</span>
-              <span className="mt-2 block text-[0.78rem] leading-snug text-coffee">{area.caption}</span>
-            </Link>
+                <span className="absolute right-5 bottom-3 font-serif text-[3.4rem] leading-none text-paper/90 [text-shadow:0_4px_18px_rgb(0_0_0/0.45)]">
+                  {area.number}
+                </span>
+              </div>
+              <div className="grid gap-3 p-5 sm:p-6">
+                <span className="w-fit rounded-full border border-[#b8893b]/40 bg-[#f6e3b0]/50 px-3 py-1 font-ui text-[0.62rem] tracking-[0.18em] text-coffee uppercase">
+                  {area.forWhom}
+                </span>
+                <p className="font-serif text-[1.45rem] leading-tight font-semibold text-shadow sm:text-[1.6rem]">{area.title}</p>
+                <p className="type-hand text-lg text-burgundy/85">{area.caption}</p>
+                <Link
+                  href={`#${area.slug}`}
+                  className="group/link mt-1 inline-flex w-fit items-center gap-2 font-ui text-[0.72rem] font-semibold tracking-[0.2em] text-burgundy uppercase"
+                >
+                  <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-500 group-hover/link:bg-[length:100%_1px]">
+                    Explore this area
+                  </span>
+                  <ArrowDown className="size-3.5 transition-transform duration-500 group-hover/link:translate-y-0.5" aria-hidden="true" />
+                </Link>
+              </div>
+            </motion.article>
           )
         })}
       </div>
-    </motion.div>
+
+      <div className="mt-6 grid grid-cols-4 gap-2" role="group" aria-label="Choose an area">
+        {workAreas.map((area, index) => {
+          const current = index === active
+          return (
+            <button
+              key={area.slug}
+              type="button"
+              aria-pressed={current}
+              aria-label={`Show ${area.title}`}
+              onClick={() => setActive(index)}
+              className="group grid min-h-11 content-center gap-2 text-left"
+            >
+              <span className={cn('font-serif text-lg leading-none transition-colors duration-300', current ? 'text-burgundy' : 'text-shadow/40 group-hover:text-shadow/70')}>
+                {area.number}
+              </span>
+              <span className="relative h-[3px] overflow-hidden rounded-full bg-coffee/15">
+                {current ? (
+                  <motion.span
+                    key={`${active}-${playing}`}
+                    className="absolute inset-y-0 left-0 rounded-full bg-[linear-gradient(90deg,#8c5f1b,#e9c46a)]"
+                    initial={{ width: playing ? '0%' : '100%' }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: playing ? INTERVAL / 1000 : 0, ease: 'linear' }}
+                  />
+                ) : null}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+      <p className="sr-only" aria-live="polite">
+        {`${workAreas[active].number}: ${workAreas[active].title}`}
+      </p>
+    </div>
   )
 }

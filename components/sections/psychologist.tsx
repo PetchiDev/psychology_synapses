@@ -1,10 +1,8 @@
 import type { CSSProperties } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowRight, BadgeCheck } from 'lucide-react'
+import { BadgeCheck } from 'lucide-react'
 import { psychologist } from '@/data/content'
 import { siteConfig } from '@/lib/site'
-import { Button } from '@/components/ui/button'
 import { PsychologistTabs } from './psychologist-tabs'
 import { SectionHeading } from './section-heading'
 
@@ -28,9 +26,10 @@ export function Portrait({ priority = false }: { priority?: boolean }) {
           className="object-cover object-[50%_32%] transition-transform duration-[1.2s] ease-out hover:scale-[1.03]"
         />
       </div>
-      <figcaption className="surface-card absolute -bottom-6 left-1/2 flex w-[min(92%,22rem)] -translate-x-1/2 items-center gap-3 rounded-full border border-coffee/12 px-4 py-2.5 text-[0.82rem] text-shadow/85">
+      <figcaption className="surface-card absolute -bottom-6 left-1/2 flex w-max max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center gap-2.5 rounded-full border border-coffee/12 px-4 py-2.5 text-[0.82rem] whitespace-nowrap text-shadow/85">
         <BadgeCheck className="size-5 shrink-0 text-burgundy" aria-hidden="true" />
-        {psychologist.registrations.map((item) => `${item.credential} (${item.region})`).join(' · ')}
+        <span className="max-sm:hidden">{psychologist.registrations.map((item) => `${item.credential} (${item.region})`).join(' · ')}</span>
+        <span className="sm:hidden">{psychologist.registrations.map((item) => `${item.credential.split(' ')[0]} (${item.region})`).join(' · ')}</span>
       </figcaption>
     </figure>
   )
@@ -60,14 +59,6 @@ export function Psychologist() {
           />
           <div data-reveal>
             <PsychologistTabs />
-          </div>
-          <div data-reveal>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/about#story">
-                Read my story
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
           </div>
         </div>
       </div>

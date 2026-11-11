@@ -14,7 +14,6 @@ export function PracticeBand() {
   const { scrollYProgress } = useScroll({ target: root, offset: ['start end', 'end start'] })
   const orbY = useTransform(scrollYProgress, [0, 1], [30, -70])
   const orbY2 = useTransform(scrollYProgress, [0, 1], [-20, 50])
-  const items = [...siteConfig.disciplines, ...siteConfig.disciplines]
 
   return (
     <section ref={root} aria-labelledby="practice-title" className="espresso-surface relative overflow-hidden py-16 lg:py-20">
@@ -60,20 +59,6 @@ export function PracticeBand() {
         </ol>
       </div>
 
-      <div aria-hidden="true" className="marquee relative mt-14 border-y border-paper/10 py-5">
-        <div className="marquee-track">
-          {items.map((item, index) => (
-            <span
-              key={`${item}-${index}`}
-              className="flex items-center gap-8 pr-8 font-serif text-[clamp(1.6rem,1.2rem+1.6vw,2.6rem)] whitespace-nowrap text-paper/80 italic"
-            >
-              {item}
-              <span className="size-1.5 rounded-full bg-gold/70" />
-            </span>
-          ))}
-        </div>
-      </div>
-      <p className="sr-only">{siteConfig.disciplines.join(', ')}</p>
     </section>
   )
 }

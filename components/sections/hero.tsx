@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowDown, ArrowRight } from 'lucide-react'
 import { siteConfig } from '@/lib/site'
 import { SynapseField } from '@/components/animations/synapse-field'
-import { ScrollPaper } from '@/components/paper/scroll-paper'
+import { GoldenScroll } from '@/components/paper/golden-scroll'
 import { Button } from '@/components/ui/button'
 
 const stagger = (index: number) => ({ '--i': index }) as CSSProperties
@@ -64,7 +64,7 @@ export function Hero() {
 
         <div data-hero-item style={stagger(3)} className="lg:col-span-5">
           <div data-parallax="0.06">
-            <ScrollPaper motion="roll" tilt={1.4} seed={7} contentClassName="px-[12%] py-12 sm:py-14">
+            <GoldenScroll unroll="load" tilt={0.8} contentClassName="px-[12%] py-10 sm:py-12">
               <p className="drop-cap text-[1.05rem] leading-[1.75] text-shadow/90">
                 Psychology extends far beyond any one setting. At {siteConfig.name}, this spans clinical practice, individual counselling,
                 organisational consulting, psychoeducation, workshops, and research collaborations.
@@ -73,7 +73,7 @@ export function Hero() {
                 {siteConfig.name} brings these interests together, along with a library of reading and resources for readers who want to learn
                 more about psychology and its place in everyday life in their own time.
               </p>
-            </ScrollPaper>
+            </GoldenScroll>
           </div>
         </div>
       </div>
